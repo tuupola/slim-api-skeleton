@@ -1,6 +1,6 @@
 {
-    "name": "tuupola/slim-skeleton",
-    "description": "Slim 3 + Datamapper + Monolog REST API skeleton",
+    "name": "tuupola/slim-api-skeleton",
+    "description": "Slim 3 + Spot + Monolog API skeleton",
     "type": "project",
     "keywords": [
         "slim",
