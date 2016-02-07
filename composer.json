@@ -1,0 +1,36 @@
+{
+    "name": "tuupola/slim-skeleton",
+    "description": "Slim 3 + Datamapper + Monolog REST API skeleton",
+    "type": "project",
+    "keywords": [
+        "slim",
+        "skeleton"
+    ],
+    "homepage": "https://github.com/tuupola/slim-api-skeleton",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mika Tuupola",
+            "email": "tuupola@appelsiini.net",
+            "homepage": "http://www.appelsiini.net/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.0",
+        "monolog/monolog": "^1.17",
+        "vlucas/phpdotenv": "^2.0",
+        "symfony/console": "^2.7",
+        "vlucas/spot2": "^2.1",
+        "tuupola/slim-jwt-auth": "^2.0",
+        "tuupola/slim-basic-auth": "^2.0",
+        "ramsey/uuid": "^3.1",
+        "league/fractal": "^0.13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "lib/App/",
+            "Doctrine\\DBAL\\Logging\\": "lib/Doctrine/DBAL/Logging/"
+        }
+    }
+}

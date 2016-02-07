@@ -1,0 +1,10 @@
+RewriteEngine On
+#RewriteBase /api/
+
+RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
+
+# Make sure $HTTP_RAW_POST_DATA is deprecated warning does not appear
+php_value   always_populate_raw_post_data   -1

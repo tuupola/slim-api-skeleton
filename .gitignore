@@ -1,0 +1,6 @@
+.env
+vendor/
+composer.lock
+.vagrant/
+npm-debug.log
+
