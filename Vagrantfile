@@ -37,6 +37,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     yum -y install mod_ssl
   SHELL
 
+  # Use the provided example environment
+  config.vm.provision "shell", name: "environment", inline: <<-SHELL
+    cd /vagrant && cp .env.example .env
+  SHELL
+
   # Install Composer and dependencies
   config.vm.provision "shell", name: "composer", inline: <<-SHELL
     curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
@@ -85,11 +90,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #  npm install -g grunt-cli
   #  cd /vagrant && npm install
   #SHELL
-
-  # Use the provided example environment
-  config.vm.provision "shell", name: "environment", inline: <<-SHELL
-    cd /vagrant && cp .env.example .env
-  SHELL
 
   config.vm.post_up_message = <<MESSAGE
 
