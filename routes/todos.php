@@ -16,12 +16,17 @@
 use App\Todo;
 use App\TodoTransformer;
 
+use Exception\NotFoundException;
+
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 
 $app->get("/todos", function ($request, $response, $arguments) {
+
+    /* Check if token has needed scope. */
+
     $todos = $this->spot->mapper("App\Todo")->all();
 
     $fractal = new Manager();
@@ -35,6 +40,9 @@ $app->get("/todos", function ($request, $response, $arguments) {
 });
 
 $app->post("/todos", function ($request, $response, $arguments) {
+
+    /* Check if token has needed scope. */
+
     $body = $request->getParsedBody();
 
     $todo = new Todo($body);
@@ -54,7 +62,15 @@ $app->post("/todos", function ($request, $response, $arguments) {
 });
 
 $app->get("/todos/{uuid}", function ($request, $response, $arguments) {
-    $todo = $this->spot->mapper("App\Todo")->first(["uuid" => $arguments["uuid"]]);
+
+    /* Check if token has needed scope. */
+
+    /* Load existing todo using provided uuid */
+    if (false === $todo = $this->spot->mapper("App\Todo")->first([
+        "uuid" => $arguments["uuid"]
+    ])) {
+        throw new NotFoundException("Todo not found.", 404);
+    };
 
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);
@@ -67,9 +83,18 @@ $app->get("/todos/{uuid}", function ($request, $response, $arguments) {
 });
 
 $app->patch("/todos/{uuid}", function ($request, $response, $arguments) {
+
+    /* Check if token has needed scope. */
+
+    /* Load existing todo using provided uuid */
+    if (false === $todo = $this->spot->mapper("App\Todo")->first([
+        "uuid" => $arguments["uuid"]
+    ])) {
+        throw new NotFoundException("Todo not found.", 404);
+    };
+
     $body = $request->getParsedBody();
 
-    $todo = $this->spot->mapper("App\Todo")->first(["uuid" => $arguments["uuid"]]);
     $todo->data($body);
     $this->spot->mapper("App\Todo")->save($todo);
 
@@ -86,7 +111,14 @@ $app->patch("/todos/{uuid}", function ($request, $response, $arguments) {
 });
 
 $app->delete("/todos/{uuid}", function ($request, $response, $arguments) {
-    $todo = $this->spot->mapper("App\Todo")->first(["uuid" => $arguments["uuid"]]);
+
+    /* Load existing todo using provided uuid */
+    if (false === $todo = $this->spot->mapper("App\Todo")->first([
+        "uuid" => $arguments["uuid"]
+    ])) {
+        throw new NotFoundException("Todo not found.", 404);
+    };
+
     $this->spot->mapper("App\Todo")->delete($todo);
 
     $data["status"] = "ok";

@@ -25,6 +25,7 @@ $app = new \Slim\App([
 ]);
 
 require __DIR__ . "/config/logger.php";
+require __DIR__ . "/config/handlers.php";
 require __DIR__ . "/config/middleware.php";
 require __DIR__ . "/config/database.php";
 

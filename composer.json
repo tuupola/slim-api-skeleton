@@ -30,7 +30,9 @@
     "autoload": {
         "psr-4": {
             "App\\": "lib/App/",
-            "Doctrine\\DBAL\\Logging\\": "lib/Doctrine/DBAL/Logging/"
+            "Doctrine\\DBAL\\Logging\\": "lib/Doctrine/DBAL/Logging/",
+            "Exception\\": "lib/Exception/",
+            "Slim\\Handlers\\": "lib/Slim/Handlers/"
         }
     }
 }
