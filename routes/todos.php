@@ -17,6 +17,7 @@ use App\Todo;
 use App\TodoTransformer;
 
 use Exception\NotFoundException;
+use Exception\ForbiddenException;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
@@ -26,6 +27,9 @@ use League\Fractal\Serializer\DataArraySerializer;
 $app->get("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
+    if (false === $this->token->hasScope(["todo.all", "todo.list"])) {
+        throw new ForbiddenException("Token not allowed to list todos.", 403);
+    }
 
     $todos = $this->spot->mapper("App\Todo")->all();
 
@@ -42,6 +46,9 @@ $app->get("/todos", function ($request, $response, $arguments) {
 $app->post("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
+    if (false === $this->token->hasScope(["todo.all", "todo.create"])) {
+        throw new ForbiddenException("Token not allowed to create todos.", 403);
+    }
 
     $body = $request->getParsedBody();
 
@@ -64,6 +71,9 @@ $app->post("/todos", function ($request, $response, $arguments) {
 $app->get("/todos/{uuid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
+    if (false === $this->token->hasScope(["todo.all", "todo.read"])) {
+        throw new ForbiddenException("Token not allowed to list todos.", 403);
+    }
 
     /* Load existing todo using provided uuid */
     if (false === $todo = $this->spot->mapper("App\Todo")->first([
@@ -85,6 +95,9 @@ $app->get("/todos/{uuid}", function ($request, $response, $arguments) {
 $app->patch("/todos/{uuid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
+    if (false === $this->token->hasScope(["todo.all", "todo.update"])) {
+        throw new ForbiddenException("Token not allowed to update todos.", 403);
+    }
 
     /* Load existing todo using provided uuid */
     if (false === $todo = $this->spot->mapper("App\Todo")->first([
@@ -111,6 +124,11 @@ $app->patch("/todos/{uuid}", function ($request, $response, $arguments) {
 });
 
 $app->delete("/todos/{uuid}", function ($request, $response, $arguments) {
+
+    /* Check if token has needed scope. */
+    if (false === $this->token->hasScope(["todo.all", "todo.delete"])) {
+        throw new ForbiddenException("Token not allowed to delete todos.", 403);
+    }
 
     /* Load existing todo using provided uuid */
     if (false === $todo = $this->spot->mapper("App\Todo")->first([

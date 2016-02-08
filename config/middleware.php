@@ -12,6 +12,7 @@
  *   https://github.com/tuupola/slim-api-skeleton
  *
  */
+use App\Token;
 
 use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\JwtAuthentication\RequestPathRule;
@@ -37,8 +38,8 @@ $container["HttpBasicAuthentication"] = function ($container) {
     ]);
 };
 
-$container["jwt"] = function ($container) {
-    return new StdClass;
+$container["token"] = function ($container) {
+    return new Token;
 };
 
 $container["JwtAuthentication"] = function ($container) {
@@ -60,7 +61,7 @@ $container["JwtAuthentication"] = function ($container) {
                 ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
         },
         "callback" => function ($request, $response, $arguments) use ($container) {
-            $container["jwt"] = $arguments["decoded"];
+            $container["token"]->hydrate($arguments["decoded"]);
         }
     ]);
 };

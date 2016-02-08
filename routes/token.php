@@ -55,5 +55,5 @@ $app->post("/token", function ($request, $response, $arguments) {
 
 /* This is just for debugging, not usefull in real life. */
 $app->get("/dump", function ($request, $response, $arguments) {
-    print_r($this->jwt);
+    print_r($this->token);
 });
