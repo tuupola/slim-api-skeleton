@@ -31,8 +31,28 @@ $app->get("/todos", function ($request, $response, $arguments) {
         throw new ForbiddenException("Token not allowed to list todos.", 403);
     }
 
-    $todos = $this->spot->mapper("App\Todo")->all();
+    /* Use ETag and date from Todo with most recent update. */
+    $first = $this->spot->mapper("App\Todo")
+        ->all()
+        ->order(["updated_at" => "DESC"])
+        ->first();
 
+    /* Add Last-Modified and ETag headers to response. */
+    $response = $this->cache->withEtag($response, $first->etag());
+    $response = $this->cache->withLastModified($response, $first->timestamp());
+
+    /* If-Modified-Since and If-None-Match request header handling. */
+    /* Heads up! Apache removes previously set Last-Modified header */
+    /* from 304 Not Modified responses. */
+    if ($this->cache->isNotModified($request, $response)) {
+        return $response->withStatus(304);
+    }
+
+    $todos = $this->spot->mapper("App\Todo")
+        ->all()
+        ->order(["updated_at" => "DESC"]);
+
+    /* Serialize the response data. */
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);
     $resource = new Collection($todos, new TodoTransformer);
@@ -55,6 +75,7 @@ $app->post("/todos", function ($request, $response, $arguments) {
     $todo = new Todo($body);
     $this->spot->mapper("App\Todo")->save($todo);
 
+    /* Serialize the response data. */
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);
     $resource = new Item($todo, new TodoTransformer);
@@ -82,6 +103,18 @@ $app->get("/todos/{uuid}", function ($request, $response, $arguments) {
         throw new NotFoundException("Todo not found.", 404);
     };
 
+    /* Add Last-Modified and ETag headers to response. */
+    $response = $this->cache->withEtag($response, $todo->etag());
+    $response = $this->cache->withLastModified($response, $todo->timestamp());
+
+    /* If-Modified-Since and If-None-Match request header handling. */
+    /* Heads up! Apache removes previously set Last-Modified header */
+    /* from 304 Not Modified responses. */
+    if ($this->cache->isNotModified($request, $response)) {
+        return $response->withStatus(304);
+    }
+
+    /* Serialize the response data. */
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);
     $resource = new Item($todo, new TodoTransformer);

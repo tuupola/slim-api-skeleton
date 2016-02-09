@@ -33,7 +33,9 @@ class Todo extends \Spot\Entity
             "order" => ["type" => "integer", "unsigned" => true, "value" => 0],
             "uuid" => ["type" => "string", "length" => 36],
             "title" => ["type" => "string", "length" => 255],
-            "completed" => ["type" => "boolean", "value" => false]
+            "completed" => ["type" => "boolean", "value" => false],
+            "created_at"   => ["type" => "datetime", "value" => new \DateTime()],
+            "updated_at"   => ["type" => "datetime", "value" => new \DateTime()]
         ];
     }
 
@@ -43,5 +45,18 @@ class Todo extends \Spot\Entity
             $uuid = Uuid::uuid1();
             $entity->uuid = $uuid->toString();
         });
+
+        $emitter->on("beforeUpdate", function (EntityInterface $entity, MapperInterface $mapper) {
+           $entity->updated_at = new \DateTime();
+       });
+    }
+    public function timestamp()
+    {
+        return $this->updated_at->getTimestamp();
+    }
+
+    public function etag()
+    {
+        return md5($this->uuid . $this->timestamp());
     }
 }

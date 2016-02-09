@@ -17,6 +17,7 @@ use App\Token;
 use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\JwtAuthentication\RequestPathRule;
 use Slim\Middleware\HttpBasicAuthentication;
+use Micheh\Cache\CacheUtil;
 
 $app->add(function ($request, $response, $next) {
     $response = $response
@@ -69,4 +70,7 @@ $container["JwtAuthentication"] = function ($container) {
 $app->add("HttpBasicAuthentication");
 $app->add("JwtAuthentication");
 
+$container["cache"] = function ($container) {
+    return new CacheUtil;
+};
 
