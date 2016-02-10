@@ -24,12 +24,12 @@ class TodoTransformer extends Fractal\TransformerAbstract
     public function transform(Todo $todo)
     {
         return [
-            "uuid" => (string)$todo->uuid ?: null,
+            "uid" => (string)$todo->uid ?: null,
             "order" => (integer)$todo->order ?: 0,
             "title" => (string)$todo->title ?: null,
             "completed" => !!$todo->completed,
             "links"        => [
-                "self" => "/todos/{$todo->uuid}"
+                "self" => "/todos/{$todo->uid}"
             ]
         ];
     }

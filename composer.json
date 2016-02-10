@@ -24,13 +24,14 @@
         "vlucas/spot2": "^2.1",
         "tuupola/slim-jwt-auth": "^2.0",
         "tuupola/slim-basic-auth": "^2.0",
-        "ramsey/uuid": "^3.1",
         "league/fractal": "^0.13.0",
-        "micheh/psr7-cache": "^0.3.0"
+        "micheh/psr7-cache": "^0.3.0",
+        "paragonie/random_compat": "^1.2"
     },
     "autoload": {
         "psr-4": {
             "App\\": "lib/App/",
+            "Utils\\": "lib/Utils/",
             "Doctrine\\DBAL\\Logging\\": "lib/Doctrine/DBAL/Logging/",
             "Exception\\": "lib/Exception/",
             "Slim\\Handlers\\": "lib/Slim/Handlers/"
