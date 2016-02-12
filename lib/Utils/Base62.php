@@ -47,6 +47,4 @@ class Base62
         }
         return $outstring;
     }
-
 }
-

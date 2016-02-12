@@ -73,4 +73,3 @@ $app->add("JwtAuthentication");
 $container["cache"] = function ($container) {
     return new CacheUtil;
 };
-

@@ -49,8 +49,8 @@ class Todo extends \Spot\Entity
         });
 
         $emitter->on("beforeUpdate", function (EntityInterface $entity, MapperInterface $mapper) {
-           $entity->updated_at = new \DateTime();
-       });
+            $entity->updated_at = new \DateTime();
+        });
     }
     public function timestamp()
     {
