@@ -1,0 +1,33 @@
+{
+  "name": "slim-api-skeleton",
+  "description": "Slim 3 API skeleton project for Composer",
+  "main": "Gruntfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.12.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-phpcs": "^0.4.0",
+    "grunt-phplint": "^0.0.8",
+    "grunt-phpunit": "^0.3.6",
+    "load-grunt-tasks": "^3.4.0"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuupola/slim-api-skeleton.git"
+  },
+  "keywords": [
+    "Slim",
+    "API",
+    "Skeleton"
+  ],
+  "author": "Mika Tuupola <tuupola@appelsiini.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tuupola/slim-api-skeleton/issues"
+  },
+  "homepage": "https://github.com/tuupola/slim-api-skeleton#readme"
+}

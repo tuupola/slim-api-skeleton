@@ -36,5 +36,8 @@
             "Exception\\": "lib/Exception/",
             "Slim\\Handlers\\": "lib/Slim/Handlers/"
         }
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^2.5"
     }
 }
