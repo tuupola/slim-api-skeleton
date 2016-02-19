@@ -15,6 +15,7 @@
 
 use Ramsey\Uuid\Uuid;
 use Firebase\JWT\JWT;
+use Utils\Base62;
 
 $app->post("/token", function ($request, $response, $arguments) {
     $requested_scopes = $request->getParsedBody();
@@ -38,7 +39,7 @@ $app->post("/token", function ($request, $response, $arguments) {
     $payload = [
         "iat" => $now->getTimeStamp(),
         "exp" => $future->getTimeStamp(),
-        "jti" => (string)Uuid::uuid1(),
+        "jti" => Base62::encode(random_bytes(32)),
         "sub" => $server["PHP_AUTH_USER"],
         "scope" => $scopes
     ];
@@ -55,5 +56,9 @@ $app->post("/token", function ($request, $response, $arguments) {
 
 /* This is just for debugging, not usefull in real life. */
 $app->get("/dump", function ($request, $response, $arguments) {
+    print_r($this->token);
+});
+
+$app->post("/dump", function ($request, $response, $arguments) {
     print_r($this->token);
 });
