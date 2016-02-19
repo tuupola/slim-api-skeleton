@@ -17,15 +17,10 @@ use App\Token;
 use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\JwtAuthentication\RequestPathRule;
 use Slim\Middleware\HttpBasicAuthentication;
-use Micheh\Cache\CacheUtil;
+use Tuupola\Middleware\Cors;
+#use Neomerx\Cors\Strategies\Settings as CorsSettings;
 
-$app->add(function ($request, $response, $next) {
-    $response = $response
-        ->withHeader("Access-Control-Allow-Headers", "Content-Type")
-        ->withHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE")
-        ->withHeader("Access-Control-Allow-Origin", "*");
-    return $next($request, $response);
-});
+use Micheh\Cache\CacheUtil;
 
 $container = $app->getContainer();
 
@@ -67,8 +62,23 @@ $container["JwtAuthentication"] = function ($container) {
     ]);
 };
 
+$container["Cors"] = function ($container) {
+
+    return new Cors([
+        "logger" => $container["logger"],
+
+        "origin" => ["*"],
+        "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+        "headers.allow" => ["Authorization"],
+        "headers.expose" => ["Authorization"],
+        "credentials" => true,
+        "cache" => 60,
+    ]);
+};
+
 $app->add("HttpBasicAuthentication");
 $app->add("JwtAuthentication");
+$app->add("Cors");
 
 $container["cache"] = function ($container) {
     return new CacheUtil;

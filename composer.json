@@ -26,7 +26,8 @@
         "tuupola/slim-basic-auth": "^2.0",
         "league/fractal": "^0.13.0",
         "micheh/psr7-cache": "^0.3.0",
-        "paragonie/random_compat": "^1.2"
+        "paragonie/random_compat": "^1.2",
+        "tuupola/cors-middleware": "dev-master"
     },
     "autoload": {
         "psr-4": {
