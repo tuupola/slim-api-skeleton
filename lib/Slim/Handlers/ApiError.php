@@ -17,7 +17,7 @@ final class ApiError extends \Slim\Handlers\Error
 
     public function __invoke(Request $request, Response $response, \Exception $exception)
     {
-        //$this->logger->critical($exception->getMessage());
+        $this->logger->critical($exception->getMessage());
 
         $status = $exception->getCode() ?: 500;
         $data = [
@@ -30,7 +30,6 @@ final class ApiError extends \Slim\Handlers\Error
         return $response
                 ->withStatus($status)
                 ->withHeader("Content-type", "application/json")
-                //->withBody(new Body(fopen('php://temp', 'r+')))
                 ->write($body);
     }
 }
