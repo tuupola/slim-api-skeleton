@@ -22,7 +22,93 @@ $ cd app
 $ vagrant up
 ```
 
-Now you can access the api at [http://192.168.50.52/todos](http://192.168.50.52/todos)
+Now you can access the api at [https://192.168.50.52/todos](https://192.168.50.52/todos)
+
+```
+$ curl "https://192.168.50.52/token"
+    --include
+    --insecure
+    --header "Content-Type: application/json"
+    --data '["todo.all"]'
+    --user test:test
+
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+    "status": "ok",
+    "token": "XXXXXXXXXX"
+```
+
+```
+$ curl "https://192.168.50.52/todos"
+    --include
+    --insecure
+    --header "Authorization: Bearer XXXXXXXXXX"
+    --header "Content-Type: application/json"
+    --data '{ "title": "Test the API", "order": 10 }'
+
+HTTP/1.1 201 Created
+Location: /todos/LwsIahyOYhp0g
+Content-Type: application/json
+
+{
+    "data": {
+        "uid": "LwsIahyOYhp0g",
+        "order": 10,
+        "title": "Test the API",
+        "completed": false,
+        "links": {
+            "self": "/todos/LwsIahyOYhp0g"
+        }
+    },
+    "status": "ok",
+    "message": "New todo created"
+}
+```
+
+```
+$ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
+    --include
+    --insecure
+    --header "Authorization: Bearer XXXXXXXXXX"
+    --header "Content-Type: application/json"
+
+HTTP/1.1 200 OK
+ETag: "2ae6e2d14b7ad7754f34055d4aa54a13"
+Last-Modified: Sun, 21 Feb 2016 01:40:20 GMT
+Content-Type: application/json
+
+{
+    "data": {
+        "uid": "LwsIahyOYhp0g",
+        "order": 10,
+        "title": "Test the API",
+        "completed": false,
+        "links": {
+            "self": "/todos/LwsIahyOYhp0g"
+        }
+    },
+    "status": "ok"
+}
+```
+
+```
+$ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
+    --request DELETE
+    --include
+    --insecure
+    --header "Authorization: Bearer XXXXXXXXXX"
+    --header "Content-Type: application/json"
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "status": "ok",
+    "message": "Todo deleted"
+}
+```
 
 ## License
 
