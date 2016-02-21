@@ -89,16 +89,16 @@ $app->post("/todos", function ($request, $response, $arguments) {
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->get("/todos/{uuid}", function ($request, $response, $arguments) {
+$app->get("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.read"])) {
         throw new ForbiddenException("Token not allowed to list todos.", 403);
     }
 
-    /* Load existing todo using provided uuid */
+    /* Load existing todo using provided uid */
     if (false === $todo = $this->spot->mapper("App\Todo")->first([
-        "uuid" => $arguments["uuid"]
+        "uid" => $arguments["uid"]
     ])) {
         throw new NotFoundException("Todo not found.", 404);
     };
@@ -125,16 +125,16 @@ $app->get("/todos/{uuid}", function ($request, $response, $arguments) {
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->patch("/todos/{uuid}", function ($request, $response, $arguments) {
+$app->patch("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.update"])) {
         throw new ForbiddenException("Token not allowed to update todos.", 403);
     }
 
-    /* Load existing todo using provided uuid */
+    /* Load existing todo using provided uid */
     if (false === $todo = $this->spot->mapper("App\Todo")->first([
-        "uuid" => $arguments["uuid"]
+        "uid" => $arguments["uid"]
     ])) {
         throw new NotFoundException("Todo not found.", 404);
     };
@@ -156,16 +156,16 @@ $app->patch("/todos/{uuid}", function ($request, $response, $arguments) {
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->delete("/todos/{uuid}", function ($request, $response, $arguments) {
+$app->delete("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.delete"])) {
         throw new ForbiddenException("Token not allowed to delete todos.", 403);
     }
 
-    /* Load existing todo using provided uuid */
+    /* Load existing todo using provided uid */
     if (false === $todo = $this->spot->mapper("App\Todo")->first([
-        "uuid" => $arguments["uuid"]
+        "uid" => $arguments["uid"]
     ])) {
         throw new NotFoundException("Todo not found.", 404);
     };
