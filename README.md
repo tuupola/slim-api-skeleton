@@ -9,6 +9,8 @@ This is Slim 3 API skeleton project for Composer. Project uses [Spot](http://php
 
 Install the latest version using [composer](https://getcomposer.org/).
 
+_IMPORTANT_: Install the PHP extension GMP for Calcs for generation of the token. php5-gmp for PHP5 and php-gmp for PHP7
+
 ``` bash
 $ composer create-project --no-interaction --stability=dev tuupola/slim-api-skeleton app
 ```
