@@ -16,6 +16,7 @@
 namespace App;
 
 use Utils\Base62;
+use Utils\Url64;
 
 use Spot\EntityInterface;
 use Spot\MapperInterface;
@@ -44,8 +45,13 @@ class Todo extends \Spot\Entity
     public static function events(EventEmitter $emitter)
     {
         $emitter->on("beforeInsert", function (EntityInterface $entity, MapperInterface $mapper) {
-            $uid = Base62::encode(random_bytes(9));
-            $entity->uid = $uid;
+            if (extension_loaded("gmp")) {
+                /* Prettier but needs gmp extension. */
+                $entity->uid = Base62::encode(random_bytes(9));
+            } else {
+                /* Might contain _ and - characters. */
+                $entity->uid = Url64::encode(random_bytes(9));
+            }
         });
 
         $emitter->on("beforeUpdate", function (EntityInterface $entity, MapperInterface $mapper) {
