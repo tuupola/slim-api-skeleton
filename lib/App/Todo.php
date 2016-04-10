@@ -59,6 +59,6 @@ class Todo extends \Spot\Entity
 
     public function etag()
     {
-        return md5($this->uuid . $this->timestamp());
+        return md5($this->uid . $this->timestamp());
     }
 }
