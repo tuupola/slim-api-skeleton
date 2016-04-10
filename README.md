@@ -24,6 +24,9 @@ $ vagrant up
 
 Now you can access the api at [https://192.168.50.52/todos](https://192.168.50.52/todos)
 
+
+### Get a token
+
 ```
 $ curl "https://192.168.50.52/token"
     --request POST
@@ -40,6 +43,8 @@ Content-Type: application/json
     "status": "ok",
     "token": "XXXXXXXXXX"
 ```
+
+### Create a new todo
 
 ```
 $ curl "https://192.168.50.52/todos"
@@ -69,6 +74,8 @@ Content-Type: application/json
 }
 ```
 
+### Get an existing todo
+
 ```
 $ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
     --include
@@ -93,6 +100,8 @@ Content-Type: application/json
     "status": "ok"
 }
 ```
+
+### Update part of an existing todo
 
 ```
 $ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
@@ -122,6 +131,7 @@ Content-Type: application/json
 }
 ```
 
+### Fully update an existing todo
 
 ```
 $ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
@@ -150,6 +160,8 @@ Content-Type: application/json
     "message": "Todo updated"
 }
 ```
+
+### Delete an existing todo
 
 ```
 $ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
