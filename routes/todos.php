@@ -156,6 +156,40 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
+$app->put("/todos/{uid}", function ($request, $response, $arguments) {
+
+    /* Check if token has needed scope. */
+    if (false === $this->token->hasScope(["todo.all", "todo.update"])) {
+        throw new ForbiddenException("Token not allowed to update todos.", 403);
+    }
+
+    /* Load existing todo using provided uid */
+    if (false === $todo = $this->spot->mapper("App\Todo")->first([
+        "uid" => $arguments["uid"]
+    ])) {
+        throw new NotFoundException("Todo not found.", 404);
+    };
+
+    $body = $request->getParsedBody();
+
+    /* PUT request assumes full representation. If any of the properties is */
+    /* missing set them to default values by clearing the todo object first. */
+    $todo->clear();
+    $todo->data($body);
+    $this->spot->mapper("App\Todo")->save($todo);
+
+    $fractal = new Manager();
+    $fractal->setSerializer(new DataArraySerializer);
+    $resource = new Item($todo, new TodoTransformer);
+    $data = $fractal->createData($resource)->toArray();
+    $data["status"] = "ok";
+    $data["message"] = "Todo updated";
+
+    return $response->withStatus(200)
+        ->withHeader("Content-Type", "application/json")
+        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+});
+
 $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */

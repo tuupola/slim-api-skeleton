@@ -67,4 +67,13 @@ class Todo extends \Spot\Entity
     {
         return md5($this->uid . $this->timestamp());
     }
+
+    public function clear()
+    {
+        $this->data([
+            "order" => null,
+            "title" => null,
+            "completed" => null
+        ]);
+    }
 }
