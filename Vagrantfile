@@ -35,6 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     yum -y install php56w-mcrypt
     yum -y install php56w-mysqlnd
     yum -y install mod_ssl
+    yum -y install php56w-xmlwriter
   SHELL
 
   # Use the provided example environment
