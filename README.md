@@ -26,6 +26,7 @@ Now you can access the api at [https://192.168.50.52/todos](https://192.168.50.5
 
 ```
 $ curl "https://192.168.50.52/token"
+    --request POST
     --include
     --insecure
     --header "Content-Type: application/json"
@@ -42,6 +43,7 @@ Content-Type: application/json
 
 ```
 $ curl "https://192.168.50.52/todos"
+    --request POST
     --include
     --insecure
     --header "Authorization: Bearer XXXXXXXXXX"
@@ -72,7 +74,6 @@ $ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
     --include
     --insecure
     --header "Authorization: Bearer XXXXXXXXXX"
-    --header "Content-Type: application/json"
 
 HTTP/1.1 200 OK
 ETag: "2ae6e2d14b7ad7754f34055d4aa54a13"
@@ -95,11 +96,67 @@ Content-Type: application/json
 
 ```
 $ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
-    --request DELETE
+    --request PATCH
     --include
     --insecure
     --header "Authorization: Bearer XXXXXXXXXX"
     --header "Content-Type: application/json"
+    --data '{ "order": 27 }'
+
+HTTP/1.1 200 OK
+Location: /todos/LwsIahyOYhp0g
+Content-Type: application/json
+
+{
+    "data": {
+        "uid": "LwsIahyOYhp0g",
+        "order": 27,
+        "title": "Test the API",
+        "completed": false,
+        "links": {
+            "self": "/todos/LwsIahyOYhp0g"
+        }
+    },
+    "status": "ok",
+    "message": "Todo updated"
+}
+```
+
+
+```
+$ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
+    --request PUT
+    --include
+    --insecure
+    --header "Authorization: Bearer XXXXXXXXXX"
+    --header "Content-Type: application/json"
+    --data '{ "title": "Full update", "order": 66, "completed": true }'
+
+HTTP/1.1 200 OK
+Location: /todos/LwsIahyOYhp0g
+Content-Type: application/json
+
+{
+    "data": {
+        "uid": "LwsIahyOYhp0g",
+        "order": 66,
+        "title": "Full update",
+        "completed": true,
+        "links": {
+            "self": "/todos/LwsIahyOYhp0g"
+        }
+    },
+    "status": "ok",
+    "message": "Todo updated"
+}
+```
+
+```
+$ curl "https://192.168.50.52/todos/LwsIahyOYhp0g"
+    --request DELETE
+    --include
+    --insecure
+    --header "Authorization: Bearer XXXXXXXXXX"
 
 HTTP/1.1 200 OK
 Content-Type: application/json
