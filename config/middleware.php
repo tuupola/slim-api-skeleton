@@ -69,8 +69,8 @@ $container["Cors"] = function ($container) {
 
         "origin" => ["*"],
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
-        "headers.allow" => ["Authorization"],
-        "headers.expose" => ["Authorization"],
+        "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+        "headers.expose" => ["Authorization", "Etag"],
         "credentials" => true,
         "cache" => 60,
     ]);
