@@ -27,7 +27,8 @@
         "league/fractal": "^0.13.0",
         "paragonie/random_compat": "^1.2",
         "tuupola/cors-middleware": "dev-master",
-        "micheh/psr7-cache": "^0.5.0"
+        "micheh/psr7-cache": "^0.5.0",
+        "gofabian/negotiation-middleware": "^0.1.1"
     },
     "autoload": {
         "psr-4": {

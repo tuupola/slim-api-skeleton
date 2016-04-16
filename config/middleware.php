@@ -18,7 +18,7 @@ use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\JwtAuthentication\RequestPathRule;
 use Slim\Middleware\HttpBasicAuthentication;
 use Tuupola\Middleware\Cors;
-#use Neomerx\Cors\Strategies\Settings as CorsSettings;
+use Gofabian\Negotiation\NegotiationMiddleware;
 
 use Micheh\Cache\CacheUtil;
 
@@ -76,9 +76,16 @@ $container["Cors"] = function ($container) {
     ]);
 };
 
+$container["Negotiation"] = function ($container) {
+    return new NegotiationMiddleware([
+        "accept" => ["application/json"]
+    ]);
+};
+
 $app->add("HttpBasicAuthentication");
 $app->add("JwtAuthentication");
 $app->add("Cors");
+$app->add("Negotiation");
 
 $container["cache"] = function ($container) {
     return new CacheUtil;
