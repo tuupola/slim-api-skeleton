@@ -15,11 +15,9 @@
 use App\Token;
 
 use Slim\Middleware\JwtAuthentication;
-use Slim\Middleware\JwtAuthentication\RequestPathRule;
 use Slim\Middleware\HttpBasicAuthentication;
 use Tuupola\Middleware\Cors;
 use Gofabian\Negotiation\NegotiationMiddleware;
-
 use Micheh\Cache\CacheUtil;
 
 $container = $app->getContainer();
@@ -40,15 +38,11 @@ $container["token"] = function ($container) {
 
 $container["JwtAuthentication"] = function ($container) {
     return new JwtAuthentication([
+        "path" => "/",
+        "passthrough" => ["/token"],
         "secret" => getenv("JWT_SECRET"),
         "logger" => $container["logger"],
         "relaxed" => ["192.168.50.52"],
-        "rules" => [
-            new RequestPathRule([
-                "path" => "/",
-                "passthrough" => ["/token"]
-            ])
-        ],
         "error" => function ($request, $response, $arguments) {
             $data["status"] = "error";
             $data["message"] = $arguments["message"];
@@ -63,7 +57,6 @@ $container["JwtAuthentication"] = function ($container) {
 };
 
 $container["Cors"] = function ($container) {
-
     return new Cors([
         "logger" => $container["logger"],
 
