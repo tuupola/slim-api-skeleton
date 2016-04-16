@@ -18,6 +18,8 @@ use App\TodoTransformer;
 
 use Exception\NotFoundException;
 use Exception\ForbiddenException;
+use Exception\PreconditionFailedException;
+use Exception\PreconditionRequiredException;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
@@ -74,6 +76,10 @@ $app->post("/todos", function ($request, $response, $arguments) {
 
     $todo = new Todo($body);
     $this->spot->mapper("App\Todo")->save($todo);
+
+    /* Add Last-Modified and ETag headers to response. */
+    $response = $this->cache->withEtag($response, $todo->etag());
+    $response = $this->cache->withLastModified($response, $todo->timestamp());
 
     /* Serialize the response data. */
     $fractal = new Manager();
@@ -139,10 +145,24 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
         throw new NotFoundException("Todo not found.", 404);
     };
 
-    $body = $request->getParsedBody();
+    /* PATCH requires If-Unmodified-Since or If-Match request header to be present. */
+    if (false === $this->cache->hasStateValidator($request)) {
+        throw new PreconditionRequiredException("PATCH request is required to be conditional.", 428);
+    }
 
+    /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
+    /* someone has modified the todo respond with 412 Precondition Failed. */
+    if (false === $this->cache->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
+        throw new PreconditionFailedException("Todo has been modified.", 412);
+    }
+
+    $body = $request->getParsedBody();
     $todo->data($body);
     $this->spot->mapper("App\Todo")->save($todo);
+
+    /* Add Last-Modified and ETag headers to response. */
+    $response = $this->cache->withEtag($response, $todo->etag());
+    $response = $this->cache->withLastModified($response, $todo->timestamp());
 
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);
@@ -170,6 +190,17 @@ $app->put("/todos/{uid}", function ($request, $response, $arguments) {
         throw new NotFoundException("Todo not found.", 404);
     };
 
+    /* PUT requires If-Unmodified-Since or If-Match request header to be present. */
+    if (false === $this->cache->hasStateValidator($request)) {
+        throw new PreconditionRequiredException("PUT request is required to be conditional.", 428);
+    }
+
+    /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
+    /* someone has modified the todo respond with 412 Precondition Failed. */
+    if (false === $this->cache->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
+        throw new PreconditionFailedException("Todo has been modified.", 412);
+    }
+
     $body = $request->getParsedBody();
 
     /* PUT request assumes full representation. If any of the properties is */
@@ -177,6 +208,10 @@ $app->put("/todos/{uid}", function ($request, $response, $arguments) {
     $todo->clear();
     $todo->data($body);
     $this->spot->mapper("App\Todo")->save($todo);
+
+    /* Add Last-Modified and ETag headers to response. */
+    $response = $this->cache->withEtag($response, $todo->etag());
+    $response = $this->cache->withLastModified($response, $todo->timestamp());
 
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer);

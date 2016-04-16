@@ -5,7 +5,7 @@
     <databaseInfo>
         <version>134481920</version>
         <UUID>8CBE425C-E6E5-493C-A5A7-ACD62FE05D36</UUID>
-        <nextObjectID>151</nextObjectID>
+        <nextObjectID>157</nextObjectID>
         <metadata>
             <plist version="1.0">
                 <dict>
@@ -132,7 +132,7 @@
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z145"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z110">
-        <attribute name="value" type="string">[{"data":{"header":["Last-Modified"]},"identifier":"com.luckymarmot.ResponseHeaderDynamicValue"}]</attribute>
+        <attribute name="value" type="string">[{"data":{"request":"8CC659A7-6391-4A36-B748-7F77DB0F42E8","header":["Last-Modified"]},"identifier":"com.luckymarmot.ResponseHeaderDynamicValue"}]</attribute>
         <attribute name="order" type="int64">3</attribute>
         <attribute name="name" type="string">If-Modified-Since</attribute>
         <attribute name="enabled" type="bool">0</attribute>
@@ -165,7 +165,7 @@
         <attribute name="value" type="string">http://www.example.com</attribute>
         <attribute name="order" type="int64">4</attribute>
         <attribute name="name" type="string">Origin</attribute>
-        <attribute name="enabled" type="bool">1</attribute>
+        <attribute name="enabled" type="bool">0</attribute>
         <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
@@ -205,7 +205,7 @@
         <attribute name="value" type="string">http://www.example.com</attribute>
         <attribute name="order" type="int64">2</attribute>
         <attribute name="name" type="string">Origin</attribute>
-        <attribute name="enabled" type="bool">1</attribute>
+        <attribute name="enabled" type="bool">0</attribute>
         <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
@@ -222,7 +222,7 @@
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z143"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z119">
-        <attribute name="value" type="string">[{"data":{"header":["ETag"]},"identifier":"com.luckymarmot.ResponseHeaderDynamicValue"}]</attribute>
+        <attribute name="value" type="string">[{"data":{"request":"8CC659A7-6391-4A36-B748-7F77DB0F42E8","header":["ETag"]},"identifier":"com.luckymarmot.ResponseHeaderDynamicValue"}]</attribute>
         <attribute name="order" type="int64">2</attribute>
         <attribute name="name" type="string">If-None-Match</attribute>
         <attribute name="enabled" type="bool">0</attribute>
@@ -232,9 +232,9 @@
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z140"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z120">
-        <attribute name="value" type="string"></attribute>
+        <attribute name="value" type="string">[{"data":{"request":"8CC659A7-6391-4A36-B748-7F77DB0F42E8","header":["ETag"]},"identifier":"com.luckymarmot.ResponseHeaderDynamicValue"}]</attribute>
         <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
+        <attribute name="name" type="string">If-Match</attribute>
         <attribute name="enabled" type="bool">1</attribute>
         <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
@@ -435,7 +435,7 @@
         <attribute name="name" type="string">Update part of specific todo</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z134 z120"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z134 z120 z152 z155 z154"></relationship>
     </object>
     <object type="LMREQUEST" id="z140">
         <attribute name="uuid" type="string">54A80F99-16C6-4B68-985A-590F898A73C0</attribute>
@@ -568,13 +568,13 @@
         <attribute name="name" type="string">Update specific todo</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z150 z151"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z156 z150 z157 z151"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z150">
-        <attribute name="value" type="string"></attribute>
+        <attribute name="value" type="string">[{"data":{"request":"8CC659A7-6391-4A36-B748-7F77DB0F42E8","header":["ETag"]},"identifier":"com.luckymarmot.ResponseHeaderDynamicValue"}]</attribute>
         <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
+        <attribute name="name" type="string">If-Match</attribute>
+        <attribute name="enabled" type="bool">0</attribute>
         <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
@@ -584,6 +584,56 @@
         <attribute name="value" type="string">["Bearer ",{"data":{"request":"24D72394-39BC-4D76-AA5D-A8713D7E5264","keyPath":["token"],"format":0},"identifier":"com.luckymarmot.ResponseBodyPathDynamicValue"}]</attribute>
         <attribute name="order" type="int64">1</attribute>
         <attribute name="name" type="string">Authorization</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z149"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z152">
+        <attribute name="value" type="string">xxx</attribute>
+        <attribute name="order" type="int64">3</attribute>
+        <attribute name="name" type="string">If-Match</attribute>
+        <attribute name="enabled" type="bool">0</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z139"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z154">
+        <attribute name="value" type="string">[{"data":{"request":"8CC659A7-6391-4A36-B748-7F77DB0F42E8","header":["Last-Modified"]},"identifier":"com.luckymarmot.ResponseHeaderDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">5</attribute>
+        <attribute name="name" type="string">If-Unmodified-Since</attribute>
+        <attribute name="enabled" type="bool">0</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z139"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z155">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">6</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z139"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z156">
+        <attribute name="value" type="string">[{"data":{"request":"8CC659A7-6391-4A36-B748-7F77DB0F42E8","header":["Last-Modified"]},"identifier":"com.luckymarmot.ResponseHeaderDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">3</attribute>
+        <attribute name="name" type="string">If-Unmodified-Since</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z149"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z157">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">4</attribute>
+        <attribute name="name" type="string"></attribute>
         <attribute name="enabled" type="bool">1</attribute>
         <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
