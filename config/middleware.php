@@ -59,13 +59,19 @@ $container["JwtAuthentication"] = function ($container) {
 $container["Cors"] = function ($container) {
     return new Cors([
         "logger" => $container["logger"],
-
         "origin" => ["*"],
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
         "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
         "headers.expose" => ["Authorization", "Etag"],
         "credentials" => true,
         "cache" => 60,
+        "error" => function ($request, $response, $arguments) {
+            $data["status"] = "error";
+            $data["message"] = $arguments["message"];
+            return $response
+                ->withHeader("Content-Type", "application/json")
+                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        }
     ]);
 };
 
