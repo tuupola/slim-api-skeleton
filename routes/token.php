@@ -15,8 +15,7 @@
 
 use Ramsey\Uuid\Uuid;
 use Firebase\JWT\JWT;
-use Utils\Base62;
-use Utils\Url64;
+use Tuupola\Base62;
 
 $app->post("/token", function ($request, $response, $arguments) {
     $requested_scopes = $request->getParsedBody();
@@ -38,13 +37,7 @@ $app->post("/token", function ($request, $response, $arguments) {
     $future = new DateTime("now +2 hours");
     $server = $request->getServerParams();
 
-    if (extension_loaded("gmp")) {
-        /* Prettier but needs gmp extension. */
-        $jti = Base62::encode(random_bytes(32));
-    } else {
-        /* Might contain _ and - characters. */
-        $jti = Url64::encode(random_bytes(32));
-    }
+    $jti = Base62::encode(random_bytes(16));
 
     $payload = [
         "iat" => $now->getTimeStamp(),
