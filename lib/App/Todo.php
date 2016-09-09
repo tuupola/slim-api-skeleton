@@ -33,7 +33,7 @@ class Todo extends \Spot\Entity
         return [
             "id" => ["type" => "integer", "unsigned" => true, "primary" => true, "autoincrement" => true],
             "order" => ["type" => "integer", "unsigned" => true, "value" => 0],
-            "uid" => ["type" => "string", "length" => 16],
+            "uid" => ["type" => "string", "length" => 16, "unique" => true],
             "title" => ["type" => "string", "length" => 255],
             "completed" => ["type" => "boolean", "value" => false],
             "created_at"   => ["type" => "datetime", "value" => new \DateTime()],
