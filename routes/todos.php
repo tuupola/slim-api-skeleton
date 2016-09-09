@@ -39,9 +39,11 @@ $app->get("/todos", function ($request, $response, $arguments) {
         ->order(["updated_at" => "DESC"])
         ->first();
 
-    /* Add Last-Modified and ETag headers to response. */
-    $response = $this->cache->withEtag($response, $first->etag());
-    $response = $this->cache->withLastModified($response, $first->timestamp());
+    /* Add Last-Modified and ETag headers to response when atleast on todo exists. */
+    if ($first) {
+        $response = $this->cache->withEtag($response, $first->etag());
+        $response = $this->cache->withLastModified($response, $first->timestamp());
+    }
 
     /* If-Modified-Since and If-None-Match request header handling. */
     /* Heads up! Apache removes previously set Last-Modified header */
