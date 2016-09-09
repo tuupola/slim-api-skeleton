@@ -40,7 +40,6 @@ class MonologSQLLogger implements SQLLogger
                 return "'" . $param . "'";
             }
         }, $sql);
-
     }
 
     public function stopQuery()
