@@ -28,7 +28,7 @@
         "paragonie/random_compat": "^1.2",
         "tuupola/cors-middleware": "^0.5.0",
         "micheh/psr7-cache": "^0.5.0",
-        "gofabian/negotiation-middleware": "^0.1.1",
+        "gofabian/negotiation-middleware": "^0.1.2",
         "tuupola/base62": "^0.5.0"
     },
     "autoload": {
