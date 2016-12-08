@@ -43,5 +43,11 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^2.5"
+    },
+    "scripts": {
+        "test": "composer phplint && composer phpcs",
+        "phpcs": "vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore=*/vendor/* . -p",
+        "phplint": "env phplint  '**/*.php' '!vendor/**'",
+        "watch": "find . -name \"*.php\" -not -path \"./vendor/*\" -o -name \"*.json\" -not -path \"./vendor/*\"| entr -c composer test"
     }
 }
