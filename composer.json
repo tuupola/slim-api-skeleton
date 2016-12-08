@@ -33,12 +33,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "lib/App/",
-            "Utils\\": "lib/Utils/",
-            "Doctrine\\DBAL\\Logging\\": "lib/Doctrine/DBAL/Logging/",
-            "Exception\\": "lib/Exception/",
-            "Slim\\Handlers\\": "lib/Slim/Handlers/",
-            "Slim\\Middleware\\": "lib/Slim/Middleware/"
+            "App\\": "src/App/",
+            "Utils\\": "src/Utils/",
+            "Doctrine\\DBAL\\Logging\\": "src/Doctrine/DBAL/Logging/",
+            "Exception\\": "src/Exception/",
+            "Slim\\Handlers\\": "src/Slim/Handlers/",
+            "Slim\\Middleware\\": "src/Slim/Middleware/"
         }
     },
     "require-dev": {
