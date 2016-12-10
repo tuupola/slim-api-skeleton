@@ -37,8 +37,7 @@
             "Utils\\": "src/Utils/",
             "Doctrine\\DBAL\\Logging\\": "src/Doctrine/DBAL/Logging/",
             "Exception\\": "src/Exception/",
-            "Slim\\Handlers\\": "src/Slim/Handlers/",
-            "Slim\\Middleware\\": "src/Slim/Middleware/"
+            "Slim\\Handlers\\": "src/Slim/Handlers/"
         }
     },
     "require-dev": {
