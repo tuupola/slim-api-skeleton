@@ -1,11 +1,13 @@
 # Fix permissions after you run commands on both hosts and guest machine
-system("
+if !Vagrant::Util::Platform.windows?
+  system("
     if [ #{ARGV[0]} = 'up' ]; then
-        echo 'Setting world write permissions for ./logs/*'
-        chmod a+w ./logs
-        chmod a+w ./logs/*
+      echo 'Setting world write permissions for ./logs/*'
+      chmod a+w ./logs
+      chmod a+w ./logs/*
     fi
-")
+  ")
+end
 
 VAGRANTFILE_API_VERSION = "2"
 
