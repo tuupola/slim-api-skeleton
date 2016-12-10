@@ -27,8 +27,7 @@ $dotenv->load();
 $app = new Slim\App();
 $container = $app->getContainer();
 
-require __DIR__ . "/../config/logger.php";
-require __DIR__ . "/../config/database.php";
+require __DIR__ . "/../config/dependencies.php";
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
