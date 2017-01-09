@@ -3,7 +3,7 @@
 /*
  * This file is part of the Slim API skeleton package
  *
- * Copyright (c) 2016 Mika Tuupola
+ * Copyright (c) 2016-2017 Mika Tuupola
  *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
@@ -39,7 +39,7 @@ $container["token"] = function ($container) {
 $container["JwtAuthentication"] = function ($container) {
     return new JwtAuthentication([
         "path" => "/",
-        "passthrough" => ["/token"],
+        "passthrough" => ["/token", "/info"],
         "secret" => getenv("JWT_SECRET"),
         "logger" => $container["logger"],
         "relaxed" => ["192.168.50.52"],

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Slim API skeleton package
  *
- * Copyright (c) 2016 Mika Tuupola
+ * Copyright (c) 2016-2017 Mika Tuupola
  *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
@@ -64,4 +64,9 @@ $app->get("/dump", function ($request, $response, $arguments) {
 
 $app->post("/dump", function ($request, $response, $arguments) {
     print_r($this->token);
+});
+
+/* This is just for debugging, not usefull in real life. */
+$app->get("/info", function ($request, $response, $arguments) {
+    phpinfo()
 });
