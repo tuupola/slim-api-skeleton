@@ -68,5 +68,5 @@ $app->post("/dump", function ($request, $response, $arguments) {
 
 /* This is just for debugging, not usefull in real life. */
 $app->get("/info", function ($request, $response, $arguments) {
-    phpinfo()
+    phpinfo();
 });
