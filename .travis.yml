@@ -14,7 +14,7 @@ before_script:
     - travis_retry composer install --no-interaction
 
 script:
-    - vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore=*/vendor/* . -p
+    - composer test
 
 cache:
     directories:
