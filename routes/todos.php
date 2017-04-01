@@ -88,8 +88,6 @@ $app->post("/todos", function ($request, $response, $arguments) {
     $fractal->setSerializer(new DataArraySerializer);
     $resource = new Item($todo, new TodoTransformer);
     $data = $fractal->createData($resource)->toArray();
-    $data["status"] = "ok";
-    $data["message"] = "New todo created";
 
     return $response->withStatus(201)
         ->withHeader("Content-Type", "application/json")
@@ -170,8 +168,6 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
     $fractal->setSerializer(new DataArraySerializer);
     $resource = new Item($todo, new TodoTransformer);
     $data = $fractal->createData($resource)->toArray();
-    $data["status"] = "ok";
-    $data["message"] = "Todo updated";
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -219,8 +215,6 @@ $app->put("/todos/{uid}", function ($request, $response, $arguments) {
     $fractal->setSerializer(new DataArraySerializer);
     $resource = new Item($todo, new TodoTransformer);
     $data = $fractal->createData($resource)->toArray();
-    $data["status"] = "ok";
-    $data["message"] = "Todo updated";
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -243,10 +237,5 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
 
     $this->spot->mapper("App\Todo")->delete($todo);
 
-    $data["status"] = "ok";
-    $data["message"] = "Todo deleted";
-
-    return $response->withStatus(200)
-        ->withHeader("Content-Type", "application/json")
-        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+    return $response->withStatus(204);
 });

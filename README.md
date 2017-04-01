@@ -71,9 +71,7 @@ Content-Type: application/json
         "links": {
             "self": "/todos/12Cf2ZjVvyu3A"
         }
-    },
-    "status": "ok",
-    "message": "New todo created"
+    }
 }
 ```
 
@@ -129,9 +127,7 @@ Content-Type: application/json
         "links": {
             "self": "/todos/12Cf2ZjVvyu3A"
         }
-    },
-    "status": "ok",
-    "message": "Todo updated"
+    }
 }
 ```
 
@@ -161,9 +157,7 @@ Content-Type: application/json
         "links": {
             "self": "/todos/12Cf2ZjVvyu3A"
         }
-    },
-    "status": "ok",
-    "message": "Todo updated"
+    }
 }
 ```
 
@@ -176,13 +170,7 @@ $ curl "https://192.168.50.52/todos/12Cf2ZjVvyu3A" \
     --insecure \
     --header "Authorization: Bearer $TOKEN"
 
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "status": "ok",
-    "message": "Todo deleted"
-}
+HTTP/1.1 204 No Content
 ```
 
 ## License
