@@ -2,9 +2,10 @@
 
 namespace Slim\Handlers;
 
-use Psr\Http\Message\ ServerRequestInterface as Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
+use Crell\ApiProblem\ApiProblem;
 
 final class ApiError extends \Slim\Handlers\Error
 {
@@ -20,16 +21,14 @@ final class ApiError extends \Slim\Handlers\Error
         $this->logger->critical($exception->getMessage());
 
         $status = $exception->getCode() ?: 500;
-        $data = [
-            "status" => "error",
-            "message" => $exception->getMessage(),
-        ];
 
-        $body = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        $problem = new ApiProblem($exception->getMessage(), "about:blank");
+        $problem->setStatus($status);
+        $body = $problem->asJson(true);
 
         return $response
                 ->withStatus($status)
-                ->withHeader("Content-type", "application/json")
+                ->withHeader("Content-type", "application/problem+json")
                 ->write($body);
     }
 }

@@ -30,7 +30,7 @@ $app->get("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.list"])) {
-        throw new ForbiddenException("Token not allowed to list todos.", 403);
+        throw new ForbiddenException("Token not allowed to list todos", 403);
     }
 
     /* Use ETag and date from Todo with most recent update. */
@@ -71,7 +71,7 @@ $app->post("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.create"])) {
-        throw new ForbiddenException("Token not allowed to create todos.", 403);
+        throw new ForbiddenException("Token not allowed to create todos", 403);
     }
 
     $body = $request->getParsedBody();
@@ -99,7 +99,7 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.read"])) {
-        throw new ForbiddenException("Token not allowed to list todos.", 403);
+        throw new ForbiddenException("Token not allowed to list todos", 403);
     }
 
     /* Load existing todo using provided uid */
@@ -135,7 +135,7 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.update"])) {
-        throw new ForbiddenException("Token not allowed to update todos.", 403);
+        throw new ForbiddenException("Token not allowed to update todos", 403);
     }
 
     /* Load existing todo using provided uid */
@@ -147,13 +147,13 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* PATCH requires If-Unmodified-Since or If-Match request header to be present. */
     if (false === $this->cache->hasStateValidator($request)) {
-        throw new PreconditionRequiredException("PATCH request is required to be conditional.", 428);
+        throw new PreconditionRequiredException("PATCH request is required to be conditional", 428);
     }
 
     /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
     /* someone has modified the todo respond with 412 Precondition Failed. */
     if (false === $this->cache->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
-        throw new PreconditionFailedException("Todo has been modified.", 412);
+        throw new PreconditionFailedException("Todo has been modified", 412);
     }
 
     $body = $request->getParsedBody();
@@ -178,25 +178,25 @@ $app->put("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.update"])) {
-        throw new ForbiddenException("Token not allowed to update todos.", 403);
+        throw new ForbiddenException("Token not allowed to update todos", 403);
     }
 
     /* Load existing todo using provided uid */
     if (false === $todo = $this->spot->mapper("App\Todo")->first([
         "uid" => $arguments["uid"]
     ])) {
-        throw new NotFoundException("Todo not found.", 404);
+        throw new NotFoundException("Todo not found", 404);
     };
 
     /* PUT requires If-Unmodified-Since or If-Match request header to be present. */
     if (false === $this->cache->hasStateValidator($request)) {
-        throw new PreconditionRequiredException("PUT request is required to be conditional.", 428);
+        throw new PreconditionRequiredException("PUT request is required to be conditional", 428);
     }
 
     /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
     /* someone has modified the todo respond with 412 Precondition Failed. */
     if (false === $this->cache->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
-        throw new PreconditionFailedException("Todo has been modified.", 412);
+        throw new PreconditionFailedException("Todo has been modified", 412);
     }
 
     $body = $request->getParsedBody();
@@ -225,14 +225,14 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.delete"])) {
-        throw new ForbiddenException("Token not allowed to delete todos.", 403);
+        throw new ForbiddenException("Token not allowed to delete todos", 403);
     }
 
     /* Load existing todo using provided uid */
     if (false === $todo = $this->spot->mapper("App\Todo")->first([
         "uid" => $arguments["uid"]
     ])) {
-        throw new NotFoundException("Todo not found.", 404);
+        throw new NotFoundException("Todo not found", 404);
     };
 
     $this->spot->mapper("App\Todo")->delete($todo);
