@@ -44,7 +44,7 @@ class Todo extends \Spot\Entity
     public static function events(EventEmitter $emitter)
     {
         $emitter->on("beforeInsert", function (EntityInterface $entity, MapperInterface $mapper) {
-            $entity->uid = Base62::encode(random_bytes(9));
+            $entity->uid = (new Base62)->encode(random_bytes(9));
         });
 
         $emitter->on("beforeUpdate", function (EntityInterface $entity, MapperInterface $mapper) {

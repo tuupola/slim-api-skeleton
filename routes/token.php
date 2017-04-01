@@ -37,7 +37,7 @@ $app->post("/token", function ($request, $response, $arguments) {
     $future = new DateTime("now +2 hours");
     $server = $request->getServerParams();
 
-    $jti = Base62::encode(random_bytes(16));
+    $jti = (new Base62)->encode(random_bytes(16));
 
     $payload = [
         "iat" => $now->getTimeStamp(),
