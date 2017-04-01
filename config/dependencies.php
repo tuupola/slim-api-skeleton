@@ -17,7 +17,7 @@ $container = $app->getContainer();
 
 use Spot\Config;
 use Spot\Locator;
-use Doctrine\DBAL\Logging\MonologSQLLogger;
+use Tuupola\DBAL\Logging\Psr3Logger;
 
 $container["spot"] = function ($container) {
 
@@ -33,7 +33,7 @@ $container["spot"] = function ($container) {
 
     $spot = new Locator($config);
 
-    $logger = new MonologSQLLogger($container["logger"]);
+    $logger = new Psr3Logger($container["logger"]);
     $mysql->getConfiguration()->setSQLLogger($logger);
 
     return $spot;
