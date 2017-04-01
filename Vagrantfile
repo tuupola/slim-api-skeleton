@@ -51,16 +51,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     cd /vagrant && /usr/local/bin/composer install
   SHELL
 
-  # MySQL
-  config.vm.provision "shell", name: "mysql", inline: <<-SHELL
-    yum -y install mysql
-    yum -y install mysql-server
-    /etc/init.d/mysqld restart
-    /sbin/chkconfig --levels 235 mysqld on
+# MariaDB
+  config.vm.provision "shell", name: "mariadb", inline: <<-SHELL
+  cat <<EOF | sudo tee /etc/yum.repos.d/mariadb.repo
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.0/centos6-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOF
+    yum -y install MariaDB-server
+    yum -y install MariaDB-client
+
+    /sbin/service mysql start
+    /sbin/chkconfig --levels 235 mysql on
 
     echo "CREATE DATABASE example" | mysql -u root
     cd /vagrant && bin/db migrate
   SHELL
+
 
   # Update Apache config and restart
   config.vm.provision "shell", name: "apache", inline: <<-'SHELL'
