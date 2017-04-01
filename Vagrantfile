@@ -72,6 +72,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sed -i -e "s/CustomLog logs\/access_log/CustomLog \/vagrant\/logs\/access_log/" /etc/httpd/conf/httpd.conf
     sed -i -e "s/AllowOverride None/AllowOverride All/" /etc/httpd/conf/httpd.conf
 
+    sed -i -e "s/ErrorLog logs\/ssl_error_log/ErrorLog \/vagrant\/logs\/error_log/" /etc/httpd/conf.d/ssl.conf
+    sed -i -e "s/TransferLog logs\/ssl_access_log/TransferLog \/vagrant\/logs\/access_log/" /etc/httpd/conf.d/ssl.conf
+
     /etc/init.d/httpd restart
     /sbin/chkconfig --levels 235 httpd on
 
