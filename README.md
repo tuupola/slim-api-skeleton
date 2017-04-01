@@ -40,8 +40,9 @@ HTTP/1.1 201 Created
 Content-Type: application/json
 
 {
-    "status": "ok",
-    "token": "XXXXXXXXXX"
+    "token": "XXXXXXXXXX",
+    "expires": 1491030210
+}
 ```
 
 ### Create a new todo
