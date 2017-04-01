@@ -1,11 +1,11 @@
 # Fix permissions after you run commands on both hosts and guest machine
 if !Vagrant::Util::Platform.windows?
   system("
-    if [ #{ARGV[0]} = 'up' ]; then
-      echo 'Setting world write permissions for ./logs/*'
-      chmod a+w ./logs
-      chmod a+w ./logs/*
-    fi
+      if [ #{ARGV[0]} = 'up' ]; then
+          echo 'Setting group write permissions for ./logs/*'
+          chmod 775 ./logs
+          chmod 664 ./logs/*
+      fi
   ")
 end
 
