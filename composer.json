@@ -4,6 +4,8 @@
     "type": "project",
     "keywords": [
         "slim",
+        "api",
+        "rest",
         "skeleton"
     ],
     "homepage": "https://github.com/tuupola/slim-api-skeleton",
