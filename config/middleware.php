@@ -12,13 +12,14 @@
  *   https://github.com/tuupola/slim-api-skeleton
  *
  */
-use App\Token;
 
+use App\Token;
+use Crell\ApiProblem\ApiProblem;
+use Gofabian\Negotiation\NegotiationMiddleware;
+use Micheh\Cache\CacheUtil;
 use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\HttpBasicAuthentication;
 use Tuupola\Middleware\Cors;
-use Gofabian\Negotiation\NegotiationMiddleware;
-use Micheh\Cache\CacheUtil;
 
 $container = $app->getContainer();
 
@@ -26,6 +27,13 @@ $container["HttpBasicAuthentication"] = function ($container) {
     return new HttpBasicAuthentication([
         "path" => "/token",
         "relaxed" => ["192.168.50.52"],
+        "error" => function ($request, $response, $arguments) {
+            $problem = new ApiProblem($arguments["message"], "about:blank");
+            $problem->setStatus(401);
+            return $response
+                ->withHeader("Content-type", "application/problem+json")
+                ->write($problem->asJson(true));
+        },
         "users" => [
             "test" => "test"
         ]
@@ -44,11 +52,11 @@ $container["JwtAuthentication"] = function ($container) {
         "logger" => $container["logger"],
         "relaxed" => ["192.168.50.52"],
         "error" => function ($request, $response, $arguments) {
-            $data["status"] = "error";
-            $data["message"] = $arguments["message"];
+            $problem = new ApiProblem($arguments["message"], "about:blank");
+            $problem->setStatus(401);
             return $response
-                ->withHeader("Content-Type", "application/json")
-                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+                ->withHeader("Content-type", "application/problem+json")
+                ->write($problem->asJson(true));
         },
         "callback" => function ($request, $response, $arguments) use ($container) {
             $container["token"]->hydrate($arguments["decoded"]);

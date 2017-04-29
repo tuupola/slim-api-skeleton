@@ -22,7 +22,8 @@ $dotenv->load();
 
 $app = new \Slim\App([
     "settings" => [
-        "displayErrorDetails" => true
+        "displayErrorDetails" => true,
+        "addContentLengthHeader" => false,
     ]
 ]);
 
