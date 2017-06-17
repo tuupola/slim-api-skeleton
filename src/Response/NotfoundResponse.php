@@ -10,7 +10,7 @@ use Slim\Http\Stream;
 
 class NotfoundResponse extends Response
 {
-    public function __construct($message, $status = 403)
+    public function __construct($message, $status = 404)
     {
         $problem = new ApiProblem(
             $message,
