@@ -18,7 +18,7 @@ use Firebase\JWT\JWT;
 use Tuupola\Base62;
 
 $app->post("/token", function ($request, $response, $arguments) {
-    $requested_scopes = $request->getParsedBody();
+    $requested_scopes = $request->getParsedBody() ?: [];
 
     $valid_scopes = [
         "todo.create",
