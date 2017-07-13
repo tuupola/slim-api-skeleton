@@ -20,19 +20,16 @@ use Micheh\Cache\CacheUtil;
 use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\HttpBasicAuthentication;
 use Tuupola\Middleware\Cors;
+use Response\UnauthorizedResponse;
 
 $container = $app->getContainer();
 
 $container["HttpBasicAuthentication"] = function ($container) {
     return new HttpBasicAuthentication([
         "path" => "/token",
-        "relaxed" => ["192.168.50.52"],
+        "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
         "error" => function ($request, $response, $arguments) {
-            $problem = new ApiProblem($arguments["message"], "about:blank");
-            $problem->setStatus(401);
-            return $response
-                ->withHeader("Content-type", "application/problem+json")
-                ->write($problem->asJson(true));
+            return new UnauthorizedResponse($arguments["message"], 401);
         },
         "users" => [
             "test" => "test"
@@ -50,13 +47,9 @@ $container["JwtAuthentication"] = function ($container) {
         "passthrough" => ["/token", "/info"],
         "secret" => getenv("JWT_SECRET"),
         "logger" => $container["logger"],
-        "relaxed" => ["192.168.50.52"],
+        "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
         "error" => function ($request, $response, $arguments) {
-            $problem = new ApiProblem($arguments["message"], "about:blank");
-            $problem->setStatus(401);
-            return $response
-                ->withHeader("Content-type", "application/problem+json")
-                ->write($problem->asJson(true));
+            return new UnauthorizedResponse($arguments["message"], 401);
         },
         "callback" => function ($request, $response, $arguments) use ($container) {
             $container["token"]->hydrate($arguments["decoded"]);
@@ -74,11 +67,7 @@ $container["Cors"] = function ($container) {
         "credentials" => true,
         "cache" => 60,
         "error" => function ($request, $response, $arguments) {
-            $data["status"] = "error";
-            $data["message"] = $arguments["message"];
-            return $response
-                ->withHeader("Content-Type", "application/json")
-                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+            return new UnauthorizedResponse($arguments["message"], 401);
         }
     ]);
 };
