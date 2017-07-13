@@ -153,7 +153,7 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
     /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
     /* someone has modified the todo respond with 412 Precondition Failed. */
     if (false === $this->cache->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
-        return new PreconditionFailedResponse("Todo has been modified", 412);
+        return new PreconditionFailedResponse("Todo has already been modified", 412);
     }
 
     $body = $request->getParsedBody();
@@ -196,7 +196,7 @@ $app->put("/todos/{uid}", function ($request, $response, $arguments) {
     /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
     /* someone has modified the todo respond with 412 Precondition Failed. */
     if (false === $this->cache->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
-        return new PreconditionFailedResponse("Todo has been modified", 412);
+        return new PreconditionFailedResponse("Todo has already been modified", 412);
     }
 
     $body = $request->getParsedBody();
