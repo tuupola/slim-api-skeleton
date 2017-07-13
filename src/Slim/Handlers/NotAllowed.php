@@ -19,7 +19,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Crell\ApiProblem\ApiProblem;
 
-final class NotAllowed extends \Slim\Handlers\Error
+final class NotAllowed extends AbstractHandler
 {
     public function __invoke(Request $request, Response $response, $allowed = null)
     {
