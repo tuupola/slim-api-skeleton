@@ -27,7 +27,7 @@ class NotfoundResponse extends Response
     {
         $problem = new ApiProblem(
             $message,
-            "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.htmlx"
+            "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html"
         );
         $problem->setStatus($status);
 
