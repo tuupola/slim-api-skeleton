@@ -18,7 +18,7 @@ use Crell\ApiProblem\ApiProblem;
 use Gofabian\Negotiation\NegotiationMiddleware;
 use Micheh\Cache\CacheUtil;
 use Slim\Middleware\JwtAuthentication;
-use Slim\Middleware\HttpBasicAuthentication;
+use Tuupola\Middleware\HttpBasicAuthentication;
 use Tuupola\Middleware\Cors;
 use Response\UnauthorizedResponse;
 
