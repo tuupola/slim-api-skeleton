@@ -17,8 +17,8 @@ use App\Token;
 use Crell\ApiProblem\ApiProblem;
 use Gofabian\Negotiation\NegotiationMiddleware;
 use Micheh\Cache\CacheUtil;
-use Slim\Middleware\JwtAuthentication;
-use Slim\Middleware\HttpBasicAuthentication;
+use Tuupola\Middleware\JwtAuthentication;
+use Tuupola\Middleware\HttpBasicAuthentication;
 use Tuupola\Middleware\Cors;
 use Response\UnauthorizedResponse;
 
@@ -44,14 +44,15 @@ $container["token"] = function ($container) {
 $container["JwtAuthentication"] = function ($container) {
     return new JwtAuthentication([
         "path" => "/",
-        "passthrough" => ["/token", "/info"],
+        "ignore" => ["/token", "/info"],
         "secret" => getenv("JWT_SECRET"),
         "logger" => $container["logger"],
+        "attribute" => false,
         "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
         "error" => function ($request, $response, $arguments) {
             return new UnauthorizedResponse($arguments["message"], 401);
         },
-        "callback" => function ($request, $response, $arguments) use ($container) {
+        "before" => function ($request, $response, $arguments) use ($container) {
             $container["token"]->hydrate($arguments["decoded"]);
         }
     ]);
