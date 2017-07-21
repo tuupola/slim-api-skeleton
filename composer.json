@@ -24,7 +24,7 @@
         "vlucas/phpdotenv": "^2.0",
         "symfony/console": "^2.7",
         "vlucas/spot2": "^2.1",
-        "tuupola/slim-jwt-auth": "^2.0",
+        "tuupola/slim-jwt-auth": "3.0.0-rc.2",
         "tuupola/slim-basic-auth": "3.0.0-rc.2",
         "league/fractal": "^0.13.0",
         "paragonie/random_compat": "^1.2",
@@ -33,7 +33,8 @@
         "gofabian/negotiation-middleware": "^0.1.2",
         "tuupola/base62": "^0.8.0",
         "tuupola/dbal-psr3-logger": "^0.1.0",
-        "crell/api-problem": "^2.0"
+        "crell/api-problem": "^2.0",
+        "firebase/php-jwt": "^4.0"
     },
     "autoload": {
         "psr-4": {
