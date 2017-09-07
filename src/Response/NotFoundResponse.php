@@ -34,7 +34,8 @@ class NotFoundResponse extends Response
         $handle = fopen("php://temp", "wb+");
         $body = new Stream($handle);
         $body->write($problem->asJson(true));
-        $headers = (new Headers)->set("Content-type", "application/problem+json");
+        $headers = new Headers;
+        $headers->set("Content-type", "application/problem+json");
         parent::__construct($status, $headers, $body);
     }
 }

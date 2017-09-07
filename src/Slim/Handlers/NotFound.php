@@ -21,7 +21,7 @@ use Crell\ApiProblem\ApiProblem;
 
 final class NotFound extends \Slim\Handlers\Error
 {
-    public function __invoke(Request $request, Response $response)
+    public function __invoke(Request $request, Response $response, \Exception $exception)
     {
         $problem = new ApiProblem(
             "Not found",
