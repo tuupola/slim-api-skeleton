@@ -21,7 +21,7 @@ use Slim\Http\Headers;
 use Slim\Http\Response;
 use Slim\Http\Stream;
 
-class NotfoundResponse extends Response
+class NotFoundResponse extends Response
 {
     public function __construct($message, $status = 404)
     {
