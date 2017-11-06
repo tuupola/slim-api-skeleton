@@ -32,12 +32,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # PHP and modules
   config.vm.provision "shell", name: "php", inline: <<-SHELL
-    yum -y install php56w php56w-opcache
-    yum -y install php56w-pdo
-    yum -y install php56w-mcrypt
-    yum -y install php56w-mysqlnd
+    yum -y install mod_php71w php71w-opcache php71w-cli
+    yum -y install php71w-pdo
+    yum -y install php71w-mcrypt php71w-mbstring
+    yum -y install php71w-mysqlnd
     yum -y install mod_ssl
-    yum -y install php56w-xmlwriter
+    yum -y install php71w-xmlwriter
   SHELL
 
   # Use the provided example environment
