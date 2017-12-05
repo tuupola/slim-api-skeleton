@@ -24,7 +24,7 @@
         "vlucas/phpdotenv": "^2.0",
         "symfony/console": "^2.7",
         "vlucas/spot2": "^2.1",
-        "tuupola/slim-jwt-auth": "3.0.0-rc.2",
+        "tuupola/slim-jwt-auth": "3.0.0-rc.3",
         "tuupola/slim-basic-auth": "3.0.0-rc.3",
         "league/fractal": "^0.13.0",
         "paragonie/random_compat": "^1.2",
