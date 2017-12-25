@@ -19,7 +19,7 @@ use Gofabian\Negotiation\NegotiationMiddleware;
 use Micheh\Cache\CacheUtil;
 use Tuupola\Middleware\JwtAuthentication;
 use Tuupola\Middleware\HttpBasicAuthentication;
-use Tuupola\Middleware\Cors;
+use Tuupola\Middleware\CorsMiddleware;
 use Response\UnauthorizedResponse;
 
 $container = $app->getContainer();
@@ -58,8 +58,8 @@ $container["JwtAuthentication"] = function ($container) {
     ]);
 };
 
-$container["Cors"] = function ($container) {
-    return new Cors([
+$container["CorsMiddleware"] = function ($container) {
+    return new CorsMiddleware([
         "logger" => $container["logger"],
         "origin" => ["*"],
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -81,7 +81,7 @@ $container["Negotiation"] = function ($container) {
 
 $app->add("HttpBasicAuthentication");
 $app->add("JwtAuthentication");
-$app->add("Cors");
+$app->add("CorsMiddleware");
 $app->add("Negotiation");
 
 $container["cache"] = function ($container) {
