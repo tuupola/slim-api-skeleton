@@ -73,7 +73,7 @@ $container["CorsMiddleware"] = function ($container) {
     ]);
 };
 
-$container["Negotiation"] = function ($container) {
+$container["NegotiationMiddleware"] = function ($container) {
     return new NegotiationMiddleware([
         "accept" => ["application/json"]
     ]);
@@ -82,7 +82,7 @@ $container["Negotiation"] = function ($container) {
 $app->add("HttpBasicAuthentication");
 $app->add("JwtAuthentication");
 $app->add("CorsMiddleware");
-$app->add("Negotiation");
+$app->add("NegotiationMiddleware");
 
 $container["cache"] = function ($container) {
     return new CacheUtil;
