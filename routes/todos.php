@@ -28,11 +28,17 @@ use League\Fractal\Serializer\DataArraySerializer;
 
 $app->get("/todos", function ($request, $response, $arguments) {
 
+
+    print_r($this->todos);
+    die();
+
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.list"])) {
         return new ForbiddenResponse("Token not allowed to list todos", 403);
     }
 
+
+    die();
     /* Use ETag and date from Todo with most recent update. */
     $first = $this->spot->mapper("App\Todo")
         ->all()
@@ -68,7 +74,10 @@ $app->get("/todos", function ($request, $response, $arguments) {
 });
 
 $app->post("/todos", function ($request, $response, $arguments) {
-
+    $todo = $this->todos->get("pvFZ1U6V1AWb");
+    $todo->changeTitle("Foo Bar");
+    print_r($todo);
+    die();
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.create"])) {
         return new ForbiddenResponse("Token not allowed to create todos", 403);
@@ -102,12 +111,12 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
         return new ForbiddenResponse("Token not allowed to read todos", 403);
     }
 
-    /* Load existing todo using provided uid */
-    if (false === $todo = $this->spot->mapper("App\Todo")->first([
-        "uid" => $arguments["uid"]
-    ])) {
+    /* Load existing todo using provided uid. */
+    try {
+        $todo = $this->todoService->get(["uid" => $arguments["uid"]]);
+    } catch (Exception $error) {
         return new NotFoundResponse("Todo not found", 404);
-    };
+    }
 
     /* Add Last-Modified and ETag headers to response. */
     $response = $this->cache->withEtag($response, $todo->etag());
@@ -121,10 +130,7 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
     }
 
     /* Serialize the response data. */
-    $fractal = new Manager();
-    $fractal->setSerializer(new DataArraySerializer);
-    $resource = new Item($todo, new TodoTransformer);
-    $data = $fractal->createData($resource)->toArray();
+    $data = $this->todoService->transform($todo);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")

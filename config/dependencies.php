@@ -15,6 +15,32 @@
 
 $container = $app->getContainer();
 
+
+use Skeleton\Application\TodoService;
+use Skeleton\Infrastructure\ZendTodoRepository;
+
+$container["todoRepository"] = function ($container) {
+
+    return new ZendTodoRepository([
+        "driver" => "Mysqli",
+        "database" => getenv("DB_NAME"),
+        "username" => getenv("DB_USER"),
+        "password" => getenv("DB_PASSWORD"),
+        "hostname" => getenv("DB_HOST"),
+        "charset" => "utf8",
+        // "driver_options" => [
+        //     PDO::ATTR_STRINGIFY_FETCHES => false,
+        //     PDO::ATTR_EMULATE_PREPARES => false
+        // ],
+    ]);
+};
+
+$container["todoService"] = function ($container) {
+
+    return new TodoService($container["todoRepository"]);
+};
+
+
 use Spot\Config;
 use Spot\Locator;
 use Tuupola\DBAL\Logging\Psr3Logger;
