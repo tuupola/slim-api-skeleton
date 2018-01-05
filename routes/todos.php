@@ -13,18 +13,10 @@
  *
  */
 
-use App\Todo;
-use App\TodoTransformer;
-
 use Response\NotFoundResponse;
 use Response\ForbiddenResponse;
 use Response\PreconditionFailedResponse;
 use Response\PreconditionRequiredResponse;
-
-use League\Fractal\Manager;
-use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Collection;
-use League\Fractal\Serializer\DataArraySerializer;
 
 $app->get("/todos", function ($request, $response, $arguments) {
 
@@ -211,14 +203,11 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
         return new ForbiddenResponse("Token not allowed to delete todos", 403);
     }
 
-    /* Load existing todo using provided uid */
-    if (false === $todo = $this->spot->mapper("App\Todo")->first([
-        "uid" => $arguments["uid"]
-    ])) {
+    try {
+        $todo = $this->deleteTodoService->execute(["uid" => $arguments["uid"]]);
+    } catch (RuntimeException $error) {
         return new NotFoundResponse("Todo not found", 404);
-    };
-
-    $this->spot->mapper("App\Todo")->delete($todo);
+    }
 
     return $response->withStatus(204);
 });

@@ -15,6 +15,7 @@
 
 $container = $app->getContainer();
 
+use Skeleton\Application\DeleteTodoService;
 use Skeleton\Application\CreateTodoService;
 use Skeleton\Application\LatestTodoService;
 use Skeleton\Application\ViewTodoService;
@@ -41,6 +42,10 @@ $container["todoRepository"] = function ($container) {
 
 $container["createTodoService"] = function ($container) {
     return new CreateTodoService($container["todoRepository"]);
+};
+
+$container["deleteTodoService"] = function ($container) {
+    return new DeleteTodoService($container["todoRepository"]);
 };
 
 $container["latestTodoService"] = function ($container) {

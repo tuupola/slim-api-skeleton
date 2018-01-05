@@ -63,6 +63,7 @@ class ZendTodoRepository implements TodoRepository
 
     public function remove(Todo $todo)
     {
-        return true;
+        $where["uid"] = $todo->uid();
+        $affectedRows = $this->table->delete($where);
     }
 }
