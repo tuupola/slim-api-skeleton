@@ -43,7 +43,7 @@ class ZendTodoRepository implements TodoRepository
     public function query(array $specification = []): array
     {
         $rowset = $this->table->select($specification);
-        return map($rowset, function($row) {
+        return map($rowset, function ($row) {
             return $this->hydrator->hydrate((array) $row, new Todo);
         });
     }

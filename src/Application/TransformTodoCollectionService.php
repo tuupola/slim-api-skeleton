@@ -8,7 +8,6 @@ use League\Fractal\Manager as FractalManager;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Serializer\DataArraySerializer;
 
-
 class TransformTodoCollectionService
 {
     public function execute(array $collection): array
