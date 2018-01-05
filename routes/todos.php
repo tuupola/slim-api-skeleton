@@ -13,10 +13,10 @@
  *
  */
 
-use Response\NotFoundResponse;
-use Response\ForbiddenResponse;
-use Response\PreconditionFailedResponse;
-use Response\PreconditionRequiredResponse;
+use Skeleton\Application\Response\NotFoundResponse;
+use Skeleton\Application\Response\ForbiddenResponse;
+use Skeleton\Application\Response\PreconditionFailedResponse;
+use Skeleton\Application\Response\PreconditionRequiredResponse;
 
 $app->get("/todos", function ($request, $response, $arguments) {
 

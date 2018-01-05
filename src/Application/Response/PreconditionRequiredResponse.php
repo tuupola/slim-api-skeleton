@@ -13,17 +13,16 @@
  *
  */
 
-//namespace Tuupola\Http\Response;
-namespace Response;
+namespace Skeleton\Application\Response;
 
 use Crell\ApiProblem\ApiProblem;
 use Slim\Http\Headers;
 use Slim\Http\Response;
 use Slim\Http\Stream;
 
-class UnauthorizedResponse extends Response
+class PreconditionRequiredResponse extends Response
 {
-    public function __construct($message, $status = 401)
+    public function __construct($message, $status = 428)
     {
         $problem = new ApiProblem($message, "about:blank");
         $problem->setStatus($status);
