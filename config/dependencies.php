@@ -15,6 +15,7 @@
 
 $container = $app->getContainer();
 
+use Skeleton\Application\CreateTodoService;
 use Skeleton\Application\LatestTodoService;
 use Skeleton\Application\ViewTodoService;
 use Skeleton\Application\ViewTodoCollectionService;
@@ -36,6 +37,10 @@ $container["todoRepository"] = function ($container) {
         //     PDO::ATTR_EMULATE_PREPARES => false
         // ],
     ]);
+};
+
+$container["createTodoService"] = function ($container) {
+    return new CreateTodoService($container["todoRepository"]);
 };
 
 $container["latestTodoService"] = function ($container) {

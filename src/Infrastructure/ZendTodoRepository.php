@@ -57,20 +57,11 @@ class ZendTodoRepository implements TodoRepository
 
     public function save(Todo $todo)
     {
-        return true;
-    }
-
-    public function saveAll(array $todos)
-    {
-        return true;
+        $data = $this->hydrator->extract($todo);
+        $affectedRows = $this->table->insert($data);
     }
 
     public function remove(Todo $todo)
-    {
-        return true;
-    }
-
-    public function removeAll(array $todos)
     {
         return true;
     }

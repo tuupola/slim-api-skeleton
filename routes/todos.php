@@ -26,8 +26,6 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 
-use Skeleton\Application\ViewTodoService;
-
 $app->get("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
@@ -61,33 +59,25 @@ $app->get("/todos", function ($request, $response, $arguments) {
 });
 
 $app->post("/todos", function ($request, $response, $arguments) {
-    $todo = $this->viewTodoService->execute(["uid" => "pvFZ1U6V1AWb"]);
-    $todo->changeTitle("Foo Bar");
-    print_r($todo);
-    die();
+
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.create"])) {
         return new ForbiddenResponse("Token not allowed to create todos", 403);
     }
 
-    $body = $request->getParsedBody();
-
-    $todo = new Todo($body);
-    $this->spot->mapper("App\Todo")->save($todo);
+    $data = $request->getParsedBody();
+    $todo = $this->createTodoService->execute($data);
 
     /* Add Last-Modified and ETag headers to response. */
     $response = $this->cache->withEtag($response, $todo->etag());
     $response = $this->cache->withLastModified($response, $todo->timestamp());
 
-    /* Serialize the response data. */
-    $fractal = new Manager();
-    $fractal->setSerializer(new DataArraySerializer);
-    $resource = new Item($todo, new TodoTransformer);
-    $data = $fractal->createData($resource)->toArray();
+    /* Serialize the response. */
+    $data = $this->transformTodoService->execute($todo);
 
     return $response->withStatus(201)
         ->withHeader("Content-Type", "application/json")
-        ->withHeader("Location", $data["data"]["links"]["self"])
+        ->withHeader("Content-Location", $data["data"]["links"]["self"])
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 

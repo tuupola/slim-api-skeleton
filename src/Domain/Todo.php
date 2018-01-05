@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * This file is part of the Slim API skeleton package
  *
@@ -15,100 +15,113 @@
 
 namespace Skeleton\Domain;
 
+use \DateTime;
+
 class Todo
 {
-    private $id;
     private $uid;
     private $order;
-    private $completed;
+    private $completed = false;
     private $title;
     private $createdAt;
     private $updatedAt;
 
     public function __construct(array $data = [])
     {
-        //$this->hydrate($data);
+        $this->populate($data);
     }
 
-    public function uid()
+    public function uid(): string
     {
         return $this->uid;
     }
 
-    public function order()
+    public function order(): int
     {
         return $this->order;
     }
 
-    public function changeOrder(int $order)
+    public function changeOrder(int $order): void
     {
-        return $this->order = $order;
+        $this->order = $order;
     }
 
-    public function isCompleted()
+    public function isCompleted(): bool
     {
         return $this->completed;
     }
 
-    public function complete()
+    public function complete(): void
     {
-        return $this->completed = true;
+        $this->completed = true;
     }
 
-    public function commence()
+    public function commence(): void
     {
-        return $this->completed = false;
+        $this->completed = false;
     }
 
-    public function title()
+    public function title(): string
     {
         return $this->title;
     }
 
-    public function changeTitle(string $title)
+    public function changeTitle(string $title): string
     {
         return $this->title = $title;
     }
 
-    public function timestamp()
+    public function timestamp(): int
     {
         return $this->updatedAt->getTimestamp();
     }
 
-    public function etag()
+    public function etag(): string
     {
         return md5($this->uid . $this->timestamp());
     }
 
     /**
-     * Hydrate all options from the given array.
+     * Populate all properties from the given array.
      */
-    // private function hydrate(array $data = []): void
-    // {
-    //     foreach ($data as $key => $value) {
-    //         /* https://github.com/facebook/hhvm/issues/6368 */
-    //         $key = str_replace("_", " ", $key);
-    //         $method = "set" . ucwords($key);
-    //         $method = str_replace(" ", "", $method);
-    //         if (method_exists($this, $method)) {
-    //             /* Try to use setter */
-    //             call_user_func([$this, $method], $value);
-    //         } else {
-    //             /* Or fallback to setting option directly */
-    //             if (property_exists(self::class, $key)) {
-    //                 $this->$key = $value;
-    //             }
-    //         }
-    //     }
-    // }
+    public function populate(array $data = []): void
+    {
+        foreach ($data as $key => $value) {
+            /* https://github.com/facebook/hhvm/issues/6368 */
+            $key = str_replace("_", " ", $key);
+            $method = "set" . ucwords($key);
+            $method = str_replace(" ", "", $method);
+            if (method_exists($this, $method)) {
+                /* Try to use setter */
+                call_user_func([$this, $method], $value);
+            } else {
+                /* Or fallback to setting option directly */
+                if (property_exists(self::class, $key)) {
+                    $this->$key = $value;
+                }
+            }
+        }
+    }
 
-    // private function setCreatedAt($datetime)
-    // {
-    //     $this->createdAt = $datetime;
-    // }
+    public function getArrayCopy(): array
+    {
+        return [
+            "uid" => $this->uid(),
+            "order" => $this->order(),
+            "completed" => $this->isCompleted(),
+            "title" => $this->title(),
+            "createdAt" => $this->createdAt,
+            "updatedAt" => $this->updatedAt,
+        ];
+    }
 
-    // private function setUpdatedAt($datetime)
-    // {
-    //     $this->updatedAt = $datetime;
-    // }
+    private function setCreatedAt(?DateTime $datetime): void
+    {
+        $this->createdAt = $datetime ?? new DateTime;
+    }
+
+    private function setUpdatedAt(?DateTime $datetime): void
+    {
+        $this->updatedAt = $datetime ?? new DateTime;
+    }
 }
