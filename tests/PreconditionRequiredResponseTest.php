@@ -1,6 +1,6 @@
 <?php
 
-namespace Response;
+namespace Skeleton\Application\Response;
 
 use PHPUnit\Framework\TestCase;
 
