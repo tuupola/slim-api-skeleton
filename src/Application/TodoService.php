@@ -19,14 +19,16 @@ class TodoService
         $this->repository = $repository;
     }
 
-    public function get(array $params): Todo
+    public function get(string $uid): Todo
     {
-        return $this->repository->get($params["uid"]);
+        return $this->repository->get($uid);
     }
 
     public function create(array $params): Todo
     {
-        return new Todo($params);
+        $todo = new Todo($params);
+        $this->repository->save($todo);
+        return $todo;
     }
 
     public function save(Todo $Todo): bool
@@ -34,7 +36,7 @@ class TodoService
         return $this->repository->save($todo);
     }
 
-    public function delete(Todo $todo): bool
+    public function remove(Todo $todo): bool
     {
         return $this->repository->delete($todo);
     }

@@ -15,8 +15,11 @@
 
 $container = $app->getContainer();
 
-
-use Skeleton\Application\TodoService;
+use Skeleton\Application\LatestTodoService;
+use Skeleton\Application\ViewTodoService;
+use Skeleton\Application\ViewTodosService;
+use Skeleton\Application\TransformTodoService;
+use Skeleton\Application\TransformTodoCollectionService;
 use Skeleton\Infrastructure\ZendTodoRepository;
 
 $container["todoRepository"] = function ($container) {
@@ -35,9 +38,24 @@ $container["todoRepository"] = function ($container) {
     ]);
 };
 
-$container["todoService"] = function ($container) {
+$container["latestTodoService"] = function ($container) {
+    return new LatestTodoService($container["todoRepository"]);
+};
 
-    return new TodoService($container["todoRepository"]);
+$container["viewTodoService"] = function ($container) {
+    return new ViewTodoService($container["todoRepository"]);
+};
+
+$container["viewTodosService"] = function ($container) {
+    return new ViewTodosService($container["todoRepository"]);
+};
+
+$container["transformTodoService"] = function ($container) {
+    return new TransformTodoService;
+};
+
+$container["transformTodoCollectionService"] = function ($container) {
+    return new TransformTodoCollectionService;
 };
 
 

@@ -26,24 +26,17 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 
+use Skeleton\Application\ViewTodoService;
+
 $app->get("/todos", function ($request, $response, $arguments) {
-
-
-    print_r($this->todos);
-    die();
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.list"])) {
         return new ForbiddenResponse("Token not allowed to list todos", 403);
     }
 
-
-    die();
     /* Use ETag and date from Todo with most recent update. */
-    $first = $this->spot->mapper("App\Todo")
-        ->all()
-        ->order(["updated_at" => "DESC"])
-        ->first();
+    $first = $this->latestTodoService->execute();
 
     /* Add Last-Modified and ETag headers to response when atleast on todo exists. */
     if ($first) {
@@ -58,15 +51,9 @@ $app->get("/todos", function ($request, $response, $arguments) {
         return $response->withStatus(304);
     }
 
-    $todos = $this->spot->mapper("App\Todo")
-        ->all()
-        ->order(["updated_at" => "DESC"]);
-
-    /* Serialize the response data. */
-    $fractal = new Manager();
-    $fractal->setSerializer(new DataArraySerializer);
-    $resource = new Collection($todos, new TodoTransformer);
-    $data = $fractal->createData($resource)->toArray();
+    /* Serialize the response. */
+    $todos = $this->viewTodosService->execute();
+    $data = $this->transformTodoCollectionService->execute($todos);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -74,7 +61,7 @@ $app->get("/todos", function ($request, $response, $arguments) {
 });
 
 $app->post("/todos", function ($request, $response, $arguments) {
-    $todo = $this->todos->get("pvFZ1U6V1AWb");
+    $todo = $this->viewTodoService->execute(["uid" => "pvFZ1U6V1AWb"]);
     $todo->changeTitle("Foo Bar");
     print_r($todo);
     die();
@@ -113,8 +100,8 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Load existing todo using provided uid. */
     try {
-        $todo = $this->todoService->get(["uid" => $arguments["uid"]]);
-    } catch (Exception $error) {
+        $todo = $this->viewTodoService->execute(["uid" => $arguments["uid"]]);
+    } catch (RuntimeException $error) {
         return new NotFoundResponse("Todo not found", 404);
     }
 
@@ -129,8 +116,8 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
         return $response->withStatus(304);
     }
 
-    /* Serialize the response data. */
-    $data = $this->todoService->transform($todo);
+    /* Serialize the response. */
+    $data = $this->transformTodoService->execute($todo);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")

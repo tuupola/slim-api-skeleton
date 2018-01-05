@@ -2,7 +2,7 @@
 
 namespace Skeleton\Infrastructure;
 
-#use GeneratedHydrator\Configuration as HydratorConfiguration;
+use Skeleton\Application\TodoHydratorFactory;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 use Tuupola\Base62;
@@ -11,11 +11,8 @@ use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\TableGateway\Feature\RowGatewayFeature;
 use Zend\Db\TableGateway\Feature\MetadataFeature;
 use Zend\Db\TableGateway\Feature\FeatureSet;
-use Zend\Hydrator\Reflection as ReflectionHydrator;
-#use Zend\Hydrator\NamingStrategy\UnderscoreNamingStrategy;
-use Zend\Hydrator\NamingStrategy\MapNamingStrategy;
-use Zend\Hydrator\Strategy\DateTimeFormatterStrategy;
-use Zend\Hydrator\Strategy\BooleanStrategy;
+
+use function Functional\map;
 
 class ZendTodoRepository implements TodoRepository
 {
@@ -26,37 +23,35 @@ class ZendTodoRepository implements TodoRepository
     {
         $adapter = new Adapter($config);
         $this->table = new TableGateway("todos", $adapter);
-
-        $this->hydrator = new ReflectionHydrator;
-        $this->hydrator->setNamingStrategy(new MapNamingStrategy([
-            "created_at" => "createdAt",
-            "updated_at" => "updatedAt",
-        ]));
-        $this->hydrator->addStrategy(
-            "createdAt",
-            new DateTimeFormatterStrategy("Y-m-d H:i:s")
-        );
-        $this->hydrator->addStrategy(
-            "updatedAt",
-            new DateTimeFormatterStrategy("Y-m-d H:i:s")
-        );
-        $this->hydrator->addStrategy(
-            "completed",
-            new BooleanStrategy(0, 1)
-        );
+        $this->hydrator = (new TodoHydratorFactory)->create();
     }
 
-    public function nextUid(): string
+    public function nextIdentity(): string
     {
         return (new Base62)->encode(random_bytes(9));
     }
 
-    public function get(string $uid): Todo
+    public function get(string $uid): ?Todo
     {
         $rowset = $this->table->select(["uid" => $uid]);
         if (null === $row = $rowset->current()) {
-            /* Throw something. */
+            return null;
         }
+        return $this->hydrator->hydrate((array) $row, new Todo);
+    }
+
+    public function query(array $specification = []): array
+    {
+        $rowset = $this->table->select($specification);
+        return map($rowset, function($row) {
+            return $this->hydrator->hydrate((array) $row, new Todo);
+        });
+    }
+
+    public function first(array $specification = []): Todo
+    {
+        $rowset = $this->table->select($specification);
+        $row = $rowset->current();
         return $this->hydrator->hydrate((array) $row, new Todo);
     }
 
@@ -70,12 +65,12 @@ class ZendTodoRepository implements TodoRepository
         return true;
     }
 
-    public function delete(Todo $todo)
+    public function remove(Todo $todo)
     {
         return true;
     }
 
-    public function deleteAll(array $todos)
+    public function removeAll(array $todos)
     {
         return true;
     }

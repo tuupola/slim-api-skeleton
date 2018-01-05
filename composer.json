@@ -36,7 +36,9 @@
         "crell/api-problem": "^2.0",
         "firebase/php-jwt": "^4.0",
         "zendframework/zend-db": "^2.9",
-        "zendframework/zend-inputfilter": "^2.8"
+        "zendframework/zend-inputfilter": "^2.8",
+        "zendframework/zend-hydrator": "^2.3",
+        "lstrojny/functional-php": "^1.6"
     },
     "autoload": {
         "psr-4": {
