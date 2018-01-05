@@ -52,7 +52,7 @@ $app->get("/todos", function ($request, $response, $arguments) {
     }
 
     /* Serialize the response. */
-    $todos = $this->viewTodosService->execute();
+    $todos = $this->viewTodoCollectionService->execute();
     $data = $this->transformTodoCollectionService->execute($todos);
 
     return $response->withStatus(200)
