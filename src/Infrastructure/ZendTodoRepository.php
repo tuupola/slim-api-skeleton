@@ -7,6 +7,8 @@ use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 use Tuupola\Base62;
 use Zend\Db\Adapter\Adapter;
+#use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\TableGateway\Feature\RowGatewayFeature;
 use Zend\Db\TableGateway\Feature\MetadataFeature;
@@ -55,15 +57,22 @@ class ZendTodoRepository implements TodoRepository
         return $this->hydrator->hydrate((array) $row, new Todo);
     }
 
-    public function save(Todo $todo)
+    public function save(Todo $todo): bool
     {
         $data = $this->hydrator->extract($todo);
-        $affectedRows = $this->table->insert($data);
+        if (null === $this->get($todo->uid())) {
+            $affectedRows = $this->table->insert($data);
+        } else {
+            $where = ["uid" => $todo->uid()];
+            $affectedRows = $this->table->update($data, $where);
+        }
+        return (bool) $affectedRows;
     }
 
-    public function remove(Todo $todo)
+    public function remove(Todo $todo): bool
     {
         $where["uid"] = $todo->uid();
         $affectedRows = $this->table->delete($where);
+        return (bool) $affectedRows;
     }
 }
