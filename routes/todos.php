@@ -28,7 +28,7 @@ $app->get("/todos", function ($request, $response, $arguments) {
     /* Use ETag and date from Todo with most recent update. */
     $first = $this->latestTodoService->execute();
 
-    /* Add Last-Modified and ETag headers to response when atleast on todo exists. */
+    /* Add Last-Modified and ETag headers to response when atleast one todo exists. */
     if ($first) {
         $response = $this->cache->withEtag($response, $first->etag());
         $response = $this->cache->withLastModified($response, $first->timestamp());

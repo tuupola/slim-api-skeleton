@@ -24,7 +24,7 @@ class CreateTodoService
         $request["updated_at"] = $request["created_at"];
         $todo = new Todo($request);
 
-        $this->repository->save($todo);
+        $this->repository->add($todo);
 
         return $todo;
     }

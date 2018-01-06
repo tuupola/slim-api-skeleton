@@ -16,6 +16,6 @@ class ReadTodoCollectionService
 
     public function execute(array $request = []): array
     {
-        return $this->repository->query($request);
+        return $this->repository->all($request);
     }
 }

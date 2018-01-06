@@ -20,7 +20,7 @@ use Micheh\Cache\CacheUtil;
 use Tuupola\Middleware\JwtAuthentication;
 use Tuupola\Middleware\HttpBasicAuthentication;
 use Tuupola\Middleware\CorsMiddleware;
-use Response\UnauthorizedResponse;
+use Skeleton\Application\Response\UnauthorizedResponse;
 
 $container = $app->getContainer();
 

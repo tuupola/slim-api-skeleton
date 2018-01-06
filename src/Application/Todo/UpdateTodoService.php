@@ -22,7 +22,7 @@ class UpdateTodoService
             throw new RuntimeException("Todo {$request['uid']} does not exist.");
         }
         $todo->populate($request);
-        $this->repository->save($todo);
+        $this->repository->add($todo);
         return $todo;
     }
 }

@@ -42,7 +42,7 @@ class ZendTodoRepository implements TodoRepository
         return $this->hydrator->hydrate((array) $row, new Todo);
     }
 
-    public function query(array $specification = []): array
+    public function all(array $specification = []): array
     {
         $rowset = $this->table->select($specification);
         return map($rowset, function ($row) {
@@ -57,7 +57,7 @@ class ZendTodoRepository implements TodoRepository
         return $this->hydrator->hydrate((array) $row, new Todo);
     }
 
-    public function save(Todo $todo): bool
+    public function add(Todo $todo): bool
     {
         $data = $this->hydrator->extract($todo);
         if (null === $this->get($todo->uid())) {
@@ -74,5 +74,10 @@ class ZendTodoRepository implements TodoRepository
         $where["uid"] = $todo->uid();
         $affectedRows = $this->table->delete($where);
         return (bool) $affectedRows;
+    }
+
+    public function count(): int
+    {
+        return 0;
     }
 }
