@@ -2,7 +2,7 @@
 
 namespace Skeleton\Infrastructure;
 
-use Skeleton\Application\TodoHydratorFactory;
+use Skeleton\Application\Todo\TodoHydratorFactory;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 use Tuupola\Base62;

@@ -13,7 +13,7 @@
  *
  */
 
-namespace Skeleton\Application;
+namespace Skeleton\Application\Todo;
 
 use Zend\Hydrator\HydratorInterface;
 use Zend\Hydrator\NamingStrategy\MapNamingStrategy;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Skeleton\Application;
+namespace Skeleton\Application\Todo;
 
 use Datetime;
 use Skeleton\Domain\Todo;

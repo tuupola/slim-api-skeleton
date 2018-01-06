@@ -15,13 +15,13 @@
 
 $container = $app->getContainer();
 
-use Skeleton\Application\DeleteTodoService;
-use Skeleton\Application\CreateTodoService;
-use Skeleton\Application\LatestTodoService;
-use Skeleton\Application\ViewTodoService;
-use Skeleton\Application\ViewTodoCollectionService;
-use Skeleton\Application\TransformTodoService;
-use Skeleton\Application\TransformTodoCollectionService;
+use Skeleton\Application\Todo\DeleteTodoService;
+use Skeleton\Application\Todo\CreateTodoService;
+use Skeleton\Application\Todo\LatestTodoService;
+use Skeleton\Application\Todo\ViewTodoService;
+use Skeleton\Application\Todo\ViewTodoCollectionService;
+use Skeleton\Application\Todo\TransformTodoService;
+use Skeleton\Application\Todo\TransformTodoCollectionService;
 use Skeleton\Infrastructure\ZendTodoRepository;
 
 $container["todoRepository"] = function ($container) {

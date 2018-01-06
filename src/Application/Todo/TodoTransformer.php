@@ -13,7 +13,7 @@
  *
  */
 
-namespace Skeleton\Application;
+namespace Skeleton\Application\Todo;
 
 use Skeleton\Domain\Todo;
 use League\Fractal\TransformerAbstract;

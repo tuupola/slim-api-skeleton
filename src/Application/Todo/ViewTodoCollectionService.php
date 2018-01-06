@@ -1,11 +1,11 @@
 <?php
 
-namespace Skeleton\Application;
+namespace Skeleton\Application\Todo;
 
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
-class LatestTodoService
+class ViewTodoCollectionService
 {
     private $repository;
 
@@ -14,8 +14,8 @@ class LatestTodoService
         $this->repository = $repository;
     }
 
-    public function execute(array $request = []): Todo
+    public function execute(array $request = []): array
     {
-        return $this->repository->first($request);
+        return $this->repository->query($request);
     }
 }
