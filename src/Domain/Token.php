@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Slim API skeleton package
@@ -13,13 +14,13 @@
  *
  */
 
-namespace App;
+namespace Skeleton\Domain;
 
 class Token
 {
     public $decoded;
 
-    public function hydrate($decoded)
+    public function populate($decoded)
     {
         $this->decoded = $decoded;
     }

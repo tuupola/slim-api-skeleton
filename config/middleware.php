@@ -13,7 +13,7 @@
  *
  */
 
-use App\Token;
+use Skeleton\Domain\Token;
 use Crell\ApiProblem\ApiProblem;
 use Gofabian\Negotiation\NegotiationMiddleware;
 use Micheh\Cache\CacheUtil;
@@ -53,7 +53,7 @@ $container["JwtAuthentication"] = function ($container) {
             return new UnauthorizedResponse($arguments["message"], 401);
         },
         "before" => function ($request, $response, $arguments) use ($container) {
-            $container["token"]->hydrate($arguments["decoded"]);
+            $container["token"]->populate($arguments["decoded"]);
         }
     ]);
 };
