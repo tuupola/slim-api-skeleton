@@ -42,7 +42,7 @@ $app->get("/todos", function ($request, $response, $arguments) {
     }
 
     /* Serialize the response. */
-    $todos = $this->viewTodoCollectionService->execute();
+    $todos = $this->readTodoCollectionService->execute();
     $data = $this->transformTodoCollectionService->execute($todos);
 
     return $response->withStatus(200)
@@ -82,7 +82,7 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Load existing todo using provided uid. */
     try {
-        $todo = $this->viewTodoService->execute(["uid" => $arguments["uid"]]);
+        $todo = $this->readTodoService->execute(["uid" => $arguments["uid"]]);
     } catch (RuntimeException $error) {
         return new NotFoundResponse("Todo not found", 404);
     }
@@ -115,7 +115,7 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Load existing todo using provided uid. */
     try {
-        $todo = $this->viewTodoService->execute(["uid" => $arguments["uid"]]);
+        $todo = $this->readTodoService->execute(["uid" => $arguments["uid"]]);
     } catch (RuntimeException $error) {
         return new NotFoundResponse("Todo not found", 404);
     }

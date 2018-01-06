@@ -6,7 +6,7 @@ use RuntimeException;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
-class ViewTodoService
+class ReadTodoService
 {
     private $repository;
 

@@ -5,7 +5,7 @@ namespace Skeleton\Application\Todo;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
-class ViewTodoCollectionService
+class ReadTodoCollectionService
 {
     private $repository;
 

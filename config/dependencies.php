@@ -19,8 +19,8 @@ use Skeleton\Application\Todo\CreateTodoService;
 use Skeleton\Application\Todo\UpdateTodoService;
 use Skeleton\Application\Todo\DeleteTodoService;
 use Skeleton\Application\Todo\LatestTodoService;
-use Skeleton\Application\Todo\ViewTodoService;
-use Skeleton\Application\Todo\ViewTodoCollectionService;
+use Skeleton\Application\Todo\ReadTodoService;
+use Skeleton\Application\Todo\ReadTodoCollectionService;
 use Skeleton\Application\Todo\TransformTodoService;
 use Skeleton\Application\Todo\TransformTodoCollectionService;
 use Skeleton\Infrastructure\ZendTodoRepository;
@@ -57,12 +57,12 @@ $container["latestTodoService"] = function ($container) {
     return new LatestTodoService($container["todoRepository"]);
 };
 
-$container["viewTodoService"] = function ($container) {
-    return new ViewTodoService($container["todoRepository"]);
+$container["readTodoService"] = function ($container) {
+    return new ReadTodoService($container["todoRepository"]);
 };
 
-$container["viewTodoCollectionService"] = function ($container) {
-    return new ViewTodoCollectionService($container["todoRepository"]);
+$container["readTodoCollectionService"] = function ($container) {
+    return new ReadTodoCollectionService($container["todoRepository"]);
 };
 
 $container["transformTodoService"] = function ($container) {
