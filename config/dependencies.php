@@ -13,8 +13,11 @@
  *
  */
 
-$container = $app->getContainer();
-
+use Monolog\Logger;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\NullHandler;
+use Monolog\Formatter\LineFormatter;
 use Skeleton\Application\Todo\CreateTodoService;
 use Skeleton\Application\Todo\UpdateTodoService;
 use Skeleton\Application\Todo\DeleteTodoService;
@@ -24,6 +27,8 @@ use Skeleton\Application\Todo\ReadTodoCollectionService;
 use Skeleton\Application\Todo\TransformTodoService;
 use Skeleton\Application\Todo\TransformTodoCollectionService;
 use Skeleton\Infrastructure\ZendTodoRepository;
+
+$container = $app->getContainer();
 
 $container["todoRepository"] = function ($container) {
 
@@ -72,39 +77,6 @@ $container["transformTodoService"] = function ($container) {
 $container["transformTodoCollectionService"] = function ($container) {
     return new TransformTodoCollectionService;
 };
-
-
-use Spot\Config;
-use Spot\Locator;
-use Tuupola\DBAL\Logging\Psr3Logger;
-
-$container["spot"] = function ($container) {
-
-    $config = new Config();
-    $mysql = $config->addConnection("mysql", [
-        "dbname" => getenv("DB_NAME"),
-        "user" => getenv("DB_USER"),
-        "password" => getenv("DB_PASSWORD"),
-        "host" => getenv("DB_HOST"),
-        "driver" => "pdo_mysql",
-        "charset" => "utf8"
-    ]);
-
-    $spot = new Locator($config);
-
-    $logger = new Psr3Logger($container["logger"]);
-    $mysql->getConfiguration()->setSQLLogger($logger);
-
-    return $spot;
-};
-
-use Monolog\Logger;
-use Monolog\Handler\RotatingFileHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\NullHandler;
-use Monolog\Formatter\LineFormatter;
-
-$container = $app->getContainer();
 
 $container["logger"] = function ($container) {
     $logger = new Logger("slim");
