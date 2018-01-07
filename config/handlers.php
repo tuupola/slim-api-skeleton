@@ -13,10 +13,13 @@
  *
  */
 
+use Skeleton\Infrastructure\Slim\Handlers\ApiError as ApiErrorHandler;
+use Skeleton\Infrastructure\Slim\Handlers\NotFound as NotFoundHandler;
+
 $container = $app->getContainer();
 
 $container["errorHandler"] = function ($container) {
-    return new Slim\Handlers\ApiError($container["logger"]);
+    return new ApiErrorHandler($container["logger"]);
 };
 
 // $container["phpErrorHandler"] = function ($container) {
@@ -24,5 +27,5 @@ $container["errorHandler"] = function ($container) {
 // };
 
 $container["notFoundHandler"] = function ($container) {
-    return new Slim\Handlers\NotFound;
+    return new NotFoundHandler;
 };

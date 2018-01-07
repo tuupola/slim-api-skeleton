@@ -40,9 +40,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/App/",
-            "Skeleton\\": "src/",
-            "Slim\\Handlers\\": "src/Slim/Handlers/"
+            "Skeleton\\": "src/"
         }
     },
     "require-dev": {
