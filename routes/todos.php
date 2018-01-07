@@ -106,7 +106,7 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
         ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 });
 
-$app->patch("/todos/{uid}", function ($request, $response, $arguments) {
+$app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->token->hasScope(["todo.all", "todo.update"])) {
@@ -122,47 +122,8 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* PATCH requires If-Unmodified-Since or If-Match request header to be present. */
     if (false === $this->cache->hasStateValidator($request)) {
-        return new PreconditionRequiredResponse("PATCH request is required to be conditional", 428);
-    }
-
-    /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
-    /* someone has modified the todo respond with 412 Precondition Failed. */
-    if (false === $this->cache->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
-        return new PreconditionFailedResponse("Todo has already been modified", 412);
-    }
-
-    $data = $request->getParsedBody();
-    $todo->populate($data);
-    $todo = $this->updateTodoService->execute($todo);
-
-    /* Add Last-Modified and ETag headers to response. */
-    $response = $this->cache->withEtag($response, $todo->etag());
-    $response = $this->cache->withLastModified($response, $todo->timestamp());
-
-    $data = $this->transformTodoService->execute($todo);
-
-    return $response->withStatus(200)
-        ->withHeader("Content-Type", "application/json")
-        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-});
-
-$app->put("/todos/{uid}", function ($request, $response, $arguments) {
-
-    /* Check if token has needed scope. */
-    if (false === $this->token->hasScope(["todo.all", "todo.update"])) {
-        return new ForbiddenResponse("Token not allowed to update todos", 403);
-    }
-
-    /* Load existing todo using provided uid. */
-    try {
-        $todo = $this->readTodoService->execute(["uid" => $arguments["uid"]]);
-    } catch (RuntimeException $error) {
-        return new NotFoundResponse("Todo not found", 404);
-    }
-
-    /* PUT requires If-Unmodified-Since or If-Match request header to be present. */
-    if (false === $this->cache->hasStateValidator($request)) {
-        return new PreconditionRequiredResponse("PUT request is required to be conditional", 428);
+        $method = strtoupper($request->getMethod());
+        return new PreconditionRequiredResponse("{$method} request is required to be conditional", 428);
     }
 
     /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
@@ -175,7 +136,9 @@ $app->put("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* PUT request assumes full representation. If any of the properties is */
     /* missing set them to default values by resetting the todo object first. */
-    $todo->reset();
+    if ("PUT" === strtoupper($request->getMethod())) {
+        $todo->reset();
+    }
     $todo->populate($data);
     $todo = $this->updateTodoService->execute($todo);
 
