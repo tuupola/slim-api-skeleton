@@ -62,7 +62,7 @@ class Todo
         $this->completed = false;
     }
 
-    public function title(): string
+    public function title(): ?string
     {
         return $this->title;
     }
@@ -81,6 +81,15 @@ class Todo
     {
         $data = $this->getArrayCopy();
         return md5(serialize($data));
+    }
+
+    public function reset(): void
+    {
+        $this->populate([
+            "order" => 0,
+            "completed" => false,
+            "title" => null,
+        ]);
     }
 
     /**

@@ -132,8 +132,8 @@ $app->patch("/todos/{uid}", function ($request, $response, $arguments) {
     }
 
     $data = $request->getParsedBody();
-    $data["uid"] = $todo->uid(); /* TODO: this is not good... */
-    $todo = $this->updateTodoService->execute($data);
+    $todo->populate($data);
+    $todo = $this->updateTodoService->execute($todo);
 
     /* Add Last-Modified and ETag headers to response. */
     $response = $this->cache->withEtag($response, $todo->etag());
@@ -153,12 +153,12 @@ $app->put("/todos/{uid}", function ($request, $response, $arguments) {
         return new ForbiddenResponse("Token not allowed to update todos", 403);
     }
 
-    /* Load existing todo using provided uid */
-    if (false === $todo = $this->spot->mapper("App\Todo")->first([
-        "uid" => $arguments["uid"]
-    ])) {
+    /* Load existing todo using provided uid. */
+    try {
+        $todo = $this->readTodoService->execute(["uid" => $arguments["uid"]]);
+    } catch (RuntimeException $error) {
         return new NotFoundResponse("Todo not found", 404);
-    };
+    }
 
     /* PUT requires If-Unmodified-Since or If-Match request header to be present. */
     if (false === $this->cache->hasStateValidator($request)) {
@@ -171,22 +171,19 @@ $app->put("/todos/{uid}", function ($request, $response, $arguments) {
         return new PreconditionFailedResponse("Todo has already been modified", 412);
     }
 
-    $body = $request->getParsedBody();
+    $data = $request->getParsedBody();
 
     /* PUT request assumes full representation. If any of the properties is */
-    /* missing set them to default values by clearing the todo object first. */
-    $todo->clear();
-    $todo->data($body);
-    $this->spot->mapper("App\Todo")->save($todo);
+    /* missing set them to default values by resetting the todo object first. */
+    $todo->reset();
+    $todo->populate($data);
+    $todo = $this->updateTodoService->execute($todo);
 
     /* Add Last-Modified and ETag headers to response. */
     $response = $this->cache->withEtag($response, $todo->etag());
     $response = $this->cache->withLastModified($response, $todo->timestamp());
 
-    $fractal = new Manager();
-    $fractal->setSerializer(new DataArraySerializer);
-    $resource = new Item($todo, new TodoTransformer);
-    $data = $fractal->createData($resource)->toArray();
+    $data = $this->transformTodoService->execute($todo);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
