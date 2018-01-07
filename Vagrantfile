@@ -66,8 +66,9 @@ EOF
     /sbin/service mysql start
     /sbin/chkconfig --levels 235 mysql on
 
-    echo "CREATE DATABASE example" | mysql -u root
-    cd /vagrant && bin/db migrate
+    echo "CREATE DATABASE development_db" | mysql -u root
+    cd /vagrant && vendor/bin/phinx migrate
+    cd /vagrant && vendor/bin/phinx seed:run
   SHELL
 
 
