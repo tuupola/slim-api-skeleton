@@ -52,7 +52,7 @@
     },
     "scripts": {
         "test": "composer phplint && composer phpcs && composer phpunit",
-        "phpcs": "vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore=*/vendor/* . -p",
+        "phpcs": "vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore=*/vendor/*,*/db/* . -p",
         "phplint": "vendor/bin/phplint . --exclude=vendor/",
         "phpunit": "vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --coverage-html=./report/",
         "watch": "find . -name \"*.php\" -not -path \"./vendor/*\" -o -name \"*.json\" -not -path \"./vendor/*\"| entr -c composer test"
