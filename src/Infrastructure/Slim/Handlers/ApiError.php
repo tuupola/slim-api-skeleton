@@ -20,10 +20,11 @@
 
 namespace Skeleton\Infrastructure\Slim\Handlers;
 
+use Crell\ApiProblem\ApiProblem;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
-use Crell\ApiProblem\ApiProblem;
+use Slim\Handlers\AbstractHandler;
 
 final class ApiError extends \Slim\Handlers\Error
 {

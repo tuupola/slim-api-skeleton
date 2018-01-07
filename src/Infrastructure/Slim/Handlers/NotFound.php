@@ -15,9 +15,10 @@
 
 namespace Skeleton\Infrastructure\Slim\Handlers;
 
+use Crell\ApiProblem\ApiProblem;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Crell\ApiProblem\ApiProblem;
+use Slim\Handlers\AbstractHandler;
 
 final class NotFound extends \Slim\Handlers\Error
 {
