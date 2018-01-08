@@ -16,13 +16,9 @@ class DeleteTodoService
         $this->repository = $repository;
     }
 
-    public function execute(array $request = []): Todo
+    public function execute(array $request = []): void
     {
         $todo = $this->repository->get($request["uid"]);
-        if (null === $todo) {
-            throw new RuntimeException("Todo {$request['uid']} does not exist.");
-        }
         $this->repository->remove($todo);
-        return $todo;
     }
 }

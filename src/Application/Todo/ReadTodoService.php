@@ -18,10 +18,6 @@ class ReadTodoService
 
     public function execute(array $request): Todo
     {
-        $todo = $this->repository->get($request["uid"]);
-        if (null === $todo) {
-            throw new RuntimeException("Todo {$request['uid']} does not exist.");
-        }
-        return $todo;
+        return $this->repository->get($request["uid"]);
     }
 }

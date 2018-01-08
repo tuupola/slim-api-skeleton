@@ -24,8 +24,8 @@ class Todo
     private $order;
     private $completed = false;
     private $title;
-    private $createdAt;
-    private $updatedAt;
+    private $createdAt = null;
+    private $updatedAt = null;
 
     public function __construct(array $data = [])
     {
@@ -90,6 +90,11 @@ class Todo
             "completed" => false,
             "title" => null,
         ]);
+    }
+
+    public function touch(): void
+    {
+        $this->updatedAt = new DateTime;
     }
 
     /**

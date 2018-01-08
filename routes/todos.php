@@ -17,6 +17,7 @@ use Skeleton\Application\Response\NotFoundResponse;
 use Skeleton\Application\Response\ForbiddenResponse;
 use Skeleton\Application\Response\PreconditionFailedResponse;
 use Skeleton\Application\Response\PreconditionRequiredResponse;
+use Skeleton\Application\Todo\TodoNotFoundException;
 
 $app->get("/todos", function ($request, $response, $arguments) {
 
@@ -25,13 +26,12 @@ $app->get("/todos", function ($request, $response, $arguments) {
         return new ForbiddenResponse("Token not allowed to list todos", 403);
     }
 
-    /* Use ETag and date from Todo with most recent update. */
-    $first = $this->latestTodoService->execute();
-
     /* Add Last-Modified and ETag headers to response when atleast one todo exists. */
-    if ($first) {
+    try {
+        $first = $this->latestTodoService->execute();
         $response = $this->cache->withEtag($response, $first->etag());
         $response = $this->cache->withLastModified($response, $first->timestamp());
+    } catch (TodoNotFoundException $exception) {
     }
 
     /* If-Modified-Since and If-None-Match request header handling. */
@@ -83,7 +83,7 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
     /* Load existing todo using provided uid. */
     try {
         $todo = $this->readTodoService->execute(["uid" => $arguments["uid"]]);
-    } catch (RuntimeException $error) {
+    } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }
 
@@ -116,7 +116,7 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
     /* Load existing todo using provided uid. */
     try {
         $todo = $this->readTodoService->execute(["uid" => $arguments["uid"]]);
-    } catch (RuntimeException $error) {
+    } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }
 
@@ -162,7 +162,7 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
 
     try {
         $todo = $this->deleteTodoService->execute(["uid" => $arguments["uid"]]);
-    } catch (RuntimeException $error) {
+    } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }
 

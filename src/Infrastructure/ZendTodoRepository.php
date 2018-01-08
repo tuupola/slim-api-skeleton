@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Skeleton\Infrastructure;
 
 use Skeleton\Application\Todo\TodoHydratorFactory;
+use Skeleton\Application\Todo\TodoNotFoundException;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 use Tuupola\Base62;
@@ -34,11 +35,11 @@ class ZendTodoRepository implements TodoRepository
         return (new Base62)->encode(random_bytes(9));
     }
 
-    public function get(string $uid): ?Todo
+    public function get(string $uid): Todo
     {
         $rowset = $this->table->select(["uid" => $uid]);
         if (null === $row = $rowset->current()) {
-            return null;
+            throw new TodoNotFoundException;
         }
         return $this->hydrator->hydrate((array) $row, new Todo);
     }
@@ -54,27 +55,37 @@ class ZendTodoRepository implements TodoRepository
     public function first(array $specification = []): Todo
     {
         $rowset = $this->table->select($specification);
-        $row = $rowset->current();
+        if (null === $row = $rowset->current()) {
+            throw new TodoNotFoundException;
+        }
         return $this->hydrator->hydrate((array) $row, new Todo);
     }
 
-    public function add(Todo $todo): bool
+    public function add(Todo $todo): void
     {
         $data = $this->hydrator->extract($todo);
-        if (null === $this->get($todo->uid())) {
-            $affectedRows = $this->table->insert($data);
-        } else {
+        if ($this->contains($todo)) {
             $where = ["uid" => $todo->uid()];
-            $affectedRows = $this->table->update($data, $where);
+            $this->table->update($data, $where);
+        } else {
+            $this->table->insert($data);
         }
-        return (bool) $affectedRows;
     }
 
-    public function remove(Todo $todo): bool
+    public function remove(Todo $todo): void
     {
         $where["uid"] = $todo->uid();
-        $affectedRows = $this->table->delete($where);
-        return (bool) $affectedRows;
+        $this->table->delete($where);
+    }
+
+    public function contains(Todo $todo): bool
+    {
+        try {
+            $this->get($todo->uid());
+        } catch (TodoNotFoundException $exception) {
+            return false;
+        }
+        return true;
     }
 
     public function count(): int

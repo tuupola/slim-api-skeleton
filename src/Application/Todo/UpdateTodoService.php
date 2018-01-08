@@ -16,9 +16,8 @@ class UpdateTodoService
         $this->repository = $repository;
     }
 
-    public function execute(Todo $todo): Todo
+    public function execute(Todo $todo): void
     {
         $this->repository->add($todo);
-        return $todo;
     }
 }
