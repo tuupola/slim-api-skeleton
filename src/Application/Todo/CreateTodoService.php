@@ -21,8 +21,8 @@ class CreateTodoService
     public function execute(array $request = []): Todo
     {
         $request["uid"] = $this->repository->nextIdentity();
-        $request["created_at"] = new DateTime;
-        $request["updated_at"] = $request["created_at"];
+        // $request["created_at"] = new DateTime;
+        // $request["updated_at"] = $request["created_at"];
 
         $todo = $this->hydrator->hydrate($request, new Todo);
         $this->repository->add($todo);
