@@ -13,19 +13,24 @@
  *
  */
 
-use Skeleton\Application\Response\NotFoundResponse;
-use Skeleton\Application\Response\ForbiddenResponse;
-use Skeleton\Application\Response\PreconditionFailedResponse;
-use Skeleton\Application\Response\PreconditionRequiredResponse;
-use Skeleton\Application\Todo\CreateTodoCommand;
-use Skeleton\Application\Todo\ReadTodoQuery;
-use Skeleton\Application\Todo\DeleteTodoCommand;
-use Skeleton\Application\Todo\LatestTodoQuery;
-use Skeleton\Application\Todo\ReadTodoCommand;
-use Skeleton\Application\Todo\ReplaceTodoCommand;
-use Skeleton\Application\Todo\UpdateTodoCommand;
-use Skeleton\Application\Todo\ReadTodoCollectionQuery;
-use Skeleton\Application\Todo\TodoNotFoundException;
+use Skeleton\Application\Response\{
+    NotFoundResponse,
+    ForbiddenResponse,
+    PreconditionFailedResponse,
+    PreconditionRequiredResponse
+};
+
+use Skeleton\Application\Todo\{
+    CreateTodoCommand,
+    ReadTodoQuery,
+    DeleteTodoCommand,
+    LatestTodoQuery,
+    ReadTodoCommand,
+    ReplaceTodoCommand,
+    UpdateTodoCommand,
+    ReadTodoCollectionQuery,
+    TodoNotFoundException
+};
 
 $app->get("/todos", function ($request, $response, $arguments) {
 

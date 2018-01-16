@@ -9,7 +9,6 @@ use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 use Tuupola\Base62;
 use Zend\Db\Adapter\Adapter;
-#use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\TableGateway\Feature\RowGatewayFeature;

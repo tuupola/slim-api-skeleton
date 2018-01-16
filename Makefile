@@ -16,7 +16,7 @@ deps:
 
 lint:
 	vendor/bin/phplint . --exclude=vendor/
-	vendor/bin/phpcs -p --standard=PSR2 --extensions=php --encoding=utf-8 --ignore=*/vendor/*,*/benchmarks/*,*/db/* .
+	vendor/bin/phpcs -p --standard=PSR2 --exclude=PSR2.Namespaces.UseDeclaration --extensions=php --encoding=utf-8 --ignore=*/vendor/*,*/benchmarks/*,*/db/* .
 
 unit:
 	vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --coverage-html=./report/
