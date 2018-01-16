@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Skeleton\Application\Todo;
 
-use RuntimeException;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
-class UpdateTodoService
+class LatestTodoHandler
 {
     private $repository;
 
@@ -16,8 +15,8 @@ class UpdateTodoService
         $this->repository = $repository;
     }
 
-    public function execute(Todo $todo): void
+    public function handle(): Todo
     {
-        $this->repository->add($todo);
+        return $this->repository->first();
     }
 }

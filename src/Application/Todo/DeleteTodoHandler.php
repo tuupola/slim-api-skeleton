@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace Skeleton\Application\Todo;
 
+use RuntimeException;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
-class ReadTodoCollectionService
+class DeleteTodoHandler
 {
     private $repository;
 
@@ -15,8 +16,9 @@ class ReadTodoCollectionService
         $this->repository = $repository;
     }
 
-    public function execute(array $request = []): array
+    public function handle(DeleteTodoCommand $command): void
     {
-        return $this->repository->all($request);
+        $todo = $this->repository->get($command->uid());
+        $this->repository->remove($todo);
     }
 }

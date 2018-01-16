@@ -6,14 +6,15 @@ use PHPUnit\Framework\TestCase;
 use Skeleton\Domain\Todo;
 use Skeleton\Infrastructure\MemoryTodoRepository;
 
-class CreateTodoServiceTest extends TestCase
+class CreateTodoHandlerTest extends TestCase
 {
     private $todoRepository;
 
     protected function setUp()
     {
         $this->todoRepository = new MemoryTodoRepository;
-        $this->createTodoService = new CreateTodoService($this->todoRepository);
+        $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);
+        $this->latestTodoHandler = new LatestTodoHandler($this->todoRepository);
     }
 
     public function testShouldBeTrue()
@@ -23,10 +24,13 @@ class CreateTodoServiceTest extends TestCase
 
     public function testShouldCreateTodo()
     {
-        $todo = $this->createTodoService->execute([
+        $command = new CreateTodoCommand([
+            "uid" => $this->todoRepository->nextIdentity(),
             "title" => "Not sure?",
             "order" => 27,
         ]);
+        $this->createTodoHandler->handle($command);
+        $todo = $this->latestTodoHandler->handle();
 
         $this->assertInstanceOf(Todo::class, $todo);
     }

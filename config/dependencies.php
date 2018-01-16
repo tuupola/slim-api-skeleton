@@ -13,22 +13,75 @@
  *
  */
 
+use League\Tactician\CommandBus;
+use League\Tactician\Handler\CommandHandlerMiddleware;
+use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
+use League\Tactician\Handler\Locator\InMemoryLocator;
+use League\Tactician\Handler\MethodNameInflector\HandleInflector;
+
 use Monolog\Logger;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\NullHandler;
 use Monolog\Formatter\LineFormatter;
-use Skeleton\Application\Todo\CreateTodoService;
-use Skeleton\Application\Todo\UpdateTodoService;
-use Skeleton\Application\Todo\DeleteTodoService;
-use Skeleton\Application\Todo\LatestTodoService;
-use Skeleton\Application\Todo\ReadTodoService;
-use Skeleton\Application\Todo\ReadTodoCollectionService;
-use Skeleton\Application\Todo\TransformTodoService;
-use Skeleton\Application\Todo\TransformTodoCollectionService;
+
+use Skeleton\Application\Todo\CreateTodoCommand;
+use Skeleton\Application\Todo\CreateTodoHandler;
+use Skeleton\Application\Todo\UpdateTodoCommand;
+use Skeleton\Application\Todo\UpdateTodoHandler;
+use Skeleton\Application\Todo\DeleteTodoCommand;
+use Skeleton\Application\Todo\DeleteTodoHandler;
+use Skeleton\Application\Todo\LatestTodoQuery;
+use Skeleton\Application\Todo\LatestTodoHandler;
+use Skeleton\Application\Todo\ReadTodoQuery;
+use Skeleton\Application\Todo\ReadTodoHandler;
+use Skeleton\Application\Todo\ReadTodoCollectionQuery;
+use Skeleton\Application\Todo\ReadTodoCollectionHandler;
+use Skeleton\Application\Todo\TransformTodoHandler;
+use Skeleton\Application\Todo\TransformTodoCollectionHandler;
 use Skeleton\Infrastructure\ZendTodoRepository;
 
 $container = $app->getContainer();
+
+$container["commandBus"] = function ($container) {
+    $inflector = new HandleInflector();
+
+    $locator = new InMemoryLocator();
+    $locator->addHandler(
+        new CreateTodoHandler($container["todoRepository"]),
+        CreateTodoCommand::class
+    );
+    $locator->addHandler(
+        new ReadTodoHandler($container["todoRepository"]),
+        ReadTodoCommand::class
+    );
+    $locator->addHandler(
+        new ReadTodoCollectionHandler($container["todoRepository"]),
+        ReadTodoCollectionCommand::class
+    );
+    $locator->addHandler(
+        new LatestTodoHandler($container["todoRepository"]),
+        LatestTodoQuery::class
+    );
+    $locator->addHandler(
+        new DeleteTodoHandler($container["todoRepository"]),
+        DeleteTodoCommand::class
+    );
+    $locator->addHandler(
+        new UpdateTodoHandler($container["todoRepository"]),
+        UpdateTodoCommand::class
+    );
+
+    $nameExtractor = new ClassNameExtractor();
+
+    $commandHandlerMiddleware = new CommandHandlerMiddleware(
+        $nameExtractor,
+        $locator,
+        $inflector
+    );
+
+    return new CommandBus([$commandHandlerMiddleware]);
+};
 
 $container["todoRepository"] = function ($container) {
 
@@ -46,36 +99,36 @@ $container["todoRepository"] = function ($container) {
     ]);
 };
 
-$container["createTodoService"] = function ($container) {
-    return new CreateTodoService($container["todoRepository"]);
+// $container["createTodoHandler"] = function ($container) {
+//     return new CreateTodoHandler($container["todoRepository"]);
+// };
+
+$container["updateTodoHandler"] = function ($container) {
+    return new UpdateTodoHandler($container["todoRepository"]);
 };
 
-$container["updateTodoService"] = function ($container) {
-    return new UpdateTodoService($container["todoRepository"]);
+$container["deleteTodoHandler"] = function ($container) {
+    return new DeleteTodoHandler($container["todoRepository"]);
 };
 
-$container["deleteTodoService"] = function ($container) {
-    return new DeleteTodoService($container["todoRepository"]);
+$container["latestTodoHandler"] = function ($container) {
+    return new LatestTodoHandler($container["todoRepository"]);
 };
 
-$container["latestTodoService"] = function ($container) {
-    return new LatestTodoService($container["todoRepository"]);
+$container["readTodoHandler"] = function ($container) {
+    return new ReadTodoHandler($container["todoRepository"]);
 };
 
-$container["readTodoService"] = function ($container) {
-    return new ReadTodoService($container["todoRepository"]);
+$container["readTodoCollectionHandler"] = function ($container) {
+    return new ReadTodoCollectionHandler($container["todoRepository"]);
 };
 
-$container["readTodoCollectionService"] = function ($container) {
-    return new ReadTodoCollectionService($container["todoRepository"]);
+$container["transformTodoHandler"] = function ($container) {
+    return new TransformTodoHandler;
 };
 
-$container["transformTodoService"] = function ($container) {
-    return new TransformTodoService;
-};
-
-$container["transformTodoCollectionService"] = function ($container) {
-    return new TransformTodoCollectionService;
+$container["transformTodoCollectionHandler"] = function ($container) {
+    return new TransformTodoCollectionHandler;
 };
 
 $container["logger"] = function ($container) {

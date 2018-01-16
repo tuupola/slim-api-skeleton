@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Skeleton\Application\Todo;
 
-use Datetime;
+use RuntimeException;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
-class CreateTodoService
+class UpdateTodoHandler
 {
     private $repository;
     private $hydrator;
@@ -18,15 +18,12 @@ class CreateTodoService
         $this->hydrator = (new TodoHydratorFactory)->create();
     }
 
-    public function execute(array $request = []): Todo
+    public function handle(UpdateTodoCommand $command): void
     {
-        $request["uid"] = $this->repository->nextIdentity();
-        // $request["created_at"] = new DateTime;
-        // $request["updated_at"] = $request["created_at"];
-
-        $todo = $this->hydrator->hydrate($request, new Todo);
+        $data = $command->getArrayCopy();
+        $todo = $this->repository->get($command->uid());
+        $todo = $this->hydrator->hydrate($data, $todo);
+        $todo->touch();
         $this->repository->add($todo);
-
-        return $todo;
     }
 }

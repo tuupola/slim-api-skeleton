@@ -6,15 +6,16 @@ use PHPUnit\Framework\TestCase;
 use Skeleton\Domain\Todo;
 use Skeleton\Infrastructure\MemoryTodoRepository;
 
-class TransformTodoServiceTest extends TestCase
+class TransformTodoHandlerTest extends TestCase
 {
     private $todoRepository;
 
     protected function setUp()
     {
         $this->todoRepository = new MemoryTodoRepository;
-        $this->createTodoService = new CreateTodoService($this->todoRepository);
-        $this->transformTodoService = new TransformTodoService($this->todoRepository);
+        $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);
+        $this->latestTodoHandler = new LatestTodoHandler($this->todoRepository);
+        $this->transformTodoHandler = new TransformTodoHandler($this->todoRepository);
     }
 
     public function testShouldBeTrue()
@@ -24,12 +25,15 @@ class TransformTodoServiceTest extends TestCase
 
     public function testShouldTransformTodo()
     {
-        $todo = $this->createTodoService->execute([
+        $command = new CreateTodoCommand([
+            "uid" => $this->todoRepository->nextIdentity(),
             "title" => "Not sure?",
             "order" => 27,
         ]);
+        $this->createTodoHandler->handle($command);
+        $todo = $this->latestTodoHandler->handle();
 
-        $transformed =$this->transformTodoService->execute($todo);
+        $transformed =$this->transformTodoHandler->handle($todo);
 
         $this->assertArrayHasKey("uid", $transformed["data"]);
         $this->assertArrayHasKey("order", $transformed["data"]);

@@ -6,7 +6,7 @@ namespace Skeleton\Application\Todo;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
-class LatestTodoService
+class ReadTodoCollectionHandler
 {
     private $repository;
 
@@ -15,8 +15,8 @@ class LatestTodoService
         $this->repository = $repository;
     }
 
-    public function execute(array $request = []): Todo
+    public function handle(): array
     {
-        return $this->repository->first($request);
+        return $this->repository->all();
     }
 }

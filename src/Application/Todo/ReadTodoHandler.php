@@ -7,7 +7,7 @@ use RuntimeException;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
-class DeleteTodoService
+class ReadTodoHandler
 {
     private $repository;
 
@@ -16,9 +16,8 @@ class DeleteTodoService
         $this->repository = $repository;
     }
 
-    public function execute(array $request = []): void
+    public function handle(ReadTodoQuery $command): Todo
     {
-        $todo = $this->repository->get($request["uid"]);
-        $this->repository->remove($todo);
+        return $this->repository->get($command->uid());
     }
 }

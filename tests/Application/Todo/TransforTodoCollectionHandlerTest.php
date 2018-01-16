@@ -6,18 +6,19 @@ use PHPUnit\Framework\TestCase;
 use Skeleton\Domain\Todo;
 use Skeleton\Infrastructure\MemoryTodoRepository;
 
-class TransformTodoCollectionServiceTest extends TestCase
+class TransformTodoCollectionHandlerTest extends TestCase
 {
     private $todoRepository;
-    private $createTodoService;
-    private $transformTodoCollectionService;
+    private $createTodoHandler;
+    private $readTodoCollectionHandler;
+    private $transformTodoCollectionHandler;
 
     protected function setUp()
     {
         $this->todoRepository = new MemoryTodoRepository;
-        $this->createTodoService = new CreateTodoService($this->todoRepository);
-        $this->readTodoCollectionService = new ReadTodoCollectionService($this->todoRepository);
-        $this->transformTodoCollectionService = new TransformTodoCollectionService($this->todoRepository);
+        $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);
+        $this->readTodoCollectionHandler = new ReadTodoCollectionHandler($this->todoRepository);
+        $this->transformTodoCollectionHandler = new TransformTodoCollectionHandler($this->todoRepository);
     }
 
     public function testShouldBeTrue()
@@ -27,18 +28,22 @@ class TransformTodoCollectionServiceTest extends TestCase
 
     public function testShouldTransformTodo()
     {
-        $first = $this->createTodoService->execute([
+        $command = new CreateTodoCommand([
+            "uid" => $this->todoRepository->nextIdentity(),
             "title" => "Not sure?",
             "order" => 27,
         ]);
+        $this->createTodoHandler->handle($command);
 
-        $second = $this->createTodoService->execute([
+        $command = new CreateTodoCommand([
+            "uid" => $this->todoRepository->nextIdentity(),
             "title" => "Brawndo!",
             "order" => 66,
         ]);
+        $this->createTodoHandler->handle($command);
 
-        $collection = $this->readTodoCollectionService->execute();
-        $transformed =$this->transformTodoCollectionService->execute($collection);
+        $collection = $this->readTodoCollectionHandler->handle();
+        $transformed =$this->transformTodoCollectionHandler->handle($collection);
 
         $this->assertCount(2, $transformed["data"]);
         $this->assertArrayHasKey("uid", $transformed["data"][0]);
