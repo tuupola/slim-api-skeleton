@@ -20,11 +20,11 @@ use Skeleton\Application\Response\PreconditionRequiredResponse;
 use Skeleton\Application\Todo\CreateTodoCommand;
 use Skeleton\Application\Todo\ReadTodoQuery;
 use Skeleton\Application\Todo\DeleteTodoCommand;
-use Skeleton\Application\Todo\LatestTodoCommand;
+use Skeleton\Application\Todo\LatestTodoQuery;
 use Skeleton\Application\Todo\ReadTodoCommand;
 use Skeleton\Application\Todo\ReplaceTodoCommand;
 use Skeleton\Application\Todo\UpdateTodoCommand;
-use Skeleton\Application\Todo\ReadTodoCollectionCommand;
+use Skeleton\Application\Todo\ReadTodoCollectionQuery;
 use Skeleton\Application\Todo\TodoNotFoundException;
 
 $app->get("/todos", function ($request, $response, $arguments) {
@@ -36,8 +36,8 @@ $app->get("/todos", function ($request, $response, $arguments) {
 
     /* Add Last-Modified and ETag headers to response when atleast one todo exists. */
     try {
-        $command = new LatestTodoCommand;
-        $first = $this->commandBus->handle($command);
+        $query = new LatestTodoQuery;
+        $first = $this->commandBus->handle($query);
         $response = $this->cache->withEtag($response, $first->etag());
         $response = $this->cache->withLastModified($response, $first->timestamp());
     } catch (TodoNotFoundException $exception) {
@@ -51,8 +51,8 @@ $app->get("/todos", function ($request, $response, $arguments) {
     }
 
     /* Serialize the response. */
-    $command = new ReadTodoCollectionCommand;
-    $todos = $this->commandBus->handle($command);
+    $query = new ReadTodoCollectionQuery;
+    $todos = $this->commandBus->handle($query);
     $data = $this->transformTodoCollectionHandler->handle($todos);
 
     return $response->withStatus(200)
