@@ -6,19 +6,19 @@ use PHPUnit\Framework\TestCase;
 use Skeleton\Domain\Todo;
 use Skeleton\Infrastructure\MemoryTodoRepository;
 
-class TransformTodoCollectionHandlerTest extends TestCase
+class TransformTodoCollectionServiceTest extends TestCase
 {
     private $todoRepository;
     private $createTodoHandler;
     private $readTodoCollectionHandler;
-    private $transformTodoCollectionHandler;
+    private $transformTodoCollectionService;
 
     protected function setUp()
     {
         $this->todoRepository = new MemoryTodoRepository;
         $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);
         $this->readTodoCollectionHandler = new ReadTodoCollectionHandler($this->todoRepository);
-        $this->transformTodoCollectionHandler = new TransformTodoCollectionHandler($this->todoRepository);
+        $this->transformTodoCollectionService = new TransformTodoCollectionService($this->todoRepository);
     }
 
     public function testShouldBeTrue()
@@ -43,7 +43,7 @@ class TransformTodoCollectionHandlerTest extends TestCase
         $this->createTodoHandler->handle($command);
 
         $collection = $this->readTodoCollectionHandler->handle();
-        $transformed =$this->transformTodoCollectionHandler->handle($collection);
+        $transformed =$this->transformTodoCollectionService->execute($collection);
 
         $this->assertCount(2, $transformed["data"]);
         $this->assertArrayHasKey("uid", $transformed["data"][0]);
