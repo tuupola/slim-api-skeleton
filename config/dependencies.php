@@ -29,6 +29,8 @@ use Skeleton\Application\Todo\CreateTodoCommand;
 use Skeleton\Application\Todo\CreateTodoHandler;
 use Skeleton\Application\Todo\UpdateTodoCommand;
 use Skeleton\Application\Todo\UpdateTodoHandler;
+use Skeleton\Application\Todo\ReplaceTodoCommand;
+use Skeleton\Application\Todo\ReplaceTodoHandler;
 use Skeleton\Application\Todo\DeleteTodoCommand;
 use Skeleton\Application\Todo\DeleteTodoHandler;
 use Skeleton\Application\Todo\LatestTodoQuery;
@@ -70,6 +72,10 @@ $container["commandBus"] = function ($container) {
     $locator->addHandler(
         new UpdateTodoHandler($container["todoRepository"]),
         UpdateTodoCommand::class
+    );
+    $locator->addHandler(
+        new ReplaceTodoHandler($container["todoRepository"]),
+        ReplaceTodoCommand::class
     );
 
     $nameExtractor = new ClassNameExtractor();
