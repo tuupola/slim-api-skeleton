@@ -5,16 +5,16 @@ namespace Skeleton\Application\Todo;
 
 use Skeleton\Domain\Todo;
 use League\Fractal\Manager as FractalManager;
-use League\Fractal\Resource\Item as FractalItem;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Serializer\DataArraySerializer;
 
-class TransformTodoHandler
+class TransformTodoCollectionService
 {
-    public function handle(Todo $todo): array
+    public function execute(array $collection): array
     {
         $fractal = new FractalManager();
         $fractal->setSerializer(new DataArraySerializer);
-        $resource = new FractalItem($todo, new TodoTransformer);
+        $resource = new FractalCollection($collection, new TodoTransformer);
         return $fractal->createData($resource)->toArray();
     }
 }

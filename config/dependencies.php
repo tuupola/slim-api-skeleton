@@ -13,6 +13,10 @@
  *
  */
 
+use League\Fractal\Manager as FractalManager;
+use League\Fractal\Resource\Item as FractalItem;
+use League\Fractal\Serializer\DataArraySerializer;
+
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\CommandHandlerMiddleware;
 use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
@@ -39,9 +43,10 @@ use Skeleton\Application\Todo\ReadTodoQuery;
 use Skeleton\Application\Todo\ReadTodoHandler;
 use Skeleton\Application\Todo\ReadTodoCollectionQuery;
 use Skeleton\Application\Todo\ReadTodoCollectionHandler;
-use Skeleton\Application\Todo\TransformTodoHandler;
-use Skeleton\Application\Todo\TransformTodoCollectionHandler;
+use Skeleton\Application\Todo\TransformTodoService;
+use Skeleton\Application\Todo\TransformTodoCollectionService;
 use Skeleton\Infrastructure\ZendTodoRepository;
+use Skeleton\Domain\Todo;
 
 $container = $app->getContainer();
 
@@ -98,43 +103,15 @@ $container["todoRepository"] = function ($container) {
         "password" => getenv("DB_PASSWORD"),
         "hostname" => getenv("DB_HOST"),
         "charset" => "utf8",
-        // "driver_options" => [
-        //     PDO::ATTR_STRINGIFY_FETCHES => false,
-        //     PDO::ATTR_EMULATE_PREPARES => false
-        // ],
     ]);
 };
 
-// $container["createTodoHandler"] = function ($container) {
-//     return new CreateTodoHandler($container["todoRepository"]);
-// };
-
-$container["updateTodoHandler"] = function ($container) {
-    return new UpdateTodoHandler($container["todoRepository"]);
+$container["transformTodoService"] = function ($container) {
+    return new TransformTodoService;
 };
 
-$container["deleteTodoHandler"] = function ($container) {
-    return new DeleteTodoHandler($container["todoRepository"]);
-};
-
-$container["latestTodoHandler"] = function ($container) {
-    return new LatestTodoHandler($container["todoRepository"]);
-};
-
-$container["readTodoHandler"] = function ($container) {
-    return new ReadTodoHandler($container["todoRepository"]);
-};
-
-$container["readTodoCollectionHandler"] = function ($container) {
-    return new ReadTodoCollectionHandler($container["todoRepository"]);
-};
-
-$container["transformTodoHandler"] = function ($container) {
-    return new TransformTodoHandler;
-};
-
-$container["transformTodoCollectionHandler"] = function ($container) {
-    return new TransformTodoCollectionHandler;
+$container["transformTodoCollectionService"] = function ($container) {
+    return new TransformTodoCollectionService;
 };
 
 $container["logger"] = function ($container) {

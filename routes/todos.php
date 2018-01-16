@@ -53,7 +53,7 @@ $app->get("/todos", function ($request, $response, $arguments) {
     /* Serialize the response. */
     $query = new ReadTodoCollectionQuery;
     $todos = $this->commandBus->handle($query);
-    $data = $this->transformTodoCollectionHandler->handle($todos);
+    $data = $this->transformTodoCollectionService->execute($todos);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -81,7 +81,7 @@ $app->post("/todos", function ($request, $response, $arguments) {
     $response = $this->cache->withLastModified($response, $todo->timestamp());
 
     /* Serialize the response. */
-    $data = $this->transformTodoHandler->handle($todo);
+    $data = $this->transformTodoService->execute($todo);
 
     return $response->withStatus(201)
         ->withHeader("Content-Type", "application/json")
@@ -116,7 +116,7 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
     }
 
     /* Serialize the response. */
-    $data = $this->transformTodoHandler->handle($todo);
+    $data = $this->transformTodoService->execute($todo);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -169,7 +169,7 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
     $response = $this->cache->withEtag($response, $todo->etag());
     $response = $this->cache->withLastModified($response, $todo->timestamp());
 
-    $data = $this->transformTodoHandler->handle($todo);
+    $data = $this->transformTodoService->execute($todo);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
