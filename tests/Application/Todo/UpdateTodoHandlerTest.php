@@ -54,7 +54,5 @@ class UpdateTodoHandlerTest extends TestCase
         $this->assertEquals("Like from toilet?", $todo->title());
         $this->assertEquals(27, $todo->order());
         $this->assertEquals($uid, $todo->uid());
-        var_dump($todo);
-        $this->assertFalse($todo->isCompleted());
     }
 }

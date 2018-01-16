@@ -53,7 +53,7 @@ $container["commandBus"] = function ($container) {
     );
     $locator->addHandler(
         new ReadTodoHandler($container["todoRepository"]),
-        ReadTodoCommand::class
+        ReadTodoQuery::class
     );
     $locator->addHandler(
         new ReadTodoCollectionHandler($container["todoRepository"]),

@@ -17,6 +17,14 @@ use Skeleton\Application\Response\NotFoundResponse;
 use Skeleton\Application\Response\ForbiddenResponse;
 use Skeleton\Application\Response\PreconditionFailedResponse;
 use Skeleton\Application\Response\PreconditionRequiredResponse;
+use Skeleton\Application\Todo\CreateTodoCommand;
+use Skeleton\Application\Todo\ReadTodoQuery;
+use Skeleton\Application\Todo\DeleteTodoCommand;
+use Skeleton\Application\Todo\LatestTodoCommand;
+use Skeleton\Application\Todo\ReadTodoCommand;
+use Skeleton\Application\Todo\ReplaceTodoCommand;
+use Skeleton\Application\Todo\UpdateTodoCommand;
+use Skeleton\Application\Todo\ReadTodoCollectionCommand;
 use Skeleton\Application\Todo\TodoNotFoundException;
 
 $app->get("/todos", function ($request, $response, $arguments) {
@@ -28,7 +36,8 @@ $app->get("/todos", function ($request, $response, $arguments) {
 
     /* Add Last-Modified and ETag headers to response when atleast one todo exists. */
     try {
-        $first = $this->latestTodoService->execute();
+        $command = new LatestTodoCommand;
+        $first = $this->commandBus->handle($command);
         $response = $this->cache->withEtag($response, $first->etag());
         $response = $this->cache->withLastModified($response, $first->timestamp());
     } catch (TodoNotFoundException $exception) {
@@ -42,8 +51,9 @@ $app->get("/todos", function ($request, $response, $arguments) {
     }
 
     /* Serialize the response. */
-    $todos = $this->readTodoCollectionService->execute();
-    $data = $this->transformTodoCollectionService->execute($todos);
+    $command = new ReadTodoCollectionCommand;
+    $todos = $this->commandBus->handle($command);
+    $data = $this->transformTodoCollectionHandler->handle($todos);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -58,14 +68,20 @@ $app->post("/todos", function ($request, $response, $arguments) {
     }
 
     $data = $request->getParsedBody();
-    $todo = $this->createTodoService->execute($data);
+    $data["uid"] = $this->todoRepository->nextIdentity();
+
+    $command = new CreateTodoCommand($data);
+    $this->commandBus->handle($command);
+
+    $query = new ReadTodoQuery($data);
+    $todo = $this->commandBus->handle($query);
 
     /* Add Last-Modified and ETag headers to response. */
     $response = $this->cache->withEtag($response, $todo->etag());
     $response = $this->cache->withLastModified($response, $todo->timestamp());
 
     /* Serialize the response. */
-    $data = $this->transformTodoService->execute($todo);
+    $data = $this->transformTodoHandler->handle($todo);
 
     return $response->withStatus(201)
         ->withHeader("Content-Type", "application/json")
@@ -82,7 +98,8 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Load existing todo using provided uid. */
     try {
-        $todo = $this->readTodoService->execute(["uid" => $arguments["uid"]]);
+        $query = new ReadTodoQuery(["uid" => $arguments["uid"]]);
+        $todo = $this->commandBus->handle($query);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }
@@ -99,7 +116,7 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
     }
 
     /* Serialize the response. */
-    $data = $this->transformTodoService->execute($todo);
+    $data = $this->transformTodoHandler->handle($todo);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -115,7 +132,8 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
 
     /* Load existing todo using provided uid. */
     try {
-        $todo = $this->readTodoService->execute(["uid" => $arguments["uid"]]);
+        $query = new ReadTodoQuery(["uid" => $arguments["uid"]]);
+        $todo = $this->commandBus->handle($query);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }
@@ -133,20 +151,25 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
     }
 
     $data = $request->getParsedBody();
+    $data["uid"] = $arguments["uid"];
 
     /* PUT request assumes full representation. If any of the properties is */
     /* missing set them to default values by resetting the todo object first. */
     if ("PUT" === strtoupper($request->getMethod())) {
-        $todo->reset();
+        $command = new ReplaceTodoCommand($data);
+    } else {
+        $command = new UpdateTodoCommand($data);
     }
-    $todo->populate($data);
-    $todo = $this->updateTodoService->execute($todo);
+    $this->commandBus->handle($command);
+
+    $query = new ReadTodoQuery(["uid" => $arguments["uid"]]);
+    $todo = $this->commandBus->handle($query);
 
     /* Add Last-Modified and ETag headers to response. */
     $response = $this->cache->withEtag($response, $todo->etag());
     $response = $this->cache->withLastModified($response, $todo->timestamp());
 
-    $data = $this->transformTodoService->execute($todo);
+    $data = $this->transformTodoHandler->handle($todo);
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -161,7 +184,8 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
     }
 
     try {
-        $todo = $this->deleteTodoService->execute(["uid" => $arguments["uid"]]);
+        $command = new DeleteTodoCommand(["uid" => $arguments["uid"]]);
+        $todo = $this->commandBus->handle($command);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }
