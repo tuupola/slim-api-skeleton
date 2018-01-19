@@ -16,7 +16,7 @@ before_script:
     - travis_retry composer install --no-interaction
 
 script:
-    - composer test
+    - make travis
 
 cache:
     directories:

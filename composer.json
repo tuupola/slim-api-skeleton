@@ -22,9 +22,7 @@
         "slim/slim": "^3.0",
         "monolog/monolog": "^1.17",
         "vlucas/phpdotenv": "^2.0",
-        "symfony/console": "^2.7",
-        "vlucas/spot2": "^2.1",
-        "tuupola/slim-jwt-auth": "3.0.0-rc.3",
+        "tuupola/slim-jwt-auth": "3.x-dev",
         "tuupola/slim-basic-auth": "3.0.0-rc.3",
         "league/fractal": "^0.13.0",
         "paragonie/random_compat": "^1.2",
@@ -32,29 +30,28 @@
         "micheh/psr7-cache": "^0.5.0",
         "gofabian/negotiation-middleware": "^0.1.2",
         "tuupola/base62": "^0.8.0",
-        "tuupola/dbal-psr3-logger": "^0.1.0",
         "crell/api-problem": "^2.0",
-        "firebase/php-jwt": "^4.0"
+        "firebase/php-jwt": "^4.0",
+        "zendframework/zend-db": "^2.9",
+        "zendframework/zend-inputfilter": "^2.8",
+        "zendframework/zend-hydrator": "^2.3",
+        "lstrojny/functional-php": "^1.6",
+        "robmorgan/phinx": "^0.9.2",
+        "league/tactician": "^1.0"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/App/",
-            "Utils\\": "src/Utils/",
-            "Exception\\": "src/Exception/",
-            "Response\\": "src/Response/",
-            "Slim\\Handlers\\": "src/Slim/Handlers/"
+            "Skeleton\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Skeleton\\": "src/"
         }
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^2.5",
-        "overtrue/phplint": "^0.2.0",
-        "phpunit/phpunit": "^5.7"
-    },
-    "scripts": {
-        "test": "composer phplint && composer phpcs && composer phpunit",
-        "phpcs": "vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore=*/vendor/* . -p",
-        "phplint": "vendor/bin/phplint . --exclude=vendor/",
-        "phpunit": "vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --coverage-html=./report/",
-        "watch": "find . -name \"*.php\" -not -path \"./vendor/*\" -o -name \"*.json\" -not -path \"./vendor/*\"| entr -c composer test"
+        "squizlabs/php_codesniffer": "^3.2",
+        "phpunit/phpunit": "^5.7",
+        "overtrue/phplint": "^1.0"
     }
 }
