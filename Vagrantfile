@@ -21,8 +21,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       config.cache.scope = :box
   end
 
-  # Make sure logs folder will be writable for Apache
-  config.vm.synced_folder "logs", "/vagrant/logs", owner: 48, group: 48
+  # Make sure logs folder is owned by apache with group vagrant
+  config.vm.synced_folder "logs", "/vagrant/logs", owner: 48, group: 500
 
   # Install all needed packages
   config.vm.provision "shell", name: "rpm", inline: <<-SHELL
@@ -62,6 +62,14 @@ gpgcheck=1
 EOF
     yum -y install MariaDB-server
     yum -y install MariaDB-client
+    usermod --append --groups vagrant mysql
+
+  cat <<EOF | sudo tee /etc/my.cnf.d/server.cnf
+[mysqld]
+general-log
+general-log-file=/vagrant/logs/query_log
+log-output=file
+EOF
 
     /sbin/service mysql start
     /sbin/chkconfig --levels 235 mysql on
