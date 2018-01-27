@@ -49,10 +49,10 @@ $container["JwtAuthentication"] = function ($container) {
         "logger" => $container["logger"],
         "attribute" => false,
         "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
-        "error" => function ($request, $response, $arguments) {
+        "error" => function ($response, $arguments) {
             return new UnauthorizedResponse($arguments["message"], 401);
         },
-        "before" => function ($request, $response, $arguments) use ($container) {
+        "before" => function ($request, $arguments) use ($container) {
             $container["token"]->populate($arguments["decoded"]);
         }
     ]);
