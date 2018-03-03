@@ -1,6 +1,6 @@
 {
     "name": "tuupola/slim-api-skeleton",
-    "description": "Slim 3 + Spot + Monolog API skeleton",
+    "description": "Slim 3 + Zend Table Gateway + Monolog API skeleton",
     "type": "project",
     "keywords": [
         "slim",
@@ -14,7 +14,7 @@
         {
             "name": "Mika Tuupola",
             "email": "tuupola@appelsiini.net",
-            "homepage": "http://www.appelsiini.net/",
+            "homepage": "https://appelsiini.net/",
             "role": "Developer"
         }
     ],
