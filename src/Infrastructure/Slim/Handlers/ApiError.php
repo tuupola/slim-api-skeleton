@@ -24,10 +24,10 @@ use Crell\ApiProblem\ApiProblem;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
-use Slim\Handlers\AbstractHandler;
+use Slim\Handlers\AbstractError;
 use Throwable;
 
-final class ApiError extends \Slim\Handlers\Error
+final class ApiError extends AbstractError
 {
     protected $logger;
 
