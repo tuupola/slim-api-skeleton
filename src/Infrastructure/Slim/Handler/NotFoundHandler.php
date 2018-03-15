@@ -20,7 +20,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Handlers\AbstractHandler;
 
-final class NotFoundHandler extends \Slim\Handlers\Error
+final class NotFoundHandler extends AbstractHandler
 {
     public function __invoke(Request $request, Response $response)
     {
