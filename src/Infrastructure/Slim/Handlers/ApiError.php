@@ -25,6 +25,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Slim\Handlers\AbstractHandler;
+use Throwable;
 
 final class ApiError extends \Slim\Handlers\Error
 {
@@ -35,13 +36,13 @@ final class ApiError extends \Slim\Handlers\Error
         $this->logger = $logger;
     }
 
-    public function __invoke(Request $request, Response $response, \Exception $exception)
+    public function __invoke(Request $request, Response $response, Throwable $throwable)
     {
-        $this->logger->critical($exception->getMessage());
+        $this->logger->critical($throwable->getMessage());
 
-        $status = $exception->getCode() ?: 500;
+        $status = $throwable->getCode() ?: 500;
 
-        $problem = new ApiProblem($exception->getMessage(), "about:blank");
+        $problem = new ApiProblem($throwable->getMessage(), "about:blank");
         $problem->setStatus($status);
         $body = $problem->asJson(true);
 
