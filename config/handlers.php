@@ -13,8 +13,8 @@
  *
  */
 
-use Skeleton\Infrastructure\Slim\Handlers\ApiError as ApiErrorHandler;
-use Skeleton\Infrastructure\Slim\Handlers\NotFound as NotFoundHandler;
+use Skeleton\Infrastructure\Slim\Handler\ApiErrorHandler;
+use Skeleton\Infrastructure\Slim\Handler\NotFoundHandler;
 
 $container = $app->getContainer();
 

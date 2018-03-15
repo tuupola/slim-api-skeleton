@@ -13,38 +13,26 @@
  *
  */
 
-namespace Skeleton\Infrastructure\Slim\Handlers;
+namespace Skeleton\Infrastructure\Slim\Handler;
 
 use Crell\ApiProblem\ApiProblem;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Handlers\AbstractHandler;
 
-final class NotAllowed extends AbstractHandler
+final class NotFoundHandler extends \Slim\Handlers\Error
 {
-    public function __invoke(Request $request, Response $response, $allowed = null)
+    public function __invoke(Request $request, Response $response)
     {
         $problem = new ApiProblem(
-            "Method not allowed",
+            "Not found",
             "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html"
         );
-        $problem->setStatus(405);
-
-        if ($allowed) {
-            if (1 === count($allowed)) {
-                $detail = "Request method must be {$allowed[0]}";
-            } else {
-                $last = array_pop($allowed);
-                $first = implode(", ", $allowed);
-                $detail = "Request method must be either {$first} or {$last}.";
-            }
-            $problem->setDetail($detail);
-        }
-
+        $problem->setStatus(404);
         $body = $problem->asJson(true);
 
         return $response
-                ->withStatus(405)
+                ->withStatus(404)
                 ->withHeader("Content-type", "application/problem+json")
                 ->write($body);
     }

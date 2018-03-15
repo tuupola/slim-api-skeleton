@@ -18,7 +18,7 @@
  *
  */
 
-namespace Skeleton\Infrastructure\Slim\Handlers;
+namespace Skeleton\Infrastructure\Slim\Handler;
 
 use Crell\ApiProblem\ApiProblem;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 use Slim\Handlers\AbstractError;
 use Throwable;
 
-final class ApiError extends AbstractError
+final class ApiErrorHandler extends AbstractError
 {
     protected $logger;
 
