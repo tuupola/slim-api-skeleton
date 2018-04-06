@@ -13,9 +13,7 @@
  *
  */
 
-use Ramsey\Uuid\Uuid;
-use Firebase\JWT\JWT;
-use Tuupola\Base62;
+use Branca\Branca;
 
 $app->post("/token", function ($request, $response, $arguments) {
     $requested_scopes = $request->getParsedBody() ?: [];
@@ -34,24 +32,17 @@ $app->post("/token", function ($request, $response, $arguments) {
     });
 
     $now = new DateTime();
-    $future = new DateTime("now +2 hours");
     $server = $request->getServerParams();
 
-    $jti = (new Base62)->encode(random_bytes(16));
-
     $payload = [
-        "iat" => $now->getTimeStamp(),
-        "exp" => $future->getTimeStamp(),
-        "jti" => $jti,
         "sub" => $server["PHP_AUTH_USER"],
         "scope" => $scopes
     ];
 
-    $secret = getenv("JWT_SECRET");
-    $token = JWT::encode($payload, $secret, "HS256");
+    $branca = new Branca(getenv("BRANCA_SECRET"));
+    $token = $branca->encode(json_encode($payload));
 
     $data["token"] = $token;
-    $data["expires"] = $future->getTimeStamp();
 
     return $response->withStatus(201)
         ->withHeader("Content-Type", "application/json")

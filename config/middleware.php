@@ -20,7 +20,7 @@ use Skeleton\Application\Response\UnauthorizedResponse;
 use Skeleton\Domain\Token;
 use Tuupola\Middleware\CorsMiddleware;
 use Tuupola\Middleware\HttpBasicAuthentication;
-use Tuupola\Middleware\JwtAuthentication;
+use Tuupola\Middleware\BrancaAuthentication;
 use Tuupola\Middleware\ServerTimingMiddleware;
 
 $container = $app->getContainer();
@@ -42,11 +42,12 @@ $container["token"] = function ($container) {
     return new Token;
 };
 
-$container["JwtAuthentication"] = function ($container) {
-    return new JwtAuthentication([
+$container["BrancaAuthentication"] = function ($container) {
+    return new BrancaAuthentication([
         "path" => "/",
+        "ttl" => 7200,
         "ignore" => ["/token", "/info"],
-        "secret" => getenv("JWT_SECRET"),
+        "secret" => getenv("BRANCA_SECRET"),
         "logger" => $container["logger"],
         "attribute" => false,
         "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
@@ -54,7 +55,7 @@ $container["JwtAuthentication"] = function ($container) {
             return new UnauthorizedResponse($arguments["message"], 401);
         },
         "before" => function ($request, $arguments) use ($container) {
-            $container["token"]->populate($arguments["decoded"]);
+            $container["token"]->populate(json_decode($arguments["decoded"], true));
         }
     ]);
 };
@@ -85,7 +86,7 @@ $container["ServerTimingMiddleware"] = function ($container) {
 };
 
 $app->add("HttpBasicAuthentication");
-$app->add("JwtAuthentication");
+$app->add("BrancaAuthentication");
 $app->add("CorsMiddleware");
 $app->add("NegotiationMiddleware");
 $app->add("ServerTimingMiddleware");
