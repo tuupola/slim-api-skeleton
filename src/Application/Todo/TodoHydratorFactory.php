@@ -17,8 +17,8 @@ declare(strict_types=1);
 namespace Skeleton\Application\Todo;
 
 use Zend\Hydrator\HydratorInterface;
+use Zend\Hydrator\Reflection as ReflectionHydrator;
 use Zend\Hydrator\NamingStrategy\MapNamingStrategy;
-use Zend\Hydrator\ArraySerializable as ArraySerializableHydrator;
 use Zend\Hydrator\Strategy\DateTimeFormatterStrategy;
 use Zend\Hydrator\Strategy\BooleanStrategy;
 
@@ -26,7 +26,7 @@ class TodoHydratorFactory
 {
     public function create(): HydratorInterface
     {
-        $hydrator = new ArraySerializableHydrator;
+        $hydrator = new ReflectionHydrator;
         $hydrator->setNamingStrategy(new MapNamingStrategy([
             "created_at" => "createdAt",
             "updated_at" => "updatedAt",
