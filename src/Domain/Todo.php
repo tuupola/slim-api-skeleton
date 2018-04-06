@@ -42,11 +42,6 @@ class Todo
         return $this->order;
     }
 
-    public function changeOrder(int $order): void
-    {
-        $this->order = $order;
-    }
-
     public function isCompleted(): bool
     {
         return $this->completed;
@@ -65,11 +60,6 @@ class Todo
     public function title(): ?string
     {
         return $this->title;
-    }
-
-    public function changeTitle(string $title): string
-    {
-        return $this->title = $title;
     }
 
     public function timestamp(): int
