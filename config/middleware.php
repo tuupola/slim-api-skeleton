@@ -13,14 +13,15 @@
  *
  */
 
-use Skeleton\Domain\Token;
 use Crell\ApiProblem\ApiProblem;
 use Gofabian\Negotiation\NegotiationMiddleware;
 use Micheh\Cache\CacheUtil;
-use Tuupola\Middleware\JwtAuthentication;
-use Tuupola\Middleware\HttpBasicAuthentication;
-use Tuupola\Middleware\CorsMiddleware;
 use Skeleton\Application\Response\UnauthorizedResponse;
+use Skeleton\Domain\Token;
+use Tuupola\Middleware\CorsMiddleware;
+use Tuupola\Middleware\HttpBasicAuthentication;
+use Tuupola\Middleware\JwtAuthentication;
+use Tuupola\Middleware\ServerTimingMiddleware;
 
 $container = $app->getContainer();
 
@@ -79,10 +80,15 @@ $container["NegotiationMiddleware"] = function ($container) {
     ]);
 };
 
+$container["ServerTimingMiddleware"] = function ($container) {
+    return new ServerTimingMiddleware;
+};
+
 $app->add("HttpBasicAuthentication");
 $app->add("JwtAuthentication");
 $app->add("CorsMiddleware");
 $app->add("NegotiationMiddleware");
+$app->add("ServerTimingMiddleware");
 
 $container["cache"] = function ($container) {
     return new CacheUtil;
