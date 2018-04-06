@@ -73,6 +73,9 @@ class Todo
         return md5(serialize($data));
     }
 
+     /**
+     * Reset all properties to default values.
+     */
     public function reset(): void
     {
         $this->populate([
@@ -90,7 +93,7 @@ class Todo
     /**
      * Populate all properties from the given array.
      */
-    public function populate(array $data = []): void
+    private function populate(array $data = []): void
     {
         foreach ($data as $key => $value) {
             /* https://github.com/facebook/hhvm/issues/6368 */
@@ -107,18 +110,6 @@ class Todo
                 }
             }
         }
-    }
-
-    public function getArrayCopy(): array
-    {
-        return [
-            "uid" => $this->uid(),
-            "order" => $this->order(),
-            "completed" => $this->isCompleted(),
-            "title" => $this->title(),
-            "createdAt" => $this->createdAt,
-            "updatedAt" => $this->updatedAt,
-        ];
     }
 
     private function setCreatedAt(?DateTime $datetime): void
