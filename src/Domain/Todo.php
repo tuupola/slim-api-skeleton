@@ -69,8 +69,7 @@ class Todo
 
     public function etag(): string
     {
-        $data = $this->getArrayCopy();
-        return md5(serialize($data));
+        return md5(serialize($this));
     }
 
      /**
