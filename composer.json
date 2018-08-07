@@ -34,7 +34,7 @@
         "tuupola/base62": "^0.10.0",
         "tuupola/cors-middleware": "^0.8.0",
         "tuupola/slim-basic-auth": "^3.2",
-        "tuupola/slim-jwt-auth": "dev-stable-psr-17",
+        "tuupola/slim-jwt-auth": "^3.1",
         "vlucas/phpdotenv": "^2.0",
         "zendframework/zend-db": "^2.9",
         "zendframework/zend-hydrator": "^2.3",
