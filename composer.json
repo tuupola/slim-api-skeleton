@@ -32,7 +32,7 @@
         "robmorgan/phinx": "^0.9.2",
         "slim/slim": "^3.9",
         "tuupola/base62": "^0.10.0",
-        "tuupola/cors-middleware": "dev-stable-psr-17",
+        "tuupola/cors-middleware": "^0.8.0",
         "tuupola/slim-basic-auth": "^3.2",
         "tuupola/slim-jwt-auth": "dev-stable-psr-17",
         "vlucas/phpdotenv": "^2.0",
