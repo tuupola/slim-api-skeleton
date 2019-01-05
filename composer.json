@@ -31,11 +31,11 @@
         "monolog/monolog": "^1.17",
         "robmorgan/phinx": "^0.9.2",
         "slim/slim": "^3.9",
-        "tuupola/base62": "^0.10.0",
         "tuupola/branca-middleware": "^0.4.1",
-        "tuupola/cors-middleware": "^0.7.0",
         "tuupola/server-timing-middleware": "^0.7.0",
-        "tuupola/slim-basic-auth": "^3.0",
+        "tuupola/base62": "^1.0",
+        "tuupola/cors-middleware": "^0.8.0",
+        "tuupola/slim-basic-auth": "^3.2",
         "vlucas/phpdotenv": "^2.0",
         "zendframework/zend-db": "^2.9",
         "zendframework/zend-hydrator": "^2.3",
@@ -52,8 +52,8 @@
         }
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.2",
-        "phpunit/phpunit": "^5.7",
-        "overtrue/phplint": "^1.0"
+        "overtrue/phplint": "^1.0",
+        "phpunit/phpunit": "^7.3",
+        "squizlabs/php_codesniffer": "^3.2"
     }
 }
