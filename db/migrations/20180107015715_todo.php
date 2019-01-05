@@ -30,7 +30,7 @@ class Todo extends AbstractMigration
     {
         $todos = $this->table("todos");
         $todos
-            ->addColumn("uid", "string", ["limit" => 16, "null" => false])
+            ->addColumn("uid", "string", ["limit" => 27, "null" => false])
             ->addColumn("title", "string", ["limit" => 255, "null" => false])
             ->addColumn("completed", "integer", ["default" => 0])
             ->addColumn("order", "integer", ["default" => 512])

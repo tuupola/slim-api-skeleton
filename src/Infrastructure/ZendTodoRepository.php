@@ -7,7 +7,7 @@ use Skeleton\Application\Todo\TodoHydratorFactory;
 use Skeleton\Application\Todo\TodoNotFoundException;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
-use Tuupola\Base62;
+use Tuupola\Ksuid;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
@@ -31,7 +31,7 @@ class ZendTodoRepository implements TodoRepository
 
     public function nextIdentity(): string
     {
-        return (new Base62)->encode(random_bytes(9));
+        return (new Ksuid)->string();
     }
 
     public function get(string $uid): Todo
