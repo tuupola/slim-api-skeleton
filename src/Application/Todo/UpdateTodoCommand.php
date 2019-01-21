@@ -8,25 +8,50 @@ use Skeleton\Domain\Todo;
 
 class UpdateTodoCommand
 {
-    private $data;
+    private $uid;
+    private $title;
+    private $completed;
+    private $order;
 
-    public function __construct(array $data)
-    {
-        $this->setData($data);
+    public function __construct(
+        string $uid,
+        string $title,
+        int $order,
+        bool $completed
+    ) {
+        $this->uid = $uid;
+        $this->title = $title;
+        $this->order = $order;
+        $this->completed = $completed;
     }
 
-    public function uid()
+    public function uid(): string
     {
-        return $this->data["uid"];
+        return $this->uid;
     }
 
-    private function setData(array $data): void
+    public function title(): string
     {
-        $this->data = $data;
+        return $this->title;
     }
 
-    public function getArrayCopy(): array
+    public function completed(): bool
     {
-        return $this->data;
+        return $this->completed;
+    }
+
+    public function order(): int
+    {
+        return $this->order;
+    }
+
+    public function asArray(): array
+    {
+        return [
+            "uid" => $this->uid,
+            "order" => $this->order,
+            "completed" => $this->completed,
+            "title" => $this->title,
+        ];
     }
 }

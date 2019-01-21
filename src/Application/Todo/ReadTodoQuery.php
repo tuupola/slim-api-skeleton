@@ -8,18 +8,13 @@ class ReadTodoQuery
 {
     private $uid;
 
-    public function __construct(array $data = [])
+    public function __construct(string $uid)
     {
-        $this->setUid($data["uid"]);
+        $this->uid = $uid;
     }
 
     public function uid()
     {
         return $this->uid;
-    }
-
-    private function setUid(string $uid): void
-    {
-        $this->uid = $uid;
     }
 }

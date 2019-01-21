@@ -29,24 +29,17 @@ class UpdateTodoHandlerTest extends TestCase
     public function testShouldUpdateTodo()
     {
         $uid = $this->todoRepository->nextIdentity();
-        $create = new CreateTodoCommand([
-            "uid" => $uid,
-            "title" => "Not sure?",
-            "order" => 27
-        ]);
+        $create = new CreateTodoCommand($uid, "Not sure?", 20);
         $this->createTodoHandler->handle($create);
 
-        $read = new ReadTodoQuery([
-            "uid" => $uid,
-        ]);
+        $read = new ReadTodoQuery($uid);
         $todo = $this->readTodoHandler->handle($read);
         $this->assertEquals("Not sure?", $todo->title());
+        $this->assertEquals(20, $todo->order());
+        $this->assertEquals($uid, $todo->uid());
 
         $todo->complete();
-        $update = new UpdateTodoCommand([
-            "uid" => $uid,
-            "title" => "Like from toilet?",
-        ]);
+        $update = new UpdateTodoCommand($uid, "Like from toilet?", 27, true);
 
         $this->updateTodoHandler->handle($update);
 

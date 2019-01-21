@@ -28,17 +28,14 @@ class DeleteTodoHandlerTest extends TestCase
     {
         $uid = $this->todoRepository->nextIdentity();
 
-        $command = new CreateTodoCommand([
-            "uid" => $uid,
-            "title" => "Not sure?",
-            "order" => 27,
-        ]);
+        $command = new CreateTodoCommand(
+            $uid,
+            "Not sure?"
+        );
         $this->createTodoHandler->handle($command);
         $todo = $this->latestTodoHandler->handle();
 
-        $command = new DeleteTodoCommand([
-            "uid" => $uid
-        ]);
+        $command = new DeleteTodoCommand($uid);
 
         $this->assertTrue($this->todoRepository->contains($todo));
         $this->deleteTodoHandler->handle($command);

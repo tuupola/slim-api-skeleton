@@ -6,38 +6,44 @@ namespace Skeleton\Application\Todo;
 
 class CreateTodoCommand
 {
-    private $order;
-    private $completed = false;
+    private $uid;
     private $title;
+    private $completed;
+    private $order;
 
-    public function __construct(array $data = [])
-    {
-        $this->setUid($data["uid"]);
-        $this->setOrder($data["order"]);
-        $this->setTitle($data["title"]);
-    }
-
-    private function setUid(string $uid): void
-    {
+    public function __construct(
+        string $uid,
+        string $title,
+        int $order = 0,
+        bool $completed = false
+    ) {
         $this->uid = $uid;
-    }
-
-    private function setOrder(int $order): void
-    {
-        $this->order = $order;
-    }
-
-    private function setTitle(string $title): void
-    {
         $this->title = $title;
-    }
-
-    private function setCompleted(bool $completed): void
-    {
+        $this->order = $order;
         $this->completed = $completed;
     }
 
-    public function getArrayCopy(): array
+    public function uid(): string
+    {
+        return $this->uid;
+    }
+
+    public function title(): string
+    {
+        return $this->title;
+    }
+
+    public function completed(): bool
+    {
+        return $this->completed;
+    }
+
+    public function order(): int
+    {
+        return $this->order;
+    }
+
+    public function asArray(): array
     {
         return [
             "uid" => $this->uid,

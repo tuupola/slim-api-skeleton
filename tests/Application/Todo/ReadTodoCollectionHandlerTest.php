@@ -26,18 +26,16 @@ class ReadTodoCollectionServiceTest extends TestCase
 
     public function testShouldReadTodo()
     {
-        $command = new CreateTodoCommand([
-            "uid" => $this->todoRepository->nextIdentity(),
-            "title" => "Not sure?",
-            "order" => 27,
-        ]);
+        $command = new CreateTodoCommand(
+            $this->todoRepository->nextIdentity(),
+            "Not sure?"
+        );
         $this->createTodoHandler->handle($command);
 
-        $command = new CreateTodoCommand([
-            "uid" => $this->todoRepository->nextIdentity(),
-            "title" => "Brawndo!",
-            "order" => 66,
-        ]);
+        $command = new CreateTodoCommand(
+            $this->todoRepository->nextIdentity(),
+            "Brawndo!"
+        );
         $this->createTodoHandler->handle($command);
 
         $collection = $this->readTodoCollectionHandler->handle();

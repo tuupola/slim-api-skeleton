@@ -20,7 +20,7 @@ class ReplaceTodoHandler
 
     public function handle(ReplaceTodoCommand $command): void
     {
-        $data = $command->getArrayCopy();
+        $data = $command->asArray();
         $todo = $this->repository->get($command->uid());
         $todo->reset();
         $todo = $this->hydrator->hydrate($data, $todo);
