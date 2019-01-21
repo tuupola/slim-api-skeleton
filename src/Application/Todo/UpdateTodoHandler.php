@@ -20,7 +20,7 @@ class UpdateTodoHandler
 
     public function handle(UpdateTodoCommand $command): void
     {
-        $data = $command->getArrayCopy();
+        $data = $command->asArray();
         $todo = $this->repository->get($command->uid());
         $todo = $this->hydrator->hydrate($data, $todo);
         $todo->touch();

@@ -25,11 +25,10 @@ class TransformTodoServiceTest extends TestCase
 
     public function testShouldTransformTodo()
     {
-        $command = new CreateTodoCommand([
-            "uid" => $this->todoRepository->nextIdentity(),
-            "title" => "Not sure?",
-            "order" => 27,
-        ]);
+        $command = new CreateTodoCommand(
+            $this->todoRepository->nextIdentity(),
+            "Not sure?",
+        );
         $this->createTodoHandler->handle($command);
         $todo = $this->latestTodoHandler->handle();
 

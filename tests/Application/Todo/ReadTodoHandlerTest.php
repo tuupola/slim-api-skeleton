@@ -25,16 +25,13 @@ class ReadTodoHandlerTest extends TestCase
     public function testShouldReadTodo()
     {
         $uid = $this->todoRepository->nextIdentity();
-        $command = new CreateTodoCommand([
-            "uid" => $uid,
-            "title" => "Not sure?",
-            "order" => 27,
-        ]);
+        $command = new CreateTodoCommand(
+            $uid,
+            "Not sure?",
+        );
         $this->createTodoHandler->handle($command);
 
-        $query = new ReadTodoQuery([
-            "uid" => $uid,
-        ]);
+        $query = new ReadTodoQuery($uid);
         $todo = $this->readTodoHandler->handle($query);
 
         $this->assertEquals("Not sure?", $todo->title());

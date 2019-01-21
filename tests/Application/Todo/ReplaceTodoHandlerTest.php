@@ -29,29 +29,28 @@ class ReplaceTodoHandlerTest extends TestCase
     public function testShouldReplaceTodo()
     {
         $uid = $this->todoRepository->nextIdentity();
-        $create = new CreateTodoCommand([
-            "uid" => $uid,
-            "title" => "Not sure?",
-            "order" => 27
-        ]);
+        $create = new CreateTodoCommand(
+            $uid,
+            "Not sure?",
+        );
         $this->createTodoHandler->handle($create);
 
-        $read = new ReadTodoQuery([
-            "uid" => $uid,
-        ]);
+        $read = new ReadTodoQuery($uid);
         $todo = $this->readTodoHandler->handle($read);
         $this->assertEquals("Not sure?", $todo->title());
 
         $todo->complete();
-        $replace = new ReplaceTodoCommand([
-            "uid" => $uid,
-            "order" => 1,
-        ]);
+        $replace = new ReplaceTodoCommand(
+            $uid,
+            "Really?",
+            1,
+            true,
+        );
 
         $this->replaceTodoHandler->handle($replace);
 
         $todo = $this->readTodoHandler->handle($read);
-        $this->assertEquals(null, $todo->title());
+        $this->assertEquals("Really?", $todo->title());
         $this->assertEquals(1, $todo->order());
         $this->assertEquals($uid, $todo->uid());
     }
