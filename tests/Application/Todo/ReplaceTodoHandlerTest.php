@@ -31,7 +31,7 @@ class ReplaceTodoHandlerTest extends TestCase
         $uid = $this->todoRepository->nextIdentity();
         $create = new CreateTodoCommand(
             $uid,
-            "Not sure?",
+            "Not sure?"
         );
         $this->createTodoHandler->handle($create);
 
@@ -44,7 +44,7 @@ class ReplaceTodoHandlerTest extends TestCase
             $uid,
             "Really?",
             1,
-            true,
+            true
         );
 
         $this->replaceTodoHandler->handle($replace);

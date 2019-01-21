@@ -27,7 +27,7 @@ class ReadTodoHandlerTest extends TestCase
         $uid = $this->todoRepository->nextIdentity();
         $command = new CreateTodoCommand(
             $uid,
-            "Not sure?",
+            "Not sure?"
         );
         $this->createTodoHandler->handle($command);
 

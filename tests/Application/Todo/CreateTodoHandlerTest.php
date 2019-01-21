@@ -26,7 +26,7 @@ class CreateTodoHandlerTest extends TestCase
     {
         $command = new CreateTodoCommand(
             $this->todoRepository->nextIdentity(),
-            "Not sure?",
+            "Not sure?"
         );
         $this->createTodoHandler->handle($command);
         $todo = $this->latestTodoHandler->handle();

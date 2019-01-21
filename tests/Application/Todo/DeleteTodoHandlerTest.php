@@ -30,7 +30,7 @@ class DeleteTodoHandlerTest extends TestCase
 
         $command = new CreateTodoCommand(
             $uid,
-            "Not sure?",
+            "Not sure?"
         );
         $this->createTodoHandler->handle($command);
         $todo = $this->latestTodoHandler->handle();

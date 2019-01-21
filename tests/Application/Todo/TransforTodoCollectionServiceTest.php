@@ -30,13 +30,13 @@ class TransformTodoCollectionServiceTest extends TestCase
     {
         $command = new CreateTodoCommand(
             $this->todoRepository->nextIdentity(),
-            "Not sure?",
+            "Not sure?"
         );
         $this->createTodoHandler->handle($command);
 
         $command = new CreateTodoCommand(
             $this->todoRepository->nextIdentity(),
-            "Brawndo!",
+            "Brawndo!"
         );
         $this->createTodoHandler->handle($command);
 
