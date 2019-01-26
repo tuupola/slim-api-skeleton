@@ -6,6 +6,7 @@ namespace Skeleton\Infrastructure;
 use Skeleton\Application\Todo\TodoHydratorFactory;
 use Skeleton\Application\Todo\TodoNotFoundException;
 use Skeleton\Domain\Todo;
+use Skeleton\Domain\TodoUid;
 use Skeleton\Domain\TodoRepository;
 use Tuupola\Base62;
 use Zend\Db\Adapter\Adapter;
@@ -29,14 +30,14 @@ class ZendTodoRepository implements TodoRepository
         $this->hydrator = (new TodoHydratorFactory)->create();
     }
 
-    public function nextIdentity(): string
+    public function nextIdentity(): TodoUid
     {
-        return (new Base62)->encode(random_bytes(9));
+        return new TodoUid;
     }
 
-    public function get(string $uid): Todo
+    public function get(TodoUid $uid): Todo
     {
-        $rowset = $this->table->select(["uid" => $uid]);
+        $rowset = $this->table->select(["uid" => (string) $uid]);
         if (null === $row = $rowset->current()) {
             throw new TodoNotFoundException;
         }
@@ -64,7 +65,7 @@ class ZendTodoRepository implements TodoRepository
     {
         $data = $this->hydrator->extract($todo);
         if ($this->contains($todo)) {
-            $where = ["uid" => $todo->uid()];
+            $where["uid"] = (string) $todo->uid();
             $this->table->update($data, $where);
         } else {
             $this->table->insert($data);
@@ -73,7 +74,7 @@ class ZendTodoRepository implements TodoRepository
 
     public function remove(Todo $todo): void
     {
-        $where["uid"] = $todo->uid();
+        $where["uid"] = (string) $todo->uid();
         $this->table->delete($where);
     }
 

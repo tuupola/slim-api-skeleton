@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Skeleton\Application\Todo;
 
+use Skeleton\Domain\TodoUid;
+
 class CreateTodoCommand
 {
     private $uid;
@@ -12,7 +14,7 @@ class CreateTodoCommand
     private $order;
 
     public function __construct(
-        string $uid,
+        TodoUid $uid,
         string $title,
         int $order = 0,
         bool $completed = false
@@ -23,7 +25,7 @@ class CreateTodoCommand
         $this->completed = $completed;
     }
 
-    public function uid(): string
+    public function uid(): TodoUid
     {
         return $this->uid;
     }
