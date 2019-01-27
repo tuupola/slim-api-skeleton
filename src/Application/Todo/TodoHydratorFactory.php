@@ -16,11 +16,13 @@ declare(strict_types=1);
 
 namespace Skeleton\Application\Todo;
 
+use Skeleton\Domain\TodoUid;
 use Zend\Hydrator\HydratorInterface;
 use Zend\Hydrator\Reflection as ReflectionHydrator;
 use Zend\Hydrator\NamingStrategy\MapNamingStrategy;
 use Zend\Hydrator\Strategy\DateTimeFormatterStrategy;
 use Zend\Hydrator\Strategy\BooleanStrategy;
+use Zend\Hydrator\Strategy\ClosureStrategy;
 
 class TodoHydratorFactory
 {
@@ -42,6 +44,17 @@ class TodoHydratorFactory
         $hydrator->addStrategy(
             "completed",
             new BooleanStrategy(0, 1)
+        );
+        $hydrator->addStrategy(
+            "uid",
+            new ClosureStrategy(
+                function (TodoUid $uid) {
+                    return (string) $uid;
+                },
+                function (string $uid) {
+                    return new TodoUid($uid);
+                }
+            )
         );
 
         return $hydrator;

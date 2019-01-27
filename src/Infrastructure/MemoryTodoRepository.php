@@ -6,8 +6,8 @@ namespace Skeleton\Infrastructure;
 use Skeleton\Application\Todo\TodoHydratorFactory;
 use Skeleton\Application\Todo\TodoNotFoundException;
 use Skeleton\Domain\Todo;
+use Skeleton\Domain\TodoUid;
 use Skeleton\Domain\TodoRepository;
-use Tuupola\Base62;
 
 use function Functional\map;
 
@@ -21,13 +21,15 @@ class MemoryTodoRepository implements TodoRepository
         $this->hydrator = (new TodoHydratorFactory)->create();
     }
 
-    public function nextIdentity(): string
+    public function nextIdentity(): TodoUid
     {
-        return (new Base62)->encode(random_bytes(9));
+        return new TodoUid;
     }
 
-    public function get(string $uid): Todo
+    public function get(TodoUid $uid): Todo
     {
+        $uid = (string) $uid;
+
         if (isset($this->todos[$uid])) {
             return $this->todos[$uid];
         }
@@ -49,17 +51,20 @@ class MemoryTodoRepository implements TodoRepository
 
     public function add(Todo $todo): void
     {
-        $this->todos[$todo->uid()] = $todo;
+        $uid = (string) $todo->uid();
+        $this->todos[$uid] = $todo;
     }
 
     public function remove(Todo $todo): void
     {
-        unset($this->todos[$todo->uid()]);
+        $uid = (string) $todo->uid();
+        unset($this->todos[$uid]);
     }
 
     public function contains(Todo $todo): bool
     {
-        return isset($this->todos[$todo->uid()]);
+        $uid = (string) $todo->uid();
+        return isset($this->todos[$uid]);
     }
 
     public function count(): int

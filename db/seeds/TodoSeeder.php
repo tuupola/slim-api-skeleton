@@ -2,7 +2,7 @@
 
 
 use Phinx\Seed\AbstractSeed;
-use Tuupola\Base62;
+use Skeleton\Domain\TodoUid;
 
 class TodoSeeder extends AbstractSeed
 {
@@ -18,13 +18,13 @@ class TodoSeeder extends AbstractSeed
     {
         $data = [
             [
-                "uid" => (new Base62)->encode(random_bytes(9)),
+                "uid" => (string) new TodoUid,
                 "title" => "Make coffee",
                 "created_at" => date("Y-m-d H:i:s"),
                 "updated_at" => date("Y-m-d H:i:s"),
             ],
             [
-                "uid" => (new Base62)->encode(random_bytes(9)),
+                "uid" => (string) new TodoUid,
                 "title" => "Walk the spiderpig",
                 "created_at" => date("Y-m-d H:i:s"),
                 "updated_at" => date("Y-m-d H:i:s"),
