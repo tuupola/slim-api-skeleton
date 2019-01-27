@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Skeleton\Application\Todo;
 
 use Datetime;
+use ReflectionClass;
 use Skeleton\Domain\Todo;
 use Skeleton\Domain\TodoRepository;
 
@@ -23,7 +24,10 @@ class CreateTodoHandler
         $data = $command->asArray();
         $data["created_at"] = (new DateTime)->format("Y-m-d H:i:s");
         $data["updated_at"] = $data["created_at"];
-        $todo = $this->hydrator->hydrate($data, new Todo);
+        $todo = $this->hydrator->hydrate(
+            $data,
+            (new ReflectionClass(Todo::class))->newInstanceWithoutConstructor()
+        );
         $this->repository->add($todo);
     }
 }
