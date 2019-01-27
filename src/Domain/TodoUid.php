@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 namespace Skeleton\Domain;
 
-use Tuupola\Base62;
+use Tuupola\Ksuid;
 
 class TodoUid
 {
@@ -24,7 +24,7 @@ class TodoUid
 
     public function __construct(string $uid = null)
     {
-        $this->uid = $uid ?: (new Base62)->encode(random_bytes(9));
+        $this->uid = $uid ?: (string) new Ksuid;
     }
 
     public function uid(): string
