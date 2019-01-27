@@ -48,10 +48,10 @@ class TodoHydratorFactory
         $hydrator->addStrategy(
             "uid",
             new ClosureStrategy(
-                function(TodoUid $uid) {
+                function (TodoUid $uid) {
                     return (string) $uid;
                 },
-                function(string $uid) {
+                function (string $uid) {
                     return new TodoUid($uid);
                 }
             )
