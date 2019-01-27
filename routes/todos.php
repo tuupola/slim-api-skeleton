@@ -32,6 +32,10 @@ use Skeleton\Application\Todo\{
     TodoNotFoundException
 };
 
+use Skeleton\Domain\{
+    TodoUid
+};
+
 $app->get("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
@@ -73,12 +77,16 @@ $app->post("/todos", function ($request, $response, $arguments) {
     }
 
     $data = $request->getParsedBody();
-    $data["uid"] = $this->todoRepository->nextIdentity();
+    $uid = $this->todoRepository->nextIdentity();
 
-    $command = new CreateTodoCommand($data);
+    $command = new CreateTodoCommand(
+        $uid,
+        $data["title"],
+        $data["order"]
+    );
     $this->commandBus->handle($command);
 
-    $query = new ReadTodoQuery($data);
+    $query = new ReadTodoQuery($uid);
     $todo = $this->commandBus->handle($query);
 
     /* Add Last-Modified and ETag headers to response. */
@@ -101,9 +109,11 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
         return new ForbiddenResponse("Token not allowed to read todos", 403);
     }
 
+    $uid = new TodoUid($arguments["uid"]);
+
     /* Load existing todo using provided uid. */
     try {
-        $query = new ReadTodoQuery(["uid" => $arguments["uid"]]);
+        $query = new ReadTodoQuery($uid);
         $todo = $this->commandBus->handle($query);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
@@ -135,9 +145,11 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
         return new ForbiddenResponse("Token not allowed to update todos", 403);
     }
 
+    $uid = new TodoUid($arguments["uid"]);
+
     /* Load existing todo using provided uid. */
     try {
-        $query = new ReadTodoQuery(["uid" => $arguments["uid"]]);
+        $query = new ReadTodoQuery($uid);
         $todo = $this->commandBus->handle($query);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
@@ -156,18 +168,26 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
     }
 
     $data = $request->getParsedBody();
-    $data["uid"] = $arguments["uid"];
 
-    /* PUT request assumes full representation. If any of the properties is */
-    /* missing set them to default values by resetting the todo object first. */
+    /* PUT request assumes full representation. PATCH allows partial data. */
     if ("PUT" === strtoupper($request->getMethod())) {
-        $command = new ReplaceTodoCommand($data);
+        $command = new ReplaceTodoCommand(
+            $uid,
+            $data["title"],
+            $data["order"],
+            $data["completed"]
+        );
     } else {
-        $command = new UpdateTodoCommand($data);
+        $command = new UpdateTodoCommand(
+            $uid,
+            $data["title"] ?? $todo->title(),
+            $data["order"] ?? $todo->order(),
+            $data["completed"] ?? $todo->isCompleted()
+        );
     }
     $this->commandBus->handle($command);
 
-    $query = new ReadTodoQuery(["uid" => $arguments["uid"]]);
+    $query = new ReadTodoQuery($uid);
     $todo = $this->commandBus->handle($query);
 
     /* Add Last-Modified and ETag headers to response. */
@@ -188,8 +208,10 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
         return new ForbiddenResponse("Token not allowed to delete todos", 403);
     }
 
+    $uid = new TodoUid($arguments["uid"]);
+
     try {
-        $command = new DeleteTodoCommand(["uid" => $arguments["uid"]]);
+        $command = new DeleteTodoCommand($uid);
         $todo = $this->commandBus->handle($command);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);

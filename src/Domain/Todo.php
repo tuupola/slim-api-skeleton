@@ -32,7 +32,7 @@ class Todo
         $this->populate($data);
     }
 
-    public function uid(): string
+    public function uid(): TodoUid
     {
         return $this->uid;
     }

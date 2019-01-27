@@ -6,7 +6,7 @@ namespace Skeleton\Application\Todo;
 
 class LatestTodoQuery
 {
-    public function __construct(array $data = [])
+    public function __construct()
     {
     }
 }

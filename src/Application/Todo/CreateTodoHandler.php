@@ -20,10 +20,9 @@ class CreateTodoHandler
 
     public function handle(CreateTodoCommand $command): void
     {
-        $data = $command->getArrayCopy();
+        $data = $command->asArray();
         $data["created_at"] = (new DateTime)->format("Y-m-d H:i:s");
         $data["updated_at"] = $data["created_at"];
-
         $todo = $this->hydrator->hydrate($data, new Todo);
         $this->repository->add($todo);
     }
