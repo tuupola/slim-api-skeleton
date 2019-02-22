@@ -29,7 +29,7 @@ $container["HttpBasicAuthentication"] = function ($container) {
     return new HttpBasicAuthentication([
         "path" => "/token",
         "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
-        "error" => function ($request, $response, $arguments) {
+        "error" => function ($response, $arguments) {
             return new UnauthorizedResponse($arguments["message"], 401);
         },
         "users" => [
