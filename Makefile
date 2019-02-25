@@ -3,31 +3,34 @@
 help:
 	@echo ""
 	@echo "Available tasks:"
-	@echo "    lint   Run linter and code style checker"
-	@echo "    unit   Run unit tests and generate coverage"
-	@echo "    test   Run linter and unit tests"
-	@echo "    watch  Run linter and unit tests when any of the source files change"
-	@echo "    deps   Install dependencies"
-	@echo "    all    Install dependencies and run linter and unit tests"
+	@echo "    test    Run all tests and generate coverage"
+	@echo "    watch   Run all tests and coverage when a source file is upaded"
+	@echo "    lint    Run only linter and code style checker"
+	@echo "    unit    Run unit tests and generate coverage"
+	@echo "    unit    Run static analysis"
+	@echo "    vendor  Install dependencies"
+	@echo "    clean   Remove vendor and composer.lock"
 	@echo ""
 
-deps:
+vendor: $(wildcard composer.lock)
 	composer install --prefer-dist
 
-lint:
+lint: vendor
 	vendor/bin/phplint . --exclude=vendor/
 	vendor/bin/phpcs -p --standard=PSR2 --exclude=PSR2.Namespaces.UseDeclaration --extensions=php --encoding=utf-8 --ignore=*/vendor/*,*/benchmarks/*,*/db/* .
 
-unit:
+unit: vendor
 	vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --coverage-html=./report/
 
-watch:
+watch: vendor
 	find . -name "*.php" -not -path "./vendor/*" -o -name "*.json" -not -path "./vendor/*" | entr -c make test
 
 test: lint unit
 
 travis: lint unit
 
-all: deps test
+clean:
+	rm -rf vendor
+	rm composer.lock
 
-.PHONY: help deps lint test watch all
+.PHONY: help lint unit watch test travis clean
