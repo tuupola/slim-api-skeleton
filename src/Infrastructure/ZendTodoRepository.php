@@ -90,6 +90,7 @@ class ZendTodoRepository implements TodoRepository
 
     public function count(): int
     {
-        return 0;
+        $rowset = $this->table->select();
+        return count($rowset);
     }
 }
