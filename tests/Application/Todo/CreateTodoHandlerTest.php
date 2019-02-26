@@ -32,5 +32,8 @@ class CreateTodoHandlerTest extends TestCase
         $todo = $this->latestTodoHandler->handle();
 
         $this->assertInstanceOf(Todo::class, $todo);
+        $this->assertEquals("Not sure?", $todo->title());
+        $this->assertEquals(0, $todo->order());
+        $this->assertFalse($todo->isCompleted());
     }
 }

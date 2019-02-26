@@ -43,5 +43,7 @@ class ReadTodoCollectionServiceTest extends TestCase
         $this->assertCount(2, $collection);
         $this->assertInstanceOf(Todo::class, $collection[0]);
         $this->assertInstanceOf(Todo::class, $collection[1]);
+        $this->assertEquals("Not sure?", $collection[0]->title());
+        $this->assertEquals("Brawndo!", $collection[1]->title());
     }
 }
