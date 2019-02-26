@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Skeleton\Infrastructure;
 
+use ReflectionClass;
 use Skeleton\Application\Todo\TodoHydratorFactory;
 use Skeleton\Application\Todo\TodoNotFoundException;
 use Skeleton\Domain\Todo;
@@ -41,14 +42,20 @@ class ZendTodoRepository implements TodoRepository
         if (null === $row = $rowset->current()) {
             throw new TodoNotFoundException;
         }
-        return $this->hydrator->hydrate((array) $row, new Todo);
+        return $this->hydrator->hydrate(
+            (array) $row,
+            (new ReflectionClass(Todo::class))->newInstanceWithoutConstructor()
+        );
     }
 
     public function all(array $specification = []): array
     {
         $rowset = $this->table->select($specification);
         return map($rowset, function ($row) {
-            return $this->hydrator->hydrate((array) $row, new Todo);
+            return $this->hydrator->hydrate(
+                (array) $row,
+                (new ReflectionClass(Todo::class))->newInstanceWithoutConstructor()
+            );
         });
     }
 
@@ -58,7 +65,10 @@ class ZendTodoRepository implements TodoRepository
         if (null === $row = $rowset->current()) {
             throw new TodoNotFoundException;
         }
-        return $this->hydrator->hydrate((array) $row, new Todo);
+        return $this->hydrator->hydrate(
+            (array) $row,
+            (new ReflectionClass(Todo::class))->newInstanceWithoutConstructor()
+        );
     }
 
     public function add(Todo $todo): void
