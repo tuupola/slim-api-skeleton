@@ -46,7 +46,7 @@ class MemoryTodoRepository implements TodoRepository
         if (empty($this->todos)) {
             throw new TodoNotFoundException;
         }
-        return end($this->todos);
+        return reset($this->todos);
     }
 
     public function add(Todo $todo): void
