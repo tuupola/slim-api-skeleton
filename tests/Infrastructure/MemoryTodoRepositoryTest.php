@@ -42,14 +42,20 @@ class MemoryTodoRepositoryTest extends TestCase
         $this->assertEquals(0, $repository->count());
 
         $uid = $repository->nextIdentity();
-        $todo = new Todo(["uid" => $uid]);
-        $repository->add($todo);
+        $todo1 = new Todo($uid, "Foo", 1, true);
+        $repository->add($todo1);
         $this->assertEquals(1, $repository->count());
 
         $uid = $repository->nextIdentity();
-        $todo = new Todo(["uid" => $uid]);
-        $repository->add($todo);
+        $todo2 = new Todo($uid, "Bar", 2, false);
+        $repository->add($todo2);
         $this->assertEquals(2, $repository->count());
+
+        $first = $repository->first();
+        $this->assertEquals($first->uid(), $todo1->uid());
+        $this->assertEquals($first->order(), $todo1->order());
+        $this->assertEquals($first->isCompleted(), $todo1->isCompleted());
+        $this->assertEquals($first->title(), $todo1->title());
     }
 
     public function testShouldRemoveTodo()
@@ -57,11 +63,11 @@ class MemoryTodoRepositoryTest extends TestCase
         $repository = new MemoryTodoRepository;
 
         $uid = $repository->nextIdentity();
-        $todo1 = new Todo(["uid" => $uid]);
+        $todo1 = new Todo($uid, "Foo", 1, true);
         $repository->add($todo1);
 
         $uid = $repository->nextIdentity();
-        $todo2 = new Todo(["uid" => $uid]);
+        $todo2 = new Todo($uid, "Bar", 2, false);
         $repository->add($todo2);
 
         $this->assertEquals(2, $repository->count());
@@ -78,13 +84,13 @@ class MemoryTodoRepositoryTest extends TestCase
         $this->assertEquals(0, $repository->count());
 
         $uid = $repository->nextIdentity();
-        $todo = new Todo(["uid" => $uid]);
-        $repository->add($todo);
+        $todo1 = new Todo($uid, "Foo", 1, true);
+        $repository->add($todo1);
         $this->assertEquals(1, $repository->count());
 
         $uid = $repository->nextIdentity();
-        $todo = new Todo(["uid" => $uid]);
-        $repository->add($todo);
+        $todo2 = new Todo($uid, "Bar", 2, false);
+        $repository->add($todo2);
 
         $all = $repository->all();
         $this->assertEquals(2, count($all));
