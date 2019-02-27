@@ -37,6 +37,8 @@ class Todo
         $this->title = $title;
         $this->order = $order;
         $this->completed = $completed;
+        $this->createdAt = new DateTime;
+        $this->updatedAt = $this->createdAt;
     }
 
     public function uid(): TodoUid
