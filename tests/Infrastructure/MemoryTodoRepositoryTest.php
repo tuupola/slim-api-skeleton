@@ -36,6 +36,13 @@ class MemoryTodoRepositoryTest extends TestCase
         $repository->first();
     }
 
+    public function testLastShouldThrowNotFound()
+    {
+        $this->expectException(TodoNotFoundException::class);
+        $repository = new MemoryTodoRepository;
+        $repository->last();
+    }
+
     public function testShouldAddTodo()
     {
         $repository = new MemoryTodoRepository;
@@ -43,11 +50,13 @@ class MemoryTodoRepositoryTest extends TestCase
 
         $uid = $repository->nextIdentity();
         $todo1 = new Todo($uid, "Foo", 1, true);
+
         $repository->add($todo1);
         $this->assertEquals(1, $repository->count());
-
+        sleep(1);
         $uid = $repository->nextIdentity();
         $todo2 = new Todo($uid, "Bar", 2, false);
+
         $repository->add($todo2);
         $this->assertEquals(2, $repository->count());
 
@@ -56,6 +65,12 @@ class MemoryTodoRepositoryTest extends TestCase
         $this->assertEquals($first->order(), $todo1->order());
         $this->assertEquals($first->isCompleted(), $todo1->isCompleted());
         $this->assertEquals($first->title(), $todo1->title());
+
+        $last = $repository->last();
+        $this->assertEquals($last->uid(), $todo2->uid());
+        $this->assertEquals($last->order(), $todo2->order());
+        $this->assertEquals($last->isCompleted(), $todo2->isCompleted());
+        $this->assertEquals($last->title(), $todo2->title());
     }
 
     public function testShouldRemoveTodo()

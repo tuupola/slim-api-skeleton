@@ -64,6 +64,16 @@ class ZendTodoRepositoryTest extends TestCase
         $repository->first();
     }
 
+    public function testLastShouldThrowNotFound()
+    {
+        $this->expectException(TodoNotFoundException::class);
+        $repository = new ZendTodoRepository([
+            "driver"   => "Pdo_Sqlite",
+            "database" => "/tmp/skeleton.sqlite3",
+        ]);
+        $repository->last();
+    }
+
     public function testShouldAddTodo()
     {
         $repository = new ZendTodoRepository([
@@ -73,13 +83,13 @@ class ZendTodoRepositoryTest extends TestCase
         $this->assertEquals(0, $repository->count());
 
         $uid = $repository->nextIdentity();
-        $todo1 = new Todo($uid, 1, true);
+        $todo1 = new Todo($uid, "Foo", 1, true);
 
         $repository->add($todo1);
         $this->assertEquals(1, $repository->count());
-
+        sleep(1);
         $uid = $repository->nextIdentity();
-        $todo2 = new Todo($uid, 2, false);
+        $todo2 = new Todo($uid, "Bar", 2, false);
 
         $repository->add($todo2);
         $this->assertEquals(2, $repository->count());
@@ -89,6 +99,12 @@ class ZendTodoRepositoryTest extends TestCase
         $this->assertEquals($first->order(), $todo1->order());
         $this->assertEquals($first->isCompleted(), $todo1->isCompleted());
         $this->assertEquals($first->title(), $todo1->title());
+
+        $last = $repository->last();
+        $this->assertEquals($last->uid(), $todo2->uid());
+        $this->assertEquals($last->order(), $todo2->order());
+        $this->assertEquals($last->isCompleted(), $todo2->isCompleted());
+        $this->assertEquals($last->title(), $todo2->title());
     }
 
     public function testShouldUpdateTodo()

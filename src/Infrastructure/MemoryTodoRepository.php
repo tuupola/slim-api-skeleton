@@ -41,12 +41,20 @@ class MemoryTodoRepository implements TodoRepository
         return array_values($this->todos);
     }
 
-    public function first(array $specification = []): Todo
+    public function first(): Todo
     {
         if (empty($this->todos)) {
             throw new TodoNotFoundException;
         }
         return reset($this->todos);
+    }
+
+    public function last(): Todo
+    {
+        if (empty($this->todos)) {
+            throw new TodoNotFoundException;
+        }
+        return end($this->todos);
     }
 
     public function add(Todo $todo): void
