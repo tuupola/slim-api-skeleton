@@ -124,8 +124,11 @@ class ZendTodoRepositoryTest extends TestCase
         $todo2 = new Todo($uid, 2, false);
 
         $repository->add($todo2);
+        $this->assertEquals(2, $repository->count());
 
         $todo3 = new Todo($todo1->uid(), 3, true);
+        $repository->add($todo2);
+        $this->assertEquals(2, $repository->count());
 
         $first = $repository->first();
         $this->assertEquals($first->uid(), $todo1->uid());
