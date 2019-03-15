@@ -21,15 +21,24 @@ use \DateTime;
 class Todo
 {
     private $uid;
+    private $completed;
     private $order;
-    private $completed = false;
     private $title;
     private $createdAt = null;
     private $updatedAt = null;
 
-    public function __construct(array $data = [])
-    {
-        $this->populate($data);
+    public function __construct(
+        TodoUid $uid,
+        string $title,
+        int $order = 0,
+        bool $completed = false
+    ) {
+        $this->uid = $uid;
+        $this->title = $title;
+        $this->order = $order;
+        $this->completed = $completed;
+        $this->createdAt = new DateTime;
+        $this->updatedAt = $this->createdAt;
     }
 
     public function uid(): TodoUid
@@ -72,52 +81,8 @@ class Todo
         return md5(serialize($this));
     }
 
-     /**
-     * Reset all properties to default values.
-     */
-    public function reset(): void
-    {
-        $this->populate([
-            "order" => 0,
-            "completed" => false,
-            "title" => null,
-        ]);
-    }
-
     public function touch(): void
     {
         $this->updatedAt = new DateTime;
-    }
-
-    /**
-     * Populate all properties from the given array.
-     */
-    private function populate(array $data = []): void
-    {
-        foreach ($data as $key => $value) {
-            /* https://github.com/facebook/hhvm/issues/6368 */
-            $key = str_replace("_", " ", $key);
-            $method = "set" . ucwords($key);
-            $method = str_replace(" ", "", $method);
-            if (method_exists($this, $method)) {
-                /* Try to use setter */
-                call_user_func([$this, $method], $value);
-            } else {
-                /* Or fallback to setting option directly */
-                if (property_exists(self::class, $key)) {
-                    $this->$key = $value;
-                }
-            }
-        }
-    }
-
-    private function setCreatedAt(?DateTime $datetime): void
-    {
-        $this->createdAt = $datetime ?? new DateTime;
-    }
-
-    private function setUpdatedAt(?DateTime $datetime): void
-    {
-        $this->updatedAt = $datetime ?? new DateTime;
     }
 }

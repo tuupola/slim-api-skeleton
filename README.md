@@ -1,9 +1,10 @@
 # Slim 3 API skeleton
 
-[![Latest Version](https://img.shields.io/packagist/v/tuupola/slim-skeleton.svg?style=flat-square)](https://github.com/tuupola/slim-skeleton/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Build Status](https://img.shields.io/travis/tuupola/slim-api-skeleton/master.svg?style=flat-square)](https://travis-ci.org/tuupola/slim-api-skeleton)
+[![Coverage](https://img.shields.io/codecov/c/github/tuupola/slim-api-skeleton.svg?style=flat-square)](https://codecov.io/github/tuupola/slim-api-skeleton)
 
-This is Slim 3 API skeleton project for Composer. Project uses [Zend Table Gateway](https://docs.zendframework.com/zend-db/table-gateway/) and [Phinx](https://phinx.org/) for database operations,  [Monolog](https://github.com/Seldaek/monolog) for logging, and [Fractal](http://fractal.thephpleague.com/) as a serializer. [Vagrant](https://www.vagrantup.com/) virtualmachine config and [Paw](https://geo.itunes.apple.com/us/app/paw-http-rest-client/id584653203?mt=12&at=1010lc2t) project files are included for easy development. The skeleton tries to follow DDD principles.
+This is Slim 3 API skeleton project for Composer. Project uses [Zend Table Gateway](https://docs.zendframework.com/zend-db/table-gateway/) and [Phinx](https://phinx.org/) for database operations,  [Monolog](https://github.com/Seldaek/monolog) for logging, and [Fractal](http://fractal.thephpleague.com/) as a serializer. [Vagrant](https://www.vagrantup.com/) virtualmachine config and [Paw](https://paw.cloud/) project files are included for easy development. The skeleton tries to follow DDD principles.
 
 ## Install
 

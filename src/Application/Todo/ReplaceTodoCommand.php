@@ -49,10 +49,10 @@ class ReplaceTodoCommand
     public function asArray(): array
     {
         return [
-            "uid" => $this->uid,
-            "order" => $this->order,
-            "completed" => $this->completed,
-            "title" => $this->title,
+            "uid" => $this->uid(),
+            "order" => $this->order(),
+            "completed" => $this->completed(),
+            "title" => $this->title(),
         ];
     }
 }

@@ -22,7 +22,6 @@ class ReplaceTodoHandler
     {
         $data = $command->asArray();
         $todo = $this->repository->get($command->uid());
-        $todo->reset();
         $todo = $this->hydrator->hydrate($data, $todo);
         $todo->touch();
         $this->repository->add($todo);

@@ -32,6 +32,11 @@ class TodoUid
         return $this->uid;
     }
 
+    public function equals(TodoUid $uid): bool
+    {
+        return $this->uid === $uid->uid;
+    }
+
     public function __toString(): string
     {
         return $this->uid;

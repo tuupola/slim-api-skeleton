@@ -18,9 +18,14 @@ namespace Skeleton\Domain;
 
 class Token
 {
-    public $decoded;
+    private $decoded;
 
-    public function populate($decoded)
+    public function __construct(array $decoded)
+    {
+        $this->populate($decoded);
+    }
+
+    public function populate(array $decoded)
     {
         $this->decoded = $decoded;
     }
