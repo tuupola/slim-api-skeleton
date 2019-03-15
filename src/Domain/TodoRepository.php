@@ -12,4 +12,6 @@ interface TodoRepository extends Countable
     public function all(array $specification): array;
     public function add(Todo $todo): void;
     public function remove(Todo $todo): void;
+    public function first(): Todo;
+    public function last(): Todo;
 }

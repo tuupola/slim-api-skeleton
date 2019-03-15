@@ -43,7 +43,7 @@ class TodoHydratorFactory
         );
         $hydrator->addStrategy(
             "completed",
-            new BooleanStrategy(0, 1)
+            new BooleanStrategy("0", "1")
         );
         $hydrator->addStrategy(
             "uid",
@@ -53,6 +53,18 @@ class TodoHydratorFactory
                 },
                 function (string $uid) {
                     return new TodoUid($uid);
+                }
+            )
+        );
+        /* For Zend DB everything is a string, need to typejuggle. */
+        $hydrator->addStrategy(
+            "order",
+            new ClosureStrategy(
+                function (int $order) {
+                    return $order;
+                },
+                function (string $order) {
+                    return (int) $order;
                 }
             )
         );

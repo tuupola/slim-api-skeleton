@@ -17,6 +17,6 @@ class LatestTodoHandler
 
     public function handle(): Todo
     {
-        return $this->repository->first();
+        return $this->repository->last();
     }
 }
