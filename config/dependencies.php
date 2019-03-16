@@ -13,10 +13,6 @@
  *
  */
 
-use League\Fractal\Manager as FractalManager;
-use League\Fractal\Resource\Item as FractalItem;
-use League\Fractal\Serializer\DataArraySerializer;
-
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\CommandHandlerMiddleware;
 use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
