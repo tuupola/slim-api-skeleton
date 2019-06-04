@@ -46,6 +46,10 @@ Content-Type: application/json
 }
 ```
 
+```
+$ export TOKEN=XXXXXXXXXX
+```
+
 ### Create a new todo
 
 ```
