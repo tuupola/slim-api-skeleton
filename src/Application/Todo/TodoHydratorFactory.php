@@ -41,9 +41,17 @@ class TodoHydratorFactory
             "updatedAt",
             new DateTimeFormatterStrategy("Y-m-d H:i:s")
         );
+
         $hydrator->addStrategy(
             "completed",
-            new BooleanStrategy("0", "1")
+            new ClosureStrategy(
+                function ($completed) {
+                    return in_array($completed, [1, "1", "true", true], true);
+                },
+                function ($completed) {
+                    return in_array($completed, [1, "1", "true", true], true);
+                }
+            )
         );
         $hydrator->addStrategy(
             "uid",
