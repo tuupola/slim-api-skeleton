@@ -38,7 +38,7 @@ $container["HttpBasicAuthentication"] = function ($container) {
 };
 
 $container["token"] = function ($container) {
-    return new Token;
+    return new Token([]);
 };
 
 $container["JwtAuthentication"] = function ($container) {
