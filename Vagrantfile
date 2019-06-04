@@ -26,6 +26,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Install all needed packages
   config.vm.provision "shell", name: "rpm", inline: <<-SHELL
+    yum -y update ca-certificates
+    yum -y update nss
     rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
     rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
   SHELL

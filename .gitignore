@@ -2,3 +2,5 @@
 vendor/
 .vagrant/
 .phplint-cache
+report/
+coverage.xml
