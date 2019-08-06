@@ -18,7 +18,8 @@ use Firebase\JWT\JWT;
 use Tuupola\Base62;
 
 $app->post("/token", function ($request, $response, $arguments) {
-    $requested_scopes = $request->getParsedBody() ?: [];
+    //$requested_scopes = $request->getParsedBody() ?: [];
+    $requested_scopes = json_decode($request->getBody()) ?: [];
 
     $valid_scopes = [
         "todo.create",
@@ -53,9 +54,12 @@ $app->post("/token", function ($request, $response, $arguments) {
     $data["token"] = $token;
     $data["expires"] = $future->getTimeStamp();
 
+    $body = $response->getBody();
+    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+
     return $response->withStatus(201)
         ->withHeader("Content-Type", "application/json")
-        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        ->withBody($body);
 });
 
 /* This is just for debugging, not usefull in real life. */

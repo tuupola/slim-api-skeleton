@@ -22,15 +22,15 @@ require __DIR__ . "/vendor/autoload.php";
 $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
 
-$app = new \Slim\App([
-    "settings" => [
-        "displayErrorDetails" => true,
-        "addContentLengthHeader" => false,
-    ]
-]);
+use DI\Container;
+use Slim\Factory\AppFactory;
+
+$container = new Container();
+AppFactory::setContainer($container);
+$app = AppFactory::create();
 
 require __DIR__ . "/config/dependencies.php";
-require __DIR__ . "/config/handlers.php";
+#require __DIR__ . "/config/handlers.php";
 require __DIR__ . "/config/middleware.php";
 
 $app->get("/", function ($request, $response, $arguments) {

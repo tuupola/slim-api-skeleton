@@ -39,73 +39,79 @@ use Skeleton\Domain\{
 $app->get("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
-    if (false === $this->token->hasScope(["todo.all", "todo.list"])) {
+    if (false === $this->get("token")->hasScope(["todo.all", "todo.list"])) {
         return new ForbiddenResponse("Token not allowed to list todos", 403);
     }
 
     /* Add Last-Modified and ETag headers to response when atleast one todo exists. */
     try {
         $query = new LatestTodoQuery;
-        $first = $this->commandBus->handle($query);
-        $response = $this->cache->withEtag($response, $first->etag());
-        $response = $this->cache->withLastModified($response, $first->timestamp());
+        $first = $this->get("commandBus")->handle($query);
+        $response = $this->get("cache")->withEtag($response, $first->etag());
+        $response = $this->get("cache")->withLastModified($response, $first->timestamp());
     } catch (TodoNotFoundException $exception) {
     }
 
     /* If-Modified-Since and If-None-Match request header handling. */
     /* Heads up! Apache removes previously set Last-Modified header */
     /* from 304 Not Modified responses. */
-    if ($this->cache->isNotModified($request, $response)) {
+    if ($this->get("cache")->isNotModified($request, $response)) {
         return $response->withStatus(304);
     }
 
     /* Serialize the response. */
     $query = new ReadTodoCollectionQuery;
-    $todos = $this->commandBus->handle($query);
-    $data = $this->transformTodoCollectionService->execute($todos);
+    $todos = $this->get("commandBus")->handle($query);
+    $data = $this->get("transformTodoCollectionService")->execute($todos);
+    $body = $response->getBody();
+    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
-        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        ->withBody($body);
 });
 
 $app->post("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
-    if (false === $this->token->hasScope(["todo.all", "todo.create"])) {
+    if (false === $this->get("token")->hasScope(["todo.all", "todo.create"])) {
         return new ForbiddenResponse("Token not allowed to create todos", 403);
     }
 
-    $data = $request->getParsedBody();
-    $uid = $this->todoRepository->nextIdentity();
+    //$data = $request->getParsedBody();
+    $data = json_decode($request->getBody(), true) ?: [];
+    $uid = $this->get("todoRepository")->nextIdentity();
 
     $command = new CreateTodoCommand(
         $uid,
         $data["title"],
         $data["order"]
     );
-    $this->commandBus->handle($command);
+    $this->get("commandBus")->handle($command);
 
     $query = new ReadTodoQuery($uid);
-    $todo = $this->commandBus->handle($query);
+    $todo = $this->get("commandBus")->handle($query);
 
     /* Add Last-Modified and ETag headers to response. */
-    $response = $this->cache->withEtag($response, $todo->etag());
-    $response = $this->cache->withLastModified($response, $todo->timestamp());
+    $response = $this->get("cache")->withEtag($response, $todo->etag());
+    $response = $this->get("cache")->withLastModified($response, $todo->timestamp());
 
     /* Serialize the response. */
-    $data = $this->transformTodoService->execute($todo);
+    $data = $this->get("transformTodoService")->execute($todo);
+
+    $body = $response->getBody();
+    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
     return $response->withStatus(201)
         ->withHeader("Content-Type", "application/json")
         ->withHeader("Content-Location", $data["data"]["links"]["self"])
-        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        ->withBody($body);
 });
 
 $app->get("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
-    if (false === $this->token->hasScope(["todo.all", "todo.read"])) {
+    if (false === $this->get("token")->hasScope(["todo.all", "todo.read"])) {
         return new ForbiddenResponse("Token not allowed to read todos", 403);
     }
 
@@ -114,34 +120,36 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
     /* Load existing todo using provided uid. */
     try {
         $query = new ReadTodoQuery($uid);
-        $todo = $this->commandBus->handle($query);
+        $todo = $this->get("commandBus")->handle($query);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }
 
     /* Add Last-Modified and ETag headers to response. */
-    $response = $this->cache->withEtag($response, $todo->etag());
-    $response = $this->cache->withLastModified($response, $todo->timestamp());
+    $response = $this->get("cache")->withEtag($response, $todo->etag());
+    $response = $this->get("cache")->withLastModified($response, $todo->timestamp());
 
     /* If-Modified-Since and If-None-Match request header handling. */
     /* Heads up! Apache removes previously set Last-Modified header */
     /* from 304 Not Modified responses. */
-    if ($this->cache->isNotModified($request, $response)) {
+    if ($this->get("cache")->isNotModified($request, $response)) {
         return $response->withStatus(304);
     }
 
     /* Serialize the response. */
-    $data = $this->transformTodoService->execute($todo);
+    $data = $this->get("transformTodoService")->execute($todo);
+    $body = $response->getBody();
+    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
-        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        ->withBody($body);
 });
 
 $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
-    if (false === $this->token->hasScope(["todo.all", "todo.update"])) {
+    if (false === $this->get("token")->hasScope(["todo.all", "todo.update"])) {
         return new ForbiddenResponse("Token not allowed to update todos", 403);
     }
 
@@ -150,24 +158,25 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
     /* Load existing todo using provided uid. */
     try {
         $query = new ReadTodoQuery($uid);
-        $todo = $this->commandBus->handle($query);
+        $todo = $this->get("commandBus")->handle($query);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }
 
     /* PATCH requires If-Unmodified-Since or If-Match request header to be present. */
-    if (false === $this->cache->hasStateValidator($request)) {
+    if (false === $this->get("cache")->hasStateValidator($request)) {
         $method = strtoupper($request->getMethod());
         return new PreconditionRequiredResponse("{$method} request is required to be conditional", 428);
     }
 
     /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
     /* someone has modified the todo respond with 412 Precondition Failed. */
-    if (false === $this->cache->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
+    if (false === $this->get("cache")->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
         return new PreconditionFailedResponse("Todo has already been modified", 412);
     }
 
-    $data = $request->getParsedBody();
+    //$data = $request->getParsedBody();
+    $data = json_decode($request->getBody(), true) ?: [];
 
     /* PUT request assumes full representation. PATCH allows partial data. */
     if ("PUT" === strtoupper($request->getMethod())) {
@@ -185,26 +194,28 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
             $data["completed"] ?? $todo->isCompleted()
         );
     }
-    $this->commandBus->handle($command);
+    $this->get("commandBus")->handle($command);
 
     $query = new ReadTodoQuery($uid);
-    $todo = $this->commandBus->handle($query);
+    $todo = $this->get("commandBus")->handle($query);
 
     /* Add Last-Modified and ETag headers to response. */
-    $response = $this->cache->withEtag($response, $todo->etag());
-    $response = $this->cache->withLastModified($response, $todo->timestamp());
+    $response = $this->get("cache")->withEtag($response, $todo->etag());
+    $response = $this->get("cache")->withLastModified($response, $todo->timestamp());
 
-    $data = $this->transformTodoService->execute($todo);
+    $data = $this->get("transformTodoService")->execute($todo);
+    $body = $response->getBody();
+    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
-        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        ->withBody($body);
 });
 
 $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
-    if (false === $this->token->hasScope(["todo.all", "todo.delete"])) {
+    if (false === $this->get("token")->hasScope(["todo.all", "todo.delete"])) {
         return new ForbiddenResponse("Token not allowed to delete todos", 403);
     }
 
@@ -212,7 +223,7 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
 
     try {
         $command = new DeleteTodoCommand($uid);
-        $todo = $this->commandBus->handle($command);
+        $todo = $this->get("commandBus")->handle($command);
     } catch (TodoNotFoundException $exception) {
         return new NotFoundResponse("Todo not found", 404);
     }

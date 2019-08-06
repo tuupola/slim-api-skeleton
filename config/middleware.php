@@ -24,66 +24,66 @@ use Skeleton\Application\Response\UnauthorizedResponse;
 
 $container = $app->getContainer();
 
-$container["HttpBasicAuthentication"] = function ($container) {
+$container->set("HttpBasicAuthentication", function ($container) {
     return new HttpBasicAuthentication([
         "path" => "/token",
         "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
-        "error" => function ($response, $arguments) {
-            return new UnauthorizedResponse($arguments["message"], 401);
-        },
+        // "error" => function ($response, $arguments) {
+        //     return new UnauthorizedResponse($arguments["message"], 401);
+        // },
         "users" => [
             "test" => "test"
         ]
     ]);
-};
+});
 
-$container["token"] = function ($container) {
+$container->set("token", function ($container) {
     return new Token([]);
-};
+});
 
-$container["JwtAuthentication"] = function ($container) {
+$container->set("JwtAuthentication", function ($container) {
     return new JwtAuthentication([
         "path" => "/",
         "ignore" => ["/token", "/info"],
         "secret" => getenv("JWT_SECRET"),
-        "logger" => $container["logger"],
+        "logger" => $container->get("logger"),
         "attribute" => false,
         "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
-        "error" => function ($response, $arguments) {
-            return new UnauthorizedResponse($arguments["message"], 401);
-        },
+        // "error" => function ($response, $arguments) {
+        //     return new UnauthorizedResponse($arguments["message"], 401);
+        // },
         "before" => function ($request, $arguments) use ($container) {
-            $container["token"]->populate($arguments["decoded"]);
+            $container->get("token")->populate($arguments["decoded"]);
         }
     ]);
-};
+});
 
-$container["CorsMiddleware"] = function ($container) {
+$container->set("CorsMiddleware", function ($container) {
     return new CorsMiddleware([
-        "logger" => $container["logger"],
+        "logger" => $container->get("logger"),
         "origin" => ["*"],
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
         "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
         "headers.expose" => ["Authorization", "Etag"],
         "credentials" => true,
         "cache" => 60,
-        "error" => function ($request, $response, $arguments) {
-            return new UnauthorizedResponse($arguments["message"], 401);
-        }
+        // "error" => function ($request, $response, $arguments) {
+        //     return new UnauthorizedResponse($arguments["message"], 401);
+        // }
     ]);
-};
+});
 
-$container["NegotiationMiddleware"] = function ($container) {
+$container->set("NegotiationMiddleware", function ($container) {
     return new NegotiationMiddleware([
         "accept" => ["application/json"]
     ]);
-};
+});
 
 $app->add("HttpBasicAuthentication");
 $app->add("JwtAuthentication");
 $app->add("CorsMiddleware");
-$app->add("NegotiationMiddleware");
+//$app->add("NegotiationMiddleware");
 
-$container["cache"] = function ($container) {
+$container->set("cache", function ($container) {
     return new CacheUtil;
-};
+});
