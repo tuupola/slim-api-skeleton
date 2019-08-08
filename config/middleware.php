@@ -20,7 +20,7 @@ use Micheh\Cache\CacheUtil;
 use Tuupola\Middleware\JwtAuthentication;
 use Tuupola\Middleware\HttpBasicAuthentication;
 use Tuupola\Middleware\CorsMiddleware;
-use Skeleton\Application\Response\UnauthorizedResponse;
+use Skeleton\Application\Response\UnauthorizedResponseFactory;
 
 $container = $app->getContainer();
 
@@ -28,9 +28,12 @@ $container->set("HttpBasicAuthentication", function ($container) {
     return new HttpBasicAuthentication([
         "path" => "/token",
         "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
-        // "error" => function ($response, $arguments) {
-        //     return new UnauthorizedResponse($arguments["message"], 401);
-        // },
+        "error" => function ($response, $arguments) {
+            return (new UnauthorizedResponseFactory)->create(
+                $arguments["message"],
+                401
+            );
+        },
         "users" => [
             "test" => "test"
         ]
@@ -49,9 +52,12 @@ $container->set("JwtAuthentication", function ($container) {
         "logger" => $container->get("logger"),
         "attribute" => false,
         "relaxed" => ["192.168.50.52", "127.0.0.1", "localhost"],
-        // "error" => function ($response, $arguments) {
-        //     return new UnauthorizedResponse($arguments["message"], 401);
-        // },
+        "error" => function ($response, $arguments) {
+            return (new UnauthorizedResponseFactory)->create(
+                $arguments["message"],
+                401
+            );
+        },
         "before" => function ($request, $arguments) use ($container) {
             $container->get("token")->populate($arguments["decoded"]);
         }
@@ -67,9 +73,12 @@ $container->set("CorsMiddleware", function ($container) {
         "headers.expose" => ["Authorization", "Etag"],
         "credentials" => true,
         "cache" => 60,
-        // "error" => function ($request, $response, $arguments) {
-        //     return new UnauthorizedResponse($arguments["message"], 401);
-        // }
+        "error" => function ($request, $response, $arguments) {
+            return (new UnauthorizedResponseFactory)->create(
+                $arguments["message"],
+                401
+            );
+        }
     ]);
 });
 

@@ -17,13 +17,20 @@ declare(strict_types=1);
 namespace Skeleton\Application\Response;
 
 use Crell\ApiProblem\ApiProblem;
-use Slim\Http\Headers;
-use Slim\Http\Response;
-use Slim\Http\Stream;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Tuupola\Http\Factory\ResponseFactory;
 
-class NotFoundResponse extends Response
+class NotFoundResponseFactory
 {
-    public function __construct($message, $status = 404)
+    private $factory;
+
+    public function __construct(ResponseFactoryInterface $factory = null)
+    {
+        $this->factory = $factory ?: new ResponseFactory;
+    }
+
+    public function create($message, $status = 404)
     {
         $problem = new ApiProblem(
             $message,
@@ -31,11 +38,11 @@ class NotFoundResponse extends Response
         );
         $problem->setStatus($status);
 
-        $handle = fopen("php://temp", "wb+");
-        $body = new Stream($handle);
+        $response = $this->factory->createResponse($status);
+        $body = $response->getBody();
         $body->write($problem->asJson(true));
-        $headers = new Headers;
-        $headers->set("Content-type", "application/problem+json");
-        parent::__construct($status, $headers, $body);
+        return $response
+            ->withHeader("Content-type", "application/problem+json")
+            ->withBody($body);
     }
 }

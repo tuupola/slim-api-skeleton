@@ -14,10 +14,10 @@
  */
 
 use Skeleton\Application\Response\{
-    NotFoundResponse,
-    ForbiddenResponse,
-    PreconditionFailedResponse,
-    PreconditionRequiredResponse
+    NotFoundResponseFactory,
+    ForbiddenResponseFactory,
+    PreconditionFailedResponseFactory,
+    PreconditionRequiredResponseFactory
 };
 
 use Skeleton\Application\Todo\{
@@ -40,7 +40,10 @@ $app->get("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->get("token")->hasScope(["todo.all", "todo.list"])) {
-        return new ForbiddenResponse("Token not allowed to list todos", 403);
+        return (new ForbiddenResponseFactory)->create(
+            "Token not allowed to list todos",
+            403
+        );
     }
 
     /* Add Last-Modified and ETag headers to response when atleast one todo exists. */
@@ -75,10 +78,12 @@ $app->post("/todos", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->get("token")->hasScope(["todo.all", "todo.create"])) {
-        return new ForbiddenResponse("Token not allowed to create todos", 403);
+        return (new ForbiddenResponseFactory)->create(
+            "Token not allowed to create todos",
+            403
+        );
     }
 
-    //$data = $request->getParsedBody();
     $data = json_decode($request->getBody(), true) ?: [];
     $uid = $this->get("todoRepository")->nextIdentity();
 
@@ -112,7 +117,10 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->get("token")->hasScope(["todo.all", "todo.read"])) {
-        return new ForbiddenResponse("Token not allowed to read todos", 403);
+        return (new ForbiddenResponseFactory)->create(
+            "Token not allowed to read todos",
+            403
+        );
     }
 
     $uid = new TodoUid($arguments["uid"]);
@@ -122,7 +130,7 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
         $query = new ReadTodoQuery($uid);
         $todo = $this->get("commandBus")->handle($query);
     } catch (TodoNotFoundException $exception) {
-        return new NotFoundResponse("Todo not found", 404);
+        return (new NotFoundResponseFactory)->create("Todo not found", 404);
     }
 
     /* Add Last-Modified and ETag headers to response. */
@@ -150,7 +158,10 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
 
     /* Check if token has needed scope. */
     if (false === $this->get("token")->hasScope(["todo.all", "todo.update"])) {
-        return new ForbiddenResponse("Token not allowed to update todos", 403);
+        return (new ForbiddenResponseFactory)->create(
+            "Token not allowed to update todos",
+            403
+        );
     }
 
     $uid = new TodoUid($arguments["uid"]);
@@ -160,22 +171,27 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
         $query = new ReadTodoQuery($uid);
         $todo = $this->get("commandBus")->handle($query);
     } catch (TodoNotFoundException $exception) {
-        return new NotFoundResponse("Todo not found", 404);
+        return (new NotFoundResponseFactory)->create("Todo not found", 404);
     }
 
     /* PATCH requires If-Unmodified-Since or If-Match request header to be present. */
     if (false === $this->get("cache")->hasStateValidator($request)) {
         $method = strtoupper($request->getMethod());
-        return new PreconditionRequiredResponse("{$method} request is required to be conditional", 428);
+        return (new PreconditionRequiredResponseFactory)->create(
+            "{$method} request is required to be conditional",
+            428
+        );
     }
 
     /* If-Unmodified-Since and If-Match request header handling. If in the meanwhile  */
     /* someone has modified the todo respond with 412 Precondition Failed. */
     if (false === $this->get("cache")->hasCurrentState($request, $todo->etag(), $todo->timestamp())) {
-        return new PreconditionFailedResponse("Todo has already been modified", 412);
+        return (new PreconditionFailedResponseFactory)->create(
+            "Todo has already been modified",
+            412
+        );
     }
 
-    //$data = $request->getParsedBody();
     $data = json_decode($request->getBody(), true) ?: [];
 
     /* PUT request assumes full representation. PATCH allows partial data. */
@@ -216,7 +232,10 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
 
     /* Check if token has needed scope. */
     if (false === $this->get("token")->hasScope(["todo.all", "todo.delete"])) {
-        return new ForbiddenResponse("Token not allowed to delete todos", 403);
+        return (new ForbiddenResponseFactory)->create(
+            "Token not allowed to delete todos",
+            403
+        );
     }
 
     $uid = new TodoUid($arguments["uid"]);
@@ -225,7 +244,7 @@ $app->delete("/todos/{uid}", function ($request, $response, $arguments) {
         $command = new DeleteTodoCommand($uid);
         $todo = $this->get("commandBus")->handle($command);
     } catch (TodoNotFoundException $exception) {
-        return new NotFoundResponse("Todo not found", 404);
+        return (new NotFoundResponseFactory)->create("Todo not found", 404);
     }
 
     return $response->withStatus(204);
