@@ -24,6 +24,7 @@ $dotenv->load();
 
 use DI\Container;
 use Slim\Factory\AppFactory;
+use Skeleton\Infrastructure\Slim\Handler\ApiErrorHandler;
 
 $container = new Container();
 AppFactory::setContainer($container);
@@ -32,6 +33,14 @@ $app = AppFactory::create();
 require __DIR__ . "/config/dependencies.php";
 #require __DIR__ . "/config/handlers.php";
 require __DIR__ . "/config/middleware.php";
+
+$errorHandler = new ApiErrorHandler(
+    $app->getCallableResolver(),
+    $app->getResponseFactory()
+);
+
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+$errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 $app->get("/", function ($request, $response, $arguments) {
     print "Here be dragons";

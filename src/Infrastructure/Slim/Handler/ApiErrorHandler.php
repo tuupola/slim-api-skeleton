@@ -1,12 +1,8 @@
 <?php
+declare(strict_types=1);
 
 /*
- * This file is part of the Slim API skeleton package.
- *
- * This handler is called in case of otherwise uncaught exceptions.
- * However due to way Slim works CORS headers are lost. It would be better
- * to handle exceptions gracefully by returning one of the predefined
- * error responses instead.
+ * This file is part of the Slim API skeleton package
  *
  * Copyright (c) 2016-2017 Mika Tuupola
  *
@@ -18,37 +14,57 @@
  *
  */
 
-// namespace Skeleton\Infrastructure\Slim\Handler;
+namespace Skeleton\Infrastructure\Slim\Handler;
 
-// use Crell\ApiProblem\ApiProblem;
-// use Psr\Http\Message\ServerRequestInterface as Request;
-// use Psr\Http\Message\ResponseInterface as Response;
-// use Psr\Log\LoggerInterface;
-// use Slim\Handlers\AbstractError;
-// use Throwable;
+use Crell\ApiProblem\ApiProblem;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Exception\HttpBadRequestException;
+use Slim\Exception\HttpException;
+use Slim\Exception\HttpForbiddenException;
+use Slim\Exception\HttpMethodNotAllowedException;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Exception\HttpNotImplementedException;
+use Slim\Exception\HttpUnauthorizedException;
+use Slim\Handlers\ErrorHandler;
+use Exception;
+use Throwable;
 
-// final class ApiErrorHandler extends AbstractError
-// {
-//     protected $logger;
+class ApiErrorHandler extends ErrorHandler
+{
+    protected function respond(): ResponseInterface
+    {
+        //$this->logger->critical($throwable->getMessage());
 
-//     public function __construct(LoggerInterface $logger)
-//     {
-//         $this->logger = $logger;
-//     }
+        $response = $this->responseFactory->createResponse();
 
-//     public function __invoke(Request $request, Response $response, Throwable $throwable)
-//     {
-//         $this->logger->critical($throwable->getMessage());
+        $status = $this->exception->getCode() ?: 500;
+        $problem = new ApiProblem($this->exception->getMessage(), "about:blank");
+        $problem->setStatus($status);
 
-//         $status = $throwable->getCode() ?: 500;
+        if ($this->exception instanceof HttpMethodNotAllowedException) {
+            $allowed = $this->exception->getAllowedMethods();
 
-//         $problem = new ApiProblem($throwable->getMessage(), "about:blank");
-//         $problem->setStatus($status);
-//         $body = $problem->asJson(true);
+            /* 405 response must include Allow header. */
+            $response = $response->withHeader("Allow", implode(", ", $allowed));
 
-//         return $response
-//                 ->withStatus($status)
-//                 ->withHeader("Content-type", "application/problem+json")
-//                 ->write($body);
-//     }
-// }
+            /* Show allowed methods also in API problem body. */
+            if (1 === count($allowed)) {
+                $detail = "Request method must be {$allowed[0]}";
+            } else {
+                $last = array_pop($allowed);
+                $first = implode(", ", $allowed);
+                $detail = "Request method must be either {$first} or {$last}.";
+            }
+            $problem->setDetail($detail);
+        }
+        $json = $problem->asJson(true);
+
+        $body = $response->getBody();
+        $body->write($json);
+
+        return $response
+            ->withStatus($status)
+            ->withHeader("Content-type", "application/problem+json")
+            ->withBody($body);
+    }
+}
