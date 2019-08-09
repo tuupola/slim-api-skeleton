@@ -2,11 +2,13 @@
 
 namespace Skeleton\Infrastructure\Slim\Handler;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
-use Tuupola\Http\Factory\RequestFactory;
+use Slim\CallableResolver;
+use Slim\Exception\HttpMethodNotAllowedException;
+use Tuupola\Http\Factory\ServerRequestFactory;
 use Tuupola\Http\Factory\ResponseFactory;
 use Psr\Log\NullLogger;
+
 
 class ApiErrorHandlerTest extends TestCase
 {
@@ -17,19 +19,22 @@ class ApiErrorHandlerTest extends TestCase
 
     public function testShouldInvoke()
     {
-        $request = (new RequestFactory)->createRequest("GET", "https://example.com/");
+        $request = (new ServerRequestFactory)->createServerRequest("GET", "https://example.com/");
         $response = (new ResponseFactory)->createResponse();
-        $exception = new Exception("Test");
+        $exception = new HttpMethodNotAllowedException($request);
 
-        $handler = new ApiErrorHandler(new NullLogger);
+        $handler = new ApiErrorHandler(
+            new CallableResolver,
+            new ResponseFactory
+        );
 
-        $response = $handler($request, $response, $exception);
+        $response = $handler($request, $exception, false, false, false);
 
         $this->assertEquals(
             "application/problem+json",
             $response->getHeaderLine("Content-Type")
         );
 
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals(405, $response->getStatusCode());
     }
 }
