@@ -10,7 +10,7 @@ class TransformTodoServiceTest extends TestCase
 {
     private $todoRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->todoRepository = new MemoryTodoRepository;
         $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);

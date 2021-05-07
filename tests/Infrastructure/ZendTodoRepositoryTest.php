@@ -16,14 +16,14 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class ZendTodoRepositoryTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $app = new PhinxApplication();
         $app->setAutoExit(false);
         $app->run(new StringInput("migrate -e testing"), new NullOutput());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unlink("/tmp/skeleton.sqlite3");
     }
