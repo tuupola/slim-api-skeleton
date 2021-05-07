@@ -22,6 +22,7 @@
         "sort-packages": true
     },
     "require": {
+        "php": "^7.3|^8.0",
         "crell/api-problem": "^3.3",
         "gofabian/negotiation-middleware": "^0.1.2",
         "league/fractal": "^0.13.0",
