@@ -6,13 +6,13 @@ use PHPUnit\Framework\TestCase;
 use Skeleton\Domain\Todo;
 use Skeleton\Infrastructure\MemoryTodoRepository;
 
-class ReadTodoCollectionServiceTest extends TestCase
+class ReadTodoCollectionHandlerTest extends TestCase
 {
     private $todoRepository;
     private $createTodoHandler;
     private $readTodoCollectionHandler;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->todoRepository = new MemoryTodoRepository;
         $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);

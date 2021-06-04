@@ -22,7 +22,8 @@
         "sort-packages": true
     },
     "require": {
-        "crell/api-problem": "^2.0",
+        "php": "^7.3|^8.0",
+        "crell/api-problem": "^3.3",
         "gofabian/negotiation-middleware": "^0.1.2",
         "league/fractal": "^0.13.0",
         "league/tactician": "^1.0",
@@ -36,9 +37,9 @@
         "tuupola/slim-basic-auth": "^3.2",
         "tuupola/slim-jwt-auth": "^3.1",
         "vlucas/phpdotenv": "^2.0",
-        "zendframework/zend-db": "^2.9",
-        "zendframework/zend-hydrator": "^2.3",
-        "zendframework/zend-inputfilter": "^2.8"
+        "laminas/laminas-db": "^2.12",
+        "laminas/laminas-hydrator": "^3.2",
+        "laminas/laminas-inputfilter": "^2.11"
     },
     "autoload": {
         "psr-4": {
@@ -52,8 +53,8 @@
     },
     "require-dev": {
         "overtrue/phplint": "^1.0",
-        "phpunit/phpunit": "^7.3",
-        "squizlabs/php_codesniffer": "^3.2",
+        "phpunit/phpunit": "^7.3|^9.3",
+        "squizlabs/php_codesniffer": "^3.5.4",
         "tuupola/http-factory": "^1.0"
     }
 }
