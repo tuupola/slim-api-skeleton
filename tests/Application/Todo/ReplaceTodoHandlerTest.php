@@ -13,7 +13,7 @@ class ReplaceTodoHandlerTest extends TestCase
     private $replaceTodoHandler;
     private $readTodoHandler;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->todoRepository = new MemoryTodoRepository;
         $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);

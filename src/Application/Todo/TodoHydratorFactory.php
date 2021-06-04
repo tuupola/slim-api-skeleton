@@ -17,19 +17,18 @@ declare(strict_types=1);
 namespace Skeleton\Application\Todo;
 
 use Skeleton\Domain\TodoUid;
-use Zend\Hydrator\HydratorInterface;
-use Zend\Hydrator\Reflection as ReflectionHydrator;
-use Zend\Hydrator\NamingStrategy\MapNamingStrategy;
-use Zend\Hydrator\Strategy\DateTimeFormatterStrategy;
-use Zend\Hydrator\Strategy\BooleanStrategy;
-use Zend\Hydrator\Strategy\ClosureStrategy;
+use Laminas\Hydrator\HydratorInterface;
+use Laminas\Hydrator\ReflectionHydrator;
+use Laminas\Hydrator\NamingStrategy\MapNamingStrategy;
+use Laminas\Hydrator\Strategy\DateTimeFormatterStrategy;
+use Laminas\Hydrator\Strategy\ClosureStrategy;
 
 class TodoHydratorFactory
 {
     public function create(): HydratorInterface
     {
         $hydrator = new ReflectionHydrator;
-        $hydrator->setNamingStrategy(new MapNamingStrategy([
+        $hydrator->setNamingStrategy(MapNamingStrategy::createFromHydrationMap([
             "created_at" => "createdAt",
             "updated_at" => "updatedAt",
         ]));
@@ -59,8 +58,8 @@ class TodoHydratorFactory
                 function (TodoUid $uid) {
                     return (string) $uid;
                 },
-                function (string $uid) {
-                    return new TodoUid($uid);
+                function ($uid) {
+                    return new TodoUid((string)$uid);
                 }
             )
         );
@@ -71,7 +70,7 @@ class TodoHydratorFactory
                 function (int $order) {
                     return $order;
                 },
-                function (string $order) {
+                function ($order) {
                     return (int) $order;
                 }
             )
