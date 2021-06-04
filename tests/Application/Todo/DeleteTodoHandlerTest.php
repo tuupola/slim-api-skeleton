@@ -11,7 +11,7 @@ class DeleteTodoHandlerTest extends TestCase
     private $todoRepository;
     private $deleteTodoHandler;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->todoRepository = new MemoryTodoRepository;
         $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);
