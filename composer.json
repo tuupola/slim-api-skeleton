@@ -28,7 +28,6 @@
         "laminas/laminas-db": "^2.12",
         "laminas/laminas-hydrator": "^3.2",
         "laminas/laminas-inputfilter": "^2.11",
-        "league/fractal": "^0.13.0",
         "league/tactician": "^1.0",
         "lstrojny/functional-php": "^1.6",
         "micheh/psr7-cache": "^0.5.0",

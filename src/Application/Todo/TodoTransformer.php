@@ -17,12 +17,12 @@ declare(strict_types=1);
 namespace Skeleton\Application\Todo;
 
 use Skeleton\Domain\Todo;
-use League\Fractal\TransformerAbstract;
+use Skeleton\Domain\TransformerInterface;
 
-class TodoTransformer extends TransformerAbstract
+final class TodoTransformer implements TransformerInterface
 {
 
-    public function transform(Todo $todo)
+    public function transform($todo): array
     {
         return [
             "uid" => (string) $todo->uid() ?: null,

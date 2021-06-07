@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Skeleton\Domain\Todo;
 use Skeleton\Infrastructure\MemoryTodoRepository;
 
-class TransformTodoServiceTest extends TestCase
+class TodoTransformerTest extends TestCase
 {
     private $todoRepository;
 
@@ -15,7 +15,7 @@ class TransformTodoServiceTest extends TestCase
         $this->todoRepository = new MemoryTodoRepository;
         $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);
         $this->latestTodoHandler = new LatestTodoHandler($this->todoRepository);
-        $this->transformTodoService = new TransformTodoService($this->todoRepository);
+        $this->transformer = new TodoTransformer();
     }
 
     public function testShouldBeTrue()
@@ -32,12 +32,12 @@ class TransformTodoServiceTest extends TestCase
         $this->createTodoHandler->handle($command);
         $todo = $this->latestTodoHandler->handle();
 
-        $transformed =$this->transformTodoService->execute($todo);
+        $transformed =$this->transformer->transform($todo);
 
-        $this->assertArrayHasKey("uid", $transformed["data"]);
-        $this->assertArrayHasKey("order", $transformed["data"]);
-        $this->assertArrayHasKey("title", $transformed["data"]);
-        $this->assertArrayHasKey("completed", $transformed["data"]);
-        $this->assertArrayHasKey("links", $transformed["data"]);
+        $this->assertArrayHasKey("uid", $transformed);
+        $this->assertArrayHasKey("order", $transformed);
+        $this->assertArrayHasKey("title", $transformed);
+        $this->assertArrayHasKey("completed", $transformed);
+        $this->assertArrayHasKey("links", $transformed);
     }
 }

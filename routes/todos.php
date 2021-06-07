@@ -29,7 +29,11 @@ use Skeleton\Application\Todo\{
     ReplaceTodoCommand,
     UpdateTodoCommand,
     ReadTodoCollectionQuery,
-    TodoNotFoundException
+    TodoNotFoundException,
+    TodoTransformer
+};
+use Skeleton\Application\{
+    CollectionTransformer
 };
 
 use Skeleton\Domain\{
@@ -65,9 +69,11 @@ $app->get("/todos", function ($request, $response, $arguments) {
     /* Serialize the response. */
     $query = new ReadTodoCollectionQuery;
     $todos = $this->get("commandBus")->handle($query);
-    $data = $this->get("transformTodoCollectionService")->execute($todos);
+    $transformer = new CollectionTransformer(new TodoTransformer());
+    $responseData["data"] = $transformer->transform($todos);
+
     $body = $response->getBody();
-    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+    $body->write(json_encode($responseData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -84,13 +90,13 @@ $app->post("/todos", function ($request, $response, $arguments) {
         );
     }
 
-    $data = json_decode($request->getBody(), true) ?: [];
+    $commandData = json_decode($request->getBody(), true) ?: [];
     $uid = $this->get("todoRepository")->nextIdentity();
 
     $command = new CreateTodoCommand(
         $uid,
-        $data["title"],
-        $data["order"]
+        $commandData["title"],
+        $commandData["order"]
     );
     $this->get("commandBus")->handle($command);
 
@@ -102,14 +108,15 @@ $app->post("/todos", function ($request, $response, $arguments) {
     $response = $this->get("cache")->withLastModified($response, $todo->timestamp());
 
     /* Serialize the response. */
-    $data = $this->get("transformTodoService")->execute($todo);
+    $transformer = new TodoTransformer();
+    $responseData["data"] =$transformer->transform($todo);
 
     $body = $response->getBody();
-    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+    $body->write(json_encode($responseData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
     return $response->withStatus(201)
         ->withHeader("Content-Type", "application/json")
-        ->withHeader("Content-Location", $data["data"]["links"]["self"])
+        ->withHeader("Content-Location", $responseData["data"]["links"]["self"])
         ->withBody($body);
 });
 
@@ -145,9 +152,11 @@ $app->get("/todos/{uid}", function ($request, $response, $arguments) {
     }
 
     /* Serialize the response. */
-    $data = $this->get("transformTodoService")->execute($todo);
+    $transformer = new TodoTransformer();
+    $responseData["data"] =$transformer->transform($todo);
+
     $body = $response->getBody();
-    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+    $body->write(json_encode($responseData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
@@ -192,22 +201,22 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
         );
     }
 
-    $data = json_decode($request->getBody(), true) ?: [];
+    $commandData = json_decode($request->getBody(), true) ?: [];
 
     /* PUT request assumes full representation. PATCH allows partial data. */
     if ("PUT" === strtoupper($request->getMethod())) {
         $command = new ReplaceTodoCommand(
             $uid,
-            $data["title"],
-            $data["order"],
-            $data["completed"]
+            $commandData["title"],
+            $commandData["order"],
+            $commandData["completed"]
         );
     } else {
         $command = new UpdateTodoCommand(
             $uid,
-            $data["title"] ?? $todo->title(),
-            $data["order"] ?? $todo->order(),
-            $data["completed"] ?? $todo->isCompleted()
+            $commandData["title"] ?? $todo->title(),
+            $commandData["order"] ?? $todo->order(),
+            $commandData["completed"] ?? $todo->isCompleted()
         );
     }
     $this->get("commandBus")->handle($command);
@@ -219,9 +228,11 @@ $app->map(["PUT", "PATCH"], "/todos/{uid}", function ($request, $response, $argu
     $response = $this->get("cache")->withEtag($response, $todo->etag());
     $response = $this->get("cache")->withLastModified($response, $todo->timestamp());
 
-    $data = $this->get("transformTodoService")->execute($todo);
+    $transformer = new TodoTransformer();
+    $responseData["data"] =$transformer->transform($todo);
+
     $body = $response->getBody();
-    $body->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+    $body->write(json_encode($responseData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
     return $response->withStatus(200)
         ->withHeader("Content-Type", "application/json")
