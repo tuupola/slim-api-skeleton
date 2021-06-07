@@ -39,8 +39,6 @@ use Skeleton\Application\Todo\ReadTodoQuery;
 use Skeleton\Application\Todo\ReadTodoHandler;
 use Skeleton\Application\Todo\ReadTodoCollectionQuery;
 use Skeleton\Application\Todo\ReadTodoCollectionHandler;
-use Skeleton\Application\Todo\TransformTodoService;
-use Skeleton\Application\Todo\TransformTodoCollectionService;
 use Skeleton\Infrastructure\ZendTodoRepository;
 use Skeleton\Domain\Todo;
 
@@ -100,14 +98,6 @@ $container->set("todoRepository", function ($container) {
         "hostname" => getenv("DB_HOST"),
         "charset" => "utf8",
     ]);
-});
-
-$container->set("transformTodoService", function ($container) {
-    return new TransformTodoService;
-});
-
-$container->set("transformTodoCollectionService", function ($container) {
-    return new TransformTodoCollectionService;
 });
 
 $container->set("logger", function ($container) {
