@@ -4,7 +4,7 @@
 [![Build Status](https://img.shields.io/github/workflow/status/tuupola/slim-api-skeleton/Tests/master?style=flat-square)](https://github.com/tuupola/slim-api-skeleton/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/tuupola/slim-api-skeleton.svg?style=flat-square)](https://codecov.io/github/tuupola/slim-api-skeleton)
 
-This is Slim 4 API skeleton project for Composer. Project uses [Zend Table Gateway](https://docs.zendframework.com/zend-db/table-gateway/) and [Phinx](https://phinx.org/) for database operations,  [Monolog](https://github.com/Seldaek/monolog) for logging, and [Fractal](http://fractal.thephpleague.com/) as a serializer. [Vagrant](https://www.vagrantup.com/) virtualmachine config and [Paw](https://paw.cloud/) project files are included for easy development. The skeleton tries to follow DDD principles.
+This is Slim 4 API skeleton project for Composer. Project uses [Zend Table Gateway](https://docs.zendframework.com/zend-db/table-gateway/) and [Phinx](https://phinx.org/) for database operations and [Monolog](https://github.com/Seldaek/monolog) for logging. [Vagrant](https://www.vagrantup.com/) virtualmachine config and [Paw](https://paw.cloud/) project files are included for easy development. The skeleton tries to follow DDD principles.
 
 ## Install
 
