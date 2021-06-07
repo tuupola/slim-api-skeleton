@@ -13,7 +13,7 @@ class UpdateTodoHandlerTest extends TestCase
     private $updateTodoHandler;
     private $readTodoHandler;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->todoRepository = new MemoryTodoRepository;
         $this->createTodoHandler = new CreateTodoHandler($this->todoRepository);

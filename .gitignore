@@ -4,3 +4,5 @@ vendor/
 .phplint-cache
 report/
 coverage.xml
+.phpunit.result.cache
+composer.lock
